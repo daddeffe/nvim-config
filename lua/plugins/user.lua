@@ -88,16 +88,6 @@ return {
     lazy = false,
   },
   {
-    'jpmcb/nvim-llama',
-    lazy = false,
-    config = function()
-      require("nvim-llama").setup({
-        debug = false,
-        model = llama2,
-    })
-    end,
-  },
-  {
     "nomnivore/ollama.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
