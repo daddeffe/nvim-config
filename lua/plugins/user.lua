@@ -80,9 +80,11 @@ return {
       )
     end,
   },
-
-
-
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" }
+  },
   {
     "lambdalisue/suda.vim",
     lazy = false,
