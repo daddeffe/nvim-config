@@ -119,7 +119,7 @@ vim.schedule(function()
 end)
 
 -- Enable break indent
-vim.o.breakindent = true
+vim.o.breakindent = false
 
 -- Save undo history
 vim.o.undofile = true
@@ -209,15 +209,15 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
-vim.keymap.set('n', '<space><space>x', '<cmd>source %<CR>', { desc = 'Source current file' })
-vim.keymap.set('n', '<space>x', ':.lua<CR>', { desc = 'Execute Lua code in normal mode' })
-vim.keymap.set('v', '<space>x', ':lua<CR>', { desc = 'Execute Lua code in visual mode' })
+--vim.keymap.set('n', '<space><space>x', '<cmd>source %<CR>', { desc = 'Source current file' })
+--vim.keymap.set('n', '<space>x', ':.lua<CR>', { desc = 'Execute Lua code in normal mode' })
+--vim.keymap.set('v', '<space>x', ':lua<CR>', { desc = 'Execute Lua code in visual mode' })
+vim.keymap.set('n', '<space>x', ':bdelete<CR>', { desc = '[X]Delete Buffer' })
 vim.keymap.set('n', '<space>w', ':w<CR>', { desc = '[W]rite file' })
 vim.keymap.set('n', '<space>W', ':wq<CR>', { desc = '[W]rite and [Q]uit file' })
 
 -- create a keymap to exit from insert mode and save the file when pressing jk
-vim.keymap.set('i', 'ii', '<Esc>', { desc = 'Exit insert mode and save file' })
-vim.keymap.set('n', 'ii', '<Esc>:wq<CR>', { desc = 'Exit insert mode and save file' })
+vim.keymap.set('i', 'jk', '<Esc>:w<CR>', { desc = 'Exit insert mode and save file' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
