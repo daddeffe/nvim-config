@@ -261,6 +261,19 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
 
+  {
+    'alex-popov-tech/store.nvim',
+    dependencies = {
+      'OXY2DEV/markview.nvim', -- optional, for pretty readme preview / help window
+    },
+    cmd = 'Store',
+    keys = {
+      { '<leader>s', '<cmd>Store<cr>', desc = 'Open Plugin Store' },
+    },
+    opts = {
+      -- optional configuration here
+    },
+  },
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
