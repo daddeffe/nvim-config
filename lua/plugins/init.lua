@@ -60,7 +60,7 @@ return {
       },
       current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
       current_line_blame_opts = {
-        virt_text_pos = 'overlay', -- 'eol' | 'overlay' | 'right_align'
+        virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
       },
     },
   },
