@@ -153,6 +153,32 @@ vim.o.splitbelow = true
 vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
+-- length of an actual \t character:
+vim.o.tabstop = 2
+-- length to use when editing text (eg. TAB and BS keys)
+-- (0 for ‘tabstop’, -1 for ‘shiftwidth’):
+vim.o.softtabstop = -1
+-- length to use when shifting text (eg. <<, >> and == commands)
+-- (0 for ‘tabstop’):
+vim.o.shiftwidth = 0
+-- round indentation to multiples of 'shiftwidth' when shifting text
+-- (so that it behaves like Ctrl-D / Ctrl-T):
+vim.opt.shiftround = true
+
+-- if set, only insert spaces; otherwise insert \t and complete with spaces:
+vim.opt.expandtab = true
+
+-- reproduce the indentation of the previous line:
+vim.opt.autoindent = true
+-- keep indentation produced by 'autoindent' if leaving the line blank:
+--set cpoptions+=I
+-- try to be smart (increase the indenting level after ‘{’,
+-- decrease it after ‘}’, and so on):
+--set smartindent
+-- a stricter alternative which works better for the C language:
+--set cindent
+-- use language‐specific plugins for indenting (better):
+
 -- Preview substitutions live, as you type!
 vim.o.inccommand = 'split'
 
@@ -166,6 +192,9 @@ vim.o.scrolloff = 5
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.o.confirm = true
+
+-- [[ Basic Plugins ]]
+-- vim.pack.add 'lambdalisue/vim-suda'
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -186,15 +215,15 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- TIP: Disable arrow keys in normal mode
-vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
-vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
-vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
-vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
-vim.keymap.set('i', '<left>', '<cmd>echo "Use h to move!!"<CR>')
-vim.keymap.set('i', '<right>', '<cmd>echo "Use l to move!!"<CR>')
-vim.keymap.set('i', '<up>', '<cmd>echo "Use k to move!!"<CR>')
-vim.keymap.set('i', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+--vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+--vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+--vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+--vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+--
+--vim.keymap.set('i', '<left>', '<cmd>echo "Use h to move!!"<CR>')
+--vim.keymap.set('i', '<right>', '<cmd>echo "Use l to move!!"<CR>')
+--vim.keymap.set('i', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+--vim.keymap.set('i', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --
@@ -233,6 +262,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.hl.on_yank()
   end,
 })
+
+vim.api.nvim_create_user_command('AlignColumns', function(opts)
+  vim.cmd(string.format("%d,%d!column -t | sed 's/ = /=/'", opts.line1, opts.line2))
+end, { range = true })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
