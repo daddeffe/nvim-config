@@ -1,5 +1,4 @@
 --[[
-
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
 =====================================================================
@@ -19,10 +18,7 @@
 ========                                                     ========
 =====================================================================
 =====================================================================
-
--- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+]]
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -61,8 +57,9 @@ vim.o.signcolumn = 'yes'
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 
-vim.o.splitright = true
-vim.o.splitbelow = true
+vim.opt.splitright = true
+vim.opt.splitbelow = false
+vim.opt.splitkeep = 'topline'
 
 vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
@@ -88,10 +85,7 @@ vim.o.confirm = true
 --  See `:help vim.keymap.set()`
 
 -- Clear highlights on search when pressing <Esc> in normal mode
---  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
--- Clear notifications
-vim.keymap.set('n', '<Esc>', '<cmd>NoiceDismiss<CR>')
 
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -115,8 +109,8 @@ vim.keymap.set('n', '<C-S-l>', '<C-w>L', { desc = 'Move window to the right' })
 vim.keymap.set('n', '<C-S-j>', '<C-w>J', { desc = 'Move window to the lower' })
 vim.keymap.set('n', '<C-S-k>', '<C-w>K', { desc = 'Move window to the upper' })
 
-vim.keymap.set('n', '<space>x', ':bdelete<CR>', { desc = '[X]Delete Buffer' })
-vim.keymap.set('n', '<space>w', ':w<CR>', { desc = '[W]rite file' })
+vim.keymap.set('n', '<leader>x', ':bdelete<CR>', { desc = '[X]Delete Buffer' })
+vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = '[W]rite file' })
 
 -- create a keymap to exit from insert mode and save the file when pressing jk
 vim.keymap.set('i', 'jk', '<Esc>:w<CR>', { desc = 'Exit insert mode and save file' })

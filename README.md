@@ -178,19 +178,19 @@ the easiest way is to use choco:
 1. install [chocolatey](https://chocolatey.org/install)
 either follow the instructions on the page or use winget,
 run in cmd as **admin**:
-```
+```sh
 winget install --accept-source-agreements chocolatey.chocolatey
 ```
 
 2. install all requirements using choco, exit the previous cmd and
 open a new one so that choco path is set, and run in cmd as **admin**:
-```
+```sh
 choco install -y neovim git ripgrep wget fd unzip gzip mingw make
 ```
 </details>
 <details><summary>WSL (Windows Subsystem for Linux)</summary>
 
-```
+```sh
 wsl --install
 wsl
 sudo add-apt-repository ppa:neovim-ppa/unstable -y
@@ -202,7 +202,7 @@ sudo apt install make gcc ripgrep unzip git xclip neovim
 #### Linux Install
 <details><summary>Ubuntu Install Steps</summary>
 
-```
+```sh
 sudo add-apt-repository ppa:neovim-ppa/unstable -y
 sudo apt update
 sudo apt install make gcc ripgrep unzip git xclip neovim
@@ -210,7 +210,7 @@ sudo apt install make gcc ripgrep unzip git xclip neovim
 </details>
 <details><summary>Debian Install Steps</summary>
 
-```
+```bash
 sudo apt update
 sudo apt install make gcc ripgrep unzip git xclip curl
 
@@ -227,7 +227,7 @@ sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/
 </details>
 <details><summary>Fedora Install Steps</summary>
 
-```
+```bash
 sudo dnf install -y gcc make git ripgrep fd-find unzip neovim
 ```
 </details>

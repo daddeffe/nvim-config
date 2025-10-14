@@ -10,6 +10,84 @@ vim.pack.add {
   'https://github.com/MunifTanjim/nui.nvim',
 }
 
+require('lualine').setup {
+  options = {
+    icons_enabled = true,
+    component_separators = { left = '⋗', right = '⋖' },
+    section_separators = { left = '', right = '' },
+    disabled_filetypes = {
+      statusline = {},
+      winbar = {},
+    },
+    ignore_focus = {},
+    always_divide_middle = true,
+    always_show_tabline = true,
+    globalstatus = true,
+    refresh = {
+      statusline = 1000,
+      tabline = 1000,
+      winbar = 1000,
+      refresh_time = 16, -- ~60fps
+      events = {
+        'WinEnter',
+        'BufEnter',
+        'BufWritePost',
+        'SessionLoadPost',
+        'FileChangedShellPost',
+        'VimResized',
+        'Filetype',
+        'CursorMoved',
+        'CursorMovedI',
+        'ModeChanged',
+      },
+    },
+  },
+  tabline = {},
+  winbar = {},
+  extensions = { 'oil', 'fzf', 'man', 'mason' },
+  sections = {
+    lualine_a = {
+      'mode',
+      'tabs',
+    },
+    lualine_b = {
+      'windows',
+    },
+    lualine_c = {
+      'branch',
+      'diff',
+      'diagnostics',
+    },
+    lualine_x = {
+      {
+        color = { fg = 'lightgray', gui = 'italic,bold' },
+        'progress',
+      },
+      {
+        color = { fg = 'lightgray', gui = 'italic' },
+        'location',
+      },
+    },
+    lualine_y = {
+      'encoding',
+      'fileformat',
+      'filetype',
+    },
+    lualine_z = {
+      'lsp_status',
+    },
+  },
+  inactive_sections = {
+    -- these are to remove the defaults
+    lualine_a = {},
+    lualine_b = {},
+    lualine_y = {},
+    lualine_z = {},
+    lualine_c = {},
+    lualine_x = {},
+  },
+}
+
 require('catppuccin').setup {
   opts = {
     flavour = 'mocha', -- latte, frappe, macchiato, mocha
@@ -17,15 +95,10 @@ require('catppuccin').setup {
   flavour = 'mocha', -- latte, frappe, macchiato, mocha
   transparent_background = false, -- disables setting the background color.
   show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
-  term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
+  term_colors = true, -- sets terminal colors (e.g. `g:terminal_color_0`)
   dim_inactive = {
     enabled = false, -- dims the background color of inactive window
-    shade = 'dark',
-    percentage = 0.15, -- percentage of the shade to apply to the inactive window
   },
-  no_italic = false, -- Force no italic
-  no_bold = false, -- Force no bold
-  no_underline = false, -- Force no underline
   styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
     comments = { 'italic' }, -- Change the style of comments
     conditionals = { 'italic' },
@@ -39,7 +112,7 @@ require('catppuccin').setup {
     properties = {},
     types = {},
     operators = {},
-    -- miscs = {}, -- Uncomment to turn off hard-coded styles
+    miscs = {}, -- Uncomment to turn off hard-coded styles
   },
   color_overrides = {},
   custom_highlights = {},
@@ -84,13 +157,16 @@ require('noice').setup {
   },
   views = {
     notify = {
-      timeout = 3000, -- 1 second timeout for notifications
+      timeout = 6000,
     },
   },
   -- you can enable a preset for easier configuration
   presets = {
     bottom_search = true, -- use a classic bottom cmdline for search
     command_palette = true, -- position the cmdline and popupmenu together
-    long_message_to_split = true, -- long messages will be sent to a split
+    long_message_to_split = false, -- long messages will be sent to a split
   },
 }
+
+-- Clear notifications
+vim.keymap.set('n', '<Esc>', '<cmd>NoiceDismiss<CR>')

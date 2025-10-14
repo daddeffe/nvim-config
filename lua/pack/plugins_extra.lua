@@ -17,21 +17,9 @@ vim.pack.add {
 
   -- Videre - Graph viewer
   'https://github.com/Owen-Dechow/videre.nvim',
-
-  -- DEPENDENCY for videre: YAML parser
   'https://github.com/Owen-Dechow/graph_view_yaml_parser',
-
-  -- DEPENDENCY for videre: TOML parser
   'https://github.com/Owen-Dechow/graph_view_toml_parser',
-
-  -- DEPENDENCY for videre: XML parser
   'https://github.com/a-usr/xml2lua.nvim',
-
-  -- Mermaider - Mermaid diagram support (DISABLED: requires Node.js and image.nvim fixes)
-  -- 'https://github.com/snrogers/mermaider.nvim',
-
-  -- DEPENDENCY for mermaider: image.nvim (DISABLED: dependency of mermaider)
-  -- 'https://github.com/3rd/image.nvim',
 
   -- Present.nvim - Presentation tool
   'https://github.com/tjdevries/present.nvim',
@@ -47,13 +35,13 @@ if claudecode_ok then
 
   -- Claude Code keymaps
   -- Note: <leader>a is used as a prefix for Claude Code commands
-  vim.keymap.set('n', '<leader>ac', '<cmd>ClaudeCode<cr>', { desc = 'Toggle Claude' })
-  vim.keymap.set('n', '<leader>af', '<cmd>ClaudeCodeFocus<cr>', { desc = 'Focus Claude' })
-  vim.keymap.set('n', '<leader>ar', '<cmd>ClaudeCode --resume<cr>', { desc = 'Resume Claude' })
-  vim.keymap.set('n', '<leader>aC', '<cmd>ClaudeCode --continue<cr>', { desc = 'Continue Claude' })
-  vim.keymap.set('n', '<leader>am', '<cmd>ClaudeCodeSelectModel<cr>', { desc = 'Select Claude model' })
-  vim.keymap.set('n', '<leader>ab', '<cmd>ClaudeCodeAdd %<cr>', { desc = 'Add current buffer' })
-  vim.keymap.set('v', '<leader>as', '<cmd>ClaudeCodeSend<cr>', { desc = 'Send to Claude' })
+  vim.keymap.set('n', '<leader>cc', '<cmd>ClaudeCode<cr>', { desc = 'Toggle Claude' })
+  vim.keymap.set('n', '<leader>cf', '<cmd>ClaudeCodeFocus<cr>', { desc = 'Focus Claude' })
+  vim.keymap.set('n', '<leader>cr', '<cmd>ClaudeCode --resume<cr>', { desc = 'Resume Claude' })
+  vim.keymap.set('n', '<leader>cC', '<cmd>ClaudeCode --continue<cr>', { desc = 'Continue Claude' })
+  vim.keymap.set('n', '<leader>cm', '<cmd>ClaudeCodeSelectModel<cr>', { desc = 'Select Claude model' })
+  vim.keymap.set('n', '<leader>cb', '<cmd>ClaudeCodeAdd %<cr>', { desc = 'Add current buffer' })
+  vim.keymap.set('v', '<leader>cs', '<cmd>ClaudeCodeSend<cr>', { desc = 'Send to Claude' })
 
   -- Special keymap for file trees
   vim.api.nvim_create_autocmd('FileType', {
@@ -180,49 +168,3 @@ if videre_ok then
     round_units = false,
   }
 end
-
--- Configure Mermaider (DISABLED: requires Node.js and image.nvim fixes)
--- Uncomment after installing Node.js and fixing image.nvim dependency
---[[
-local mermaider_ok, mermaider = pcall(require, 'mermaider')
-if mermaider_ok then
-  -- Check for image.nvim dependency
-  local image_ok = pcall(require, 'image')
-  if not image_ok then
-    vim.notify('Mermaider: image.nvim not found, disabling image preview', vim.log.levels.WARN)
-  end
-
-  mermaider.setup {
-    -- Command to run the mermaid-cli
-    mermaider_cmd = 'npx -y -p @mermaid-js/mermaid-cli mmdc -i {{IN_FILE}} -o {{OUT_FILE}}.png -s 3',
-
-    -- Directory for temporary files
-    temp_dir = vim.fn.expand '$HOME/.cache/mermaider',
-
-    -- Auto render settings
-    auto_render = true,
-    auto_render_on_open = true,
-    auto_preview = true,
-
-    -- Mermaid diagram styling
-    theme = 'forest',
-    background_color = '#1e1e2e',
-
-    -- Additional mmdc options
-    mmdc_options = '',
-
-    -- Window size settings
-    max_width_window_percentage = 80,
-    max_height_window_percentage = 80,
-
-    -- Render settings
-    inline_render = true,
-
-    -- Split window settings
-    use_split = true,
-    split_direction = 'vertical',
-    split_width = 50,
-  }
-end
---]]
-

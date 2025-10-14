@@ -23,16 +23,13 @@ end
 
 -- Configure origami (folding)
 local origami_ok, origami = pcall(require, 'nvim-origami')
-if origami_ok then
-  -- Origami loads on VeryLazy event, configuration is automatic
-end
 
 -- Configure indent-blankline
 require('ibl').setup {}
 
 -- Configure todo-comments
 require('todo-comments').setup {
-  signs = false,
+  --signs = false,
 }
 
 -- Configure colorizer
@@ -43,3 +40,4 @@ require('colorizer').setup {
 }
 
 -- Note: mini.nvim modules are configured in core.lua
+

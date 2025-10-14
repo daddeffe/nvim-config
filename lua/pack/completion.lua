@@ -85,7 +85,10 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdLineEnter' }, {
           {
             name = 'cmdline',
             option = {
-              ignore_cmds = { 'Man', '!' },
+              ignore_cmds = {
+                --'Man',
+                '!',
+              },
             },
           },
         }),
@@ -94,3 +97,4 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdLineEnter' }, {
   end,
   once = true,
 })
+
