@@ -111,6 +111,7 @@ vim.keymap.set('n', '<C-S-k>', '<C-w>K', { desc = 'Move window to the upper' })
 
 vim.keymap.set('n', '<leader>x', ':bdelete<CR>', { desc = '[X]Delete Buffer' })
 vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = '[W]rite file' })
+vim.keymap.set('n', '<leader>Q', ':qa<CR>', { desc = '[Q]Close all' })
 
 -- create a keymap to exit from insert mode and save the file when pressing jk
 vim.keymap.set('i', 'jk', '<Esc>:w<CR>', { desc = 'Exit insert mode and save file' })

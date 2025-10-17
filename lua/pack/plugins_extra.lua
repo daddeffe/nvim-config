@@ -20,13 +20,21 @@ vim.pack.add {
   'https://github.com/Owen-Dechow/graph_view_yaml_parser',
   'https://github.com/Owen-Dechow/graph_view_toml_parser',
   'https://github.com/a-usr/xml2lua.nvim',
-
-  -- Present.nvim - Presentation tool
-  'https://github.com/tjdevries/present.nvim',
 }
 
+-- Load optional packages
+vim.cmd.packadd 'markview.nvim'
+vim.cmd.packadd 'claudecode.nvim'
+vim.cmd.packadd 'snacks.nvim'
+vim.cmd.packadd 'vim-coach.nvim'
+vim.cmd.packadd 'possession.nvim'
+vim.cmd.packadd 'videre.nvim'
+vim.cmd.packadd 'graph_view_yaml_parser'
+vim.cmd.packadd 'graph_view_toml_parser'
+vim.cmd.packadd 'xml2lua.nvim'
+--
 -- Configure Store.nvim
-vim.keymap.set('n', '<leader>s', '<cmd>Store<cr>', { desc = 'Open Plugin Store' })
+vim.keymap.set('n', '<leader>S', '<cmd>Store<cr>', { desc = 'Open Plugin Store' })
 
 -- Configure Claude Code
 local claudecode_ok, claudecode = pcall(require, 'claudecode')

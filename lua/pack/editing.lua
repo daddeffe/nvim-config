@@ -15,6 +15,13 @@ vim.pack.add {
   'https://github.com/norcalli/nvim-colorizer.lua',
 }
 
+-- Load optional packages
+vim.cmd.packadd('nvim-autopairs')
+vim.cmd.packadd('nvim-origami')
+vim.cmd.packadd('indent-blankline.nvim')
+vim.cmd.packadd('todo-comments.nvim')
+vim.cmd.packadd('nvim-colorizer.lua')
+
 -- Configure autopairs
 local autopairs_ok, autopairs = pcall(require, 'nvim-autopairs')
 if autopairs_ok then
@@ -22,8 +29,10 @@ if autopairs_ok then
 end
 
 -- Configure origami (folding)
-local origami_ok, origami = pcall(require, 'nvim-origami')
-
+local origami_ok, origami = pcall(require, 'origami')
+if origami_ok then
+  origami.setup {}
+end
 -- Configure indent-blankline
 require('ibl').setup {}
 
@@ -40,4 +49,3 @@ require('colorizer').setup {
 }
 
 -- Note: mini.nvim modules are configured in core.lua
-
