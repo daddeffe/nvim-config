@@ -55,13 +55,16 @@ if claudecode_ok then
   vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'NvimTree', 'neo-tree', 'oil', 'minifiles' },
     callback = function()
-      vim.keymap.set('n', '<leader>as', '<cmd>ClaudeCodeTreeAdd<cr>', { buffer = true, desc = 'Add file' })
+      vim.keymap.set('n', '<leader>cS', '<cmd>ClaudeCodeTreeAdd<cr>', {
+        buffer = true,
+        desc = 'Add file',
+      })
     end,
   })
 
   -- Diff management
-  vim.keymap.set('n', '<leader>aa', '<cmd>ClaudeCodeDiffAccept<cr>', { desc = 'Accept diff' })
-  vim.keymap.set('n', '<leader>ad', '<cmd>ClaudeCodeDiffDeny<cr>', { desc = 'Deny diff' })
+  vim.keymap.set('n', '<leader>ca', '<cmd>ClaudeCodeDiffAccept<cr>', { desc = 'Accept diff' })
+  vim.keymap.set('n', '<leader>cd', '<cmd>ClaudeCodeDiffDeny<cr>', { desc = 'Deny diff' })
 end
 
 -- Configure Vim Coach

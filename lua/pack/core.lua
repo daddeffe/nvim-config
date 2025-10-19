@@ -17,7 +17,7 @@ vim.pack.add {
 }
 
 -- Setup pack-manager
-require('pack-manager').setup {}
+require('pack-manager').setup()
 
 -- Configure mini.nvim modules
 require('mini.icons').setup()

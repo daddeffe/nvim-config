@@ -23,7 +23,7 @@ require('fidget').setup {}
 
 -- Configure conform (formatting)
 require('conform').setup {
-  notify_on_error = false,
+  notify_on_error = true,
   format_on_save = function(bufnr)
     -- Disable "format_on_save lsp_fallback" for languages that don't
     -- have a well standardized coding style.
@@ -92,6 +92,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- Execute a code action
     map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
 
+    -- Jump to Declaration
+    map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+
     -- Find references for the word under your cursor
     map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
 
@@ -100,9 +103,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     -- Jump to the definition
     map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-
-    -- Jump to Declaration
-    map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
     -- Document symbols
     map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
@@ -225,4 +225,3 @@ require('mason-lspconfig').setup {
     end,
   },
 }
-

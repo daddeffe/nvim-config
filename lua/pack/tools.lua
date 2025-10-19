@@ -232,13 +232,13 @@ vim.api.nvim_create_autocmd('User', {
 })
 
 -- Attiva AutoreadOn per ogni buffer aperto (solo file reali)
-vim.api.nvim_create_autocmd('BufReadPost', {
-  pattern = '*',
-  callback = function(args)
-    local filepath = vim.api.nvim_buf_get_name(args.buf)
-    -- Controlla che il buffer abbia un path di file esistente
-    if filepath ~= '' and vim.fn.filereadable(filepath) == 1 then
-      pcall(vim.cmd, 'AutoreadOn')
-    end
-  end,
-})
+--vim.api.nvim_create_autocmd('BufReadPost', {
+--  pattern = '*',
+--  callback = function(args)
+--    local filepath = vim.api.nvim_buf_get_name(args.buf)
+--    -- Controlla che il buffer abbia un path di file esistente
+--    if filepath ~= '' and vim.fn.filereadable(filepath) == 1 then
+--      pcall(vim.cmd, 'AutoreadOn')
+--    end
+--  end,
+--})

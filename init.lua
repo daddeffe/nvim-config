@@ -62,7 +62,11 @@ vim.opt.splitbelow = false
 vim.opt.splitkeep = 'topline'
 
 vim.o.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = {
+  tab = '» ',
+  trail = '·',
+  nbsp = '␣',
+}
 
 -- length of an actual \t character:
 vim.o.tabstop = 2
@@ -109,12 +113,39 @@ vim.keymap.set('n', '<C-S-l>', '<C-w>L', { desc = 'Move window to the right' })
 vim.keymap.set('n', '<C-S-j>', '<C-w>J', { desc = 'Move window to the lower' })
 vim.keymap.set('n', '<C-S-k>', '<C-w>K', { desc = 'Move window to the upper' })
 
+-- Move inside insert mode
+vim.keymap.set('i', '<C-h>', '<Left>')
+vim.keymap.set('i', '<C-j>', '<Down>')
+vim.keymap.set('i', '<C-k>', '<Up>')
+vim.keymap.set('i', '<C-l>', '<Right>')
+
 vim.keymap.set('n', '<leader>x', ':bdelete<CR>', { desc = '[X]Delete Buffer' })
 vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = '[W]rite file' })
 vim.keymap.set('n', '<leader>Q', ':qa<CR>', { desc = '[Q]Close all' })
 
+vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = 'Sed current line' })
+vim.keymap.set('n', '<leader><leader>', ':lua vim.cmd.so()<CR>', { desc = 'Source file' })
+
 -- create a keymap to exit from insert mode and save the file when pressing jk
 vim.keymap.set('i', 'jk', '<Esc>:w<CR>', { desc = 'Exit insert mode and save file' })
+
+-- Move block in visual line
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+
+-- Force cursor at center during J, nav and serach
+vim.keymap.set('n', 'J', 'mzJ`z')
+vim.keymap.set('n', '<C-d>', '<C-d>zz')
+vim.keymap.set('n', '<C-u>', '<C-u>zz')
+vim.keymap.set('n', 'n', 'nzzzv')
+vim.keymap.set('n', 'N', 'Nzzzv')
+
+-- Paste with yanking to null reg
+vim.keymap.set('x', '<leader>p', '"_dP', { desc = 'Paste without overvrite last yank' })
+
+-- Move block in visual line
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv'")
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv'")
 
 -- Load vim.pack install and plugin list
 require 'pack'
