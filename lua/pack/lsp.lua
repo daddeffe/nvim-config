@@ -55,7 +55,7 @@ require('conform').setup {
 }
 
 -- Format keymap
-vim.keymap.set('', '<leader>=', function()
+vim.keymap.set('n', '<leader>=', function()
   require('conform').format { async = true, lsp_format = 'fallback' }
 end, { desc = '[F]ormat buffer' })
 
@@ -67,7 +67,11 @@ lint.linters_by_ft = {
 
 -- Create autocommand for linting
 local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
+vim.api.nvim_create_autocmd({
+  'BufEnter',
+  'BufWritePost',
+  'InsertLeave',
+}, {
   group = lint_augroup,
   callback = function()
     -- Only run the linter in buffers that you can modify
@@ -152,6 +156,130 @@ vim.api.nvim_create_autocmd('LspAttach', {
       map('<leader>th', function()
         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
       end, '[T]oggle Inlay [H]ints')
+    end
+  end,
+})
+
+vim.opt.foldmethod = 'manual'
+vim.opt.foldexpr = ''
+
+-- 2) Liste
+local FORCE_DISABLE_FT = {
+  'DiffviewFiles',
+  'NvimTree',
+  'TelescopePrompt',
+  'Trouble',
+  'alpha',
+  'checkhealth',
+  'dap-repl',
+  'dashboard',
+  'fugitive',
+  'git',
+  'help',
+  'lazy',
+  'mason',
+  'md',
+  'neo-tree',
+  'oil',
+  'qf',
+}
+
+local TREESITTER_FT = {
+  'lua',
+  'vim',
+  'vimdoc',
+  'python',
+  'typescript',
+  'javascript',
+  'go',
+  'rust',
+  'c',
+  'cpp',
+  'java',
+  'ruby',
+  'php',
+  'json',
+  'yaml',
+  'toml',
+  'markdown',
+}
+
+local function in_list(ft, list)
+  for _, v in ipairs(list) do
+    if v == ft then
+      return true
+    end
+  end
+  return false
+end
+
+-- 3) FileType “speciali”: disattiva fold
+vim.api.nvim_create_autocmd('FileType', {
+  callback = function(args)
+    local ft = vim.bo[args.buf].filetype
+    if in_list(ft, FORCE_DISABLE_FT) then
+      vim.api.nvim_buf_set_option(args.buf, 'foldmethod', 'manual')
+      vim.api.nvim_buf_set_option(args.buf, 'foldexpr', '')
+      pcall(vim.cmd, 'normal! zR') -- apri tutto
+    end
+  end,
+})
+
+-- 4) Abilita fold LSP solo quando un client si ATTACCA
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local bufnr = args.buf
+    local ft = vim.bo[bufnr].filetype
+    if in_list(ft, FORCE_DISABLE_FT) then
+      return
+    end
+
+    -- attiva fold via LSP (Neovim ≥ 0.10)
+    vim.api.nvim_buf_set_option(bufnr, 'foldmethod', 'expr')
+    vim.api.nvim_buf_set_option(bufnr, 'foldexpr', 'v:lua.vim.lsp.foldexpr()')
+  end,
+})
+
+-- 5) Se non c’è LSP, fallback opzionale a Treesitter o manual
+vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
+  callback = function(ctx)
+    local bufnr = ctx.buf
+    local ft = vim.bo[bufnr].filetype
+
+    if in_list(ft, FORCE_DISABLE_FT) then
+      return
+    end
+    local clients = vim.lsp.get_clients { bufnr = bufnr }
+    if clients and #clients > 0 then
+      return
+    end
+
+    vim.api.nvim_buf_set_option(bufnr, 'foldmethod', 'manual')
+    vim.api.nvim_buf_set_option(bufnr, 'foldexpr', '')
+
+    -- fallback opzionale Treesitter
+    if in_list(ft, TREESITTER_FT) then
+      vim.api.nvim_buf_set_option(bufnr, 'foldmethod', 'expr')
+      vim.api.nvim_buf_set_option(bufnr, 'foldexpr', 'nvim_treesitter#foldexpr()')
+      pcall(vim.cmd, 'normal! zR')
+    end
+  end,
+})
+
+-- 6) Se un LSP si stacca, torna manual
+vim.api.nvim_create_autocmd('LspDetach', {
+  callback = function(args)
+    local bufnr = args.buf
+    local ft = vim.bo[bufnr].filetype
+    if in_list(ft, FORCE_DISABLE_FT) then
+      return
+    end
+
+    local clients = vim.lsp.get_clients { bufnr = bufnr }
+    if not clients or #clients == 0 then
+      vim.api.nvim_buf_set_option(bufnr, 'foldmethod', 'manual')
+      vim.api.nvim_buf_set_option(bufnr, 'foldexpr', '')
+      pcall(vim.cmd, 'normal! zR')
     end
   end,
 })

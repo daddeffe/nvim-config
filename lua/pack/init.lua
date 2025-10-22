@@ -6,8 +6,8 @@ require 'pack.ui'
 
 -- Development tools
 require 'pack.lsp'
-require 'pack.completion'
 require 'pack.treesitter'
+require 'pack.completion'
 
 -- Editor enhancements
 require 'pack.editing'
@@ -18,11 +18,15 @@ require 'pack.tools'
 require 'pack.plugins_extra'
 
 -- Load plugins from lua/plugins/ directory
-local plugins_path = vim.fn.stdpath('config') .. '/lua/plugins'
-if vim.fn.isdirectory(plugins_path) == 1 then
-  local plugins = vim.fn.glob(plugins_path .. '/*.lua', false, true)
-  for _, plugin_file in ipairs(plugins) do
-    local plugin_name = vim.fn.fnamemodify(plugin_file, ':t:r')
-    pcall(require, 'plugins.' .. plugin_name)
+local fs = vim.fs -- nvim ≥ 0.9
+local plugins_dir = fs.joinpath(vim.fn.stdpath 'config', 'lua', 'plugins')
+
+if vim.fn.isdirectory(plugins_dir) == 1 then
+  local pattern = fs.joinpath(plugins_dir, '*.lua')
+  for _, plugin_file in ipairs(vim.fn.glob(pattern, true, true)) do
+    local ok, err = pcall(dofile, plugin_file) -- carica ed esegue il file
+    if not ok then
+      vim.notify(('Errore in %s: %s'):format(plugin_file, err), vim.log.levels.ERROR)
+    end
   end
 end

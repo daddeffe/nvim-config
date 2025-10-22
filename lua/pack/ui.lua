@@ -12,46 +12,23 @@ vim.pack.add {
 
 require('lualine').setup {
   options = {
-    icons_enabled = true,
-    component_separators = { left = '⋗', right = '⋖' },
+    component_separators = { left = '', right = '' },
     section_separators = { left = '', right = '' },
-    disabled_filetypes = {
-      statusline = {},
-      winbar = {},
-    },
-    ignore_focus = {},
-    always_divide_middle = true,
-    always_show_tabline = true,
-    globalstatus = true,
-    refresh = {
-      statusline = 1000,
-      tabline = 1000,
-      winbar = 1000,
-      refresh_time = 16, -- ~60fps
-      events = {
-        'WinEnter',
-        'BufEnter',
-        'BufWritePost',
-        'SessionLoadPost',
-        'FileChangedShellPost',
-        'VimResized',
-        'Filetype',
-        'CursorMoved',
-        'CursorMovedI',
-        'ModeChanged',
-      },
-    },
   },
-  tabline = {},
-  winbar = {},
-  extensions = { 'oil', 'fzf', 'man', 'mason' },
+  extensions = { 'undotree', 'oil', 'fzf', 'man', 'mason' },
   sections = {
     lualine_a = {
-      'mode',
-      'tabs',
+      {
+        'mode',
+      },
+      {
+        'tabs',
+      },
     },
     lualine_b = {
-      'windows',
+      {
+        'buffers',
+      },
     },
     lualine_c = {
       'branch',
@@ -59,14 +36,8 @@ require('lualine').setup {
       'diagnostics',
     },
     lualine_x = {
-      {
-        color = { fg = 'lightgray', gui = 'italic,bold' },
-        'progress',
-      },
-      {
-        color = { fg = 'lightgray', gui = 'italic' },
-        'location',
-      },
+      'progress',
+      'location',
     },
     lualine_y = {
       'encoding',
@@ -76,15 +47,6 @@ require('lualine').setup {
     lualine_z = {
       'lsp_status',
     },
-  },
-  inactive_sections = {
-    -- these are to remove the defaults
-    lualine_a = {},
-    lualine_b = {},
-    lualine_y = {},
-    lualine_z = {},
-    lualine_c = {},
-    lualine_x = {},
   },
 }
 
@@ -137,6 +99,7 @@ require('catppuccin').setup {
   },
 }
 
+--vim.notify(vim.inspect(require('lualine').get_config()))
 -- setup must be called before loading
 vim.cmd.colorscheme 'catppuccin'
 
@@ -164,7 +127,7 @@ require('noice').setup {
   presets = {
     bottom_search = true, -- use a classic bottom cmdline for search
     command_palette = true, -- position the cmdline and popupmenu together
-    long_message_to_split = false, -- long messages will be sent to a split
+    long_message_to_split = true, -- long messages will be sent to a split
   },
 }
 

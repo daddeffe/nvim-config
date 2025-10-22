@@ -31,10 +31,8 @@ require('nvim-treesitter.configs').setup {
     --  the list of additional_vim_regex_highlighting and disabled languages for indent.
     -- additional_vim_regex_highlighting = { 'ruby' },
   },
-  indent = {
-    enable = true,
-    -- disable = { 'ruby' }
-  },
+  --indent = { enable = false },
+  --fold = { enable = false },
 }
 
 -- Build treesitter parsers on first run
@@ -45,4 +43,3 @@ vim.api.nvim_create_autocmd('VimEnter', {
   end,
   once = true,
 })
-

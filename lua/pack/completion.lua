@@ -49,7 +49,10 @@ if blink_ok then
     completion = {
       -- By default, you may press `<c-space>` to show the documentation.
       -- Optionally, set `auto_show = true` to show the documentation after a delay.
-      documentation = { auto_show = true, auto_show_delay_ms = 500 },
+      documentation = {
+        auto_show_delay_ms = 500,
+        treesitter_highlighting = true,
+      },
     },
 
     sources = {
@@ -69,7 +72,6 @@ if blink_ok then
     -- Shows a signature help window while you type arguments for a function
     signature = {
       enabled = true,
-      auto_show = true,
     },
   }
 end
@@ -81,6 +83,9 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdLineEnter' }, {
     if cmp_ok then
       -- `:` cmdline setup.
       cmp.setup.cmdline(':', {
+        completion = {
+          completeopt = 'menu,menuone',
+        },
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
           { name = 'path' },
@@ -90,7 +95,7 @@ vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdLineEnter' }, {
             option = {
               ignore_cmds = {
                 --'Man',
-                '!',
+                -- '!',
               },
             },
           },

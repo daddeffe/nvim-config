@@ -11,15 +11,6 @@ vim.pack.add {
 
   -- Vim Coach
   'https://github.com/shahshlok/vim-coach.nvim',
-
-  -- Session management
-  'https://github.com/jedrzejboczar/possession.nvim',
-
-  -- Videre - Graph viewer
-  'https://github.com/Owen-Dechow/videre.nvim',
-  'https://github.com/Owen-Dechow/graph_view_yaml_parser',
-  'https://github.com/Owen-Dechow/graph_view_toml_parser',
-  'https://github.com/a-usr/xml2lua.nvim',
 }
 
 -- Load optional packages
@@ -27,11 +18,6 @@ vim.cmd.packadd 'markview.nvim'
 vim.cmd.packadd 'claudecode.nvim'
 vim.cmd.packadd 'snacks.nvim'
 vim.cmd.packadd 'vim-coach.nvim'
-vim.cmd.packadd 'possession.nvim'
-vim.cmd.packadd 'videre.nvim'
-vim.cmd.packadd 'graph_view_yaml_parser'
-vim.cmd.packadd 'graph_view_toml_parser'
-vim.cmd.packadd 'xml2lua.nvim'
 --
 -- Configure Store.nvim
 vim.keymap.set('n', '<leader>S', '<cmd>Store<cr>', { desc = 'Open Plugin Store' })
@@ -67,115 +53,56 @@ if claudecode_ok then
   vim.keymap.set('n', '<leader>cd', '<cmd>ClaudeCodeDiffDeny<cr>', { desc = 'Deny diff' })
 end
 
+-- Autocomando che intercetta apertura in modalità diff
+vim.api.nvim_create_autocmd('BufReadPost', {
+  callback = function(args)
+    -- Se non siamo in modalità diff, esci
+    if not vim.wo.diff then
+      return
+    end
+
+    local buf = args.buf
+    local file = vim.api.nvim_buf_get_name(buf)
+    if file == '' then
+      return
+    end
+
+    -- Cerca se il file è già aperto in un’altra finestra
+    local target_buf = vim.fn.bufnr(file, false)
+    local target_win = vim.fn.bufwinid(target_buf)
+
+    if target_win ~= -1 and target_win ~= vim.api.nvim_get_current_win() then
+      -- Il buffer è già visibile da un'altra parte
+      -- Rimuovi diff dallo split corrente per non sovrapporre
+      vim.cmd 'diffoff'
+
+      -- Sposta la modalità diff nella finestra originale
+      local current_win = vim.api.nvim_get_current_win()
+      vim.api.nvim_set_current_win(target_win)
+      vim.cmd 'diffthis'
+      vim.api.nvim_set_current_win(current_win)
+
+      -- Notifica (opzionale)
+      vim.notify('Diff riassegnato alla finestra già aperta per: ' .. file, vim.log.levels.INFO)
+    else
+      -- Se non esiste, crea diff verticale
+      vim.cmd('vertical diffsplit ' .. vim.fn.fnameescape(file))
+    end
+  end,
+})
+
+-- Autocomand per entrare in modalita' insert entrando in un buffer terminale
+vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter' }, {
+  group = group,
+  pattern = 'term://*',
+  callback = function()
+    vim.cmd 'startinsert'
+  end,
+})
+
 -- Configure Vim Coach
 local coach_ok, coach = pcall(require, 'vim-coach')
 if coach_ok then
   coach.setup()
   vim.keymap.set('n', '<leader>?', '<cmd>VimCoach<cr>', { desc = 'Vim Coach' })
-end
-
--- Configure Possession (session management)
-local possession_ok, possession = pcall(require, 'possession')
-if possession_ok then
-  possession.setup {
-    silent = false,
-    load_silent = true,
-    debug = false,
-    logfile = false,
-    prompt_no_cr = false,
-    autosave = {
-      current = false,
-      cwd = false,
-      tmp = false,
-      tmp_name = 'tmp',
-      on_load = true,
-      on_quit = true,
-    },
-    autoload = false,
-    commands = {
-      save = 'PossessionSave',
-      load = 'PossessionLoad',
-      save_cwd = 'PossessionSaveCwd',
-      load_cwd = 'PossessionLoadCwd',
-      rename = 'PossessionRename',
-      close = 'PossessionClose',
-      delete = 'PossessionDelete',
-      show = 'PossessionShow',
-      pick = 'PossessionPick',
-      list = 'PossessionList',
-      list_cwd = 'PossessionListCwd',
-      migrate = 'PossessionMigrate',
-    },
-    hooks = {
-      before_save = function(name)
-        return {}
-      end,
-      after_save = function(name, user_data, aborted) end,
-      before_load = function(name, user_data)
-        return user_data
-      end,
-      after_load = function(name, user_data) end,
-    },
-    plugins = {
-      close_windows = {
-        hooks = { 'before_save', 'before_load' },
-        preserve_layout = true,
-        match = {
-          floating = true,
-          buftype = {},
-          filetype = {},
-          custom = false,
-        },
-      },
-      delete_hidden_buffers = {
-        hooks = {
-          'before_load',
-          vim.o.sessionoptions:match 'buffer' and 'before_save',
-        },
-        force = false,
-      },
-      nvim_tree = true,
-      neo_tree = true,
-      symbols_outline = true,
-      outline = true,
-      tabby = true,
-      dap = true,
-      dapui = true,
-      neotest = true,
-      kulala = true,
-      delete_buffers = false,
-      stop_lsp_clients = false,
-    },
-    telescope = {
-      previewer = {
-        enabled = true,
-        previewer = 'pretty',
-        wrap_lines = true,
-        include_empty_plugin_data = false,
-        cwd_colors = {
-          cwd = 'Comment',
-          tab_cwd = { '#cc241d', '#b16286', '#d79921', '#689d6a', '#d65d0e', '#458588' },
-        },
-      },
-      list = {
-        default_action = 'load',
-        mappings = {
-          save = { n = '<c-x>', i = '<c-x>' },
-          load = { n = '<c-v>', i = '<c-v>' },
-          delete = { n = '<c-t>', i = '<c-t>' },
-          rename = { n = '<c-r>', i = '<c-r>' },
-          grep = { n = '<c-g>', i = '<c-g>' },
-          find = { n = '<c-f>', i = '<c-f>' },
-        },
-      },
-    },
-  }
-end
-
--- Configure Videre
-local videre_ok, videre = pcall(require, 'videre')
-if videre_ok then
-  videre.setup {
-    round_units = false,
-  }
 end

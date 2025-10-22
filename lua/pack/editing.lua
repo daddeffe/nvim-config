@@ -16,11 +16,11 @@ vim.pack.add {
 }
 
 -- Load optional packages
-vim.cmd.packadd('nvim-autopairs')
-vim.cmd.packadd('nvim-origami')
-vim.cmd.packadd('indent-blankline.nvim')
-vim.cmd.packadd('todo-comments.nvim')
-vim.cmd.packadd('nvim-colorizer.lua')
+vim.cmd.packadd 'nvim-autopairs'
+vim.cmd.packadd 'nvim-origami'
+vim.cmd.packadd 'indent-blankline.nvim'
+vim.cmd.packadd 'todo-comments.nvim'
+vim.cmd.packadd 'nvim-colorizer.lua'
 
 -- Configure autopairs
 local autopairs_ok, autopairs = pcall(require, 'nvim-autopairs')
