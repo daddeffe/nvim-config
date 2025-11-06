@@ -131,7 +131,6 @@ vim.keymap.set('i', '<C-l>', '<Right>')
 
 vim.keymap.set('n', '<leader>x', ':bdelete<CR>', { desc = '[X]Delete Buffer', silent = true })
 vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = '[W]rite file', silent = true })
-vim.keymap.set('n', '<leader>q ', ':qa<CR>', { desc = '[Q]Close all', silent = true })
 
 vim.keymap.set('n', '<leader><leader>', ':lua vim.cmd.so()<CR>', { desc = 'Source file', silent = true })
 

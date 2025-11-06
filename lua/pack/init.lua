@@ -39,7 +39,3 @@ if vim.fn.isdirectory(plugins_dir) == 1 then
     end
   end
 end
-
-vim.schedule(function()
-  vim.notify 'Plugin caricati'
-end)

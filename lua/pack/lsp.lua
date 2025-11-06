@@ -122,7 +122,6 @@ vim.api.nvim_create_autocmd({
       vim.o.list = false
     else
       lint.try_lint()
-      vim.notify 'Linted'
       vim.opt.colorcolumn = '85'
       vim.o.list = true
     end
