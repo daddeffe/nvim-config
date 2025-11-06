@@ -95,6 +95,9 @@ vim.o.scrolloff = 8
 
 vim.o.confirm = true
 
+vim.o.autoread = true
+vim.o.autowrite = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 

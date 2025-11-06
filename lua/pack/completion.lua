@@ -27,11 +27,11 @@ require('lazydev').setup {
 
 -- Configure LuaSnip
 local luasnip_ok, luasnip = pcall(require, 'luasnip')
---if luasnip_ok then
---  require('luasnip.loaders.from_vscode').lazy_load()
---  -- Enable friendly-snippets
---  require('luasnip.loaders.from_vscode').lazy_load { paths = vim.fn.stdpath 'data' .. '/site/pack/*/start/friendly-snippets' }
---end
+if luasnip_ok then
+  require('luasnip.loaders.from_vscode').lazy_load()
+  -- Enable friendly-snippets
+  require('luasnip.loaders.from_vscode').lazy_load { paths = vim.fn.stdpath 'data' .. '/site/pack/*/start/friendly-snippets' }
+end
 
 -- Configure cmp
 local cmp = require 'cmp'
@@ -81,7 +81,7 @@ cmp.setup {
   -- Completion behavior
   completion = {
     keyword_length = 1,
-    completeopt = 'menu,menuone',
+    completeopt = 'menu,menuone,noinsert,preview',
     autocomplete = {
       require('cmp.types').cmp.TriggerEvent.TextChanged,
     },
@@ -151,11 +151,11 @@ cmp.setup {
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
-    ['<CR>'] = cmp.mapping.confirm { select = true },
-    ['<S-CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
-    },
+    -- CR in insert mode: always insert newline (no confirm)
+    ['<CR>'] = cmp.mapping(function(fallback)
+      fallback()
+    end, { 'i', 's' }),
+    -- Tab: navigate completion menu
     ['<Tab>'] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -174,6 +174,7 @@ cmp.setup {
         fallback()
       end
     end, { 'i', 's' }),
+
     ['<C-l>'] = cmp.mapping(function()
       if luasnip_ok and luasnip.expand_or_locally_jumpable() then
         luasnip.expand_or_jump()
@@ -279,9 +280,29 @@ cmp.setup {
   },
 }
 
+-- Common cmdline mappings (shared between search and command mode)
+local cmdline_mapping = cmp.mapping.preset.cmdline {
+  ['<CR>'] = cmp.mapping.confirm { select = true },
+  ['<Space>'] = cmp.mapping(function(fallback)
+    if cmp.visible() and cmp.get_selected_entry() then
+      cmp.confirm { select = true }
+    end
+    fallback()
+  end, { 'c' }),
+  ['<Tab>'] = cmp.mapping(function(fallback)
+    if cmp.visible() then
+      cmp.select_next_item()
+    else
+      fallback()
+    end
+  end, { 'c' }),
+  ['<C-n>'] = cmp.mapping.select_next_item(),
+  ['<C-p>'] = cmp.mapping.select_prev_item(),
+}
+
 -- Search mode completion
 cmp.setup.cmdline({ '/', '?' }, {
-  mapping = cmp.mapping.preset.cmdline(),
+  mapping = cmdline_mapping,
   sources = {
     {
       name = 'buffer',
@@ -290,14 +311,11 @@ cmp.setup.cmdline({ '/', '?' }, {
       },
     },
   },
-  view = {
-    entries = { name = 'wildmenu', separator = ' | ' },
-  },
 })
 
 -- Command mode completion
 cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline(),
+  mapping = cmdline_mapping,
   sources = cmp.config.sources({
     {
       name = 'path',
