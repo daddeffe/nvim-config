@@ -1,4 +1,4 @@
-vim.pack.add {
+vim.pack.add({
   -- VSCode like winbar
   'https://github.com/utilyre/barbecue.nvim',
   'https://github.com/SmiteshP/nvim-navic',
@@ -9,7 +9,9 @@ vim.pack.add {
 
   -- Macro management
   'https://github.com/sahilsehwag/macrobank.nvim',
-}
+}, {
+  confirm = false,
+})
 
 -- Configure barbecue
 require('barbecue').setup {

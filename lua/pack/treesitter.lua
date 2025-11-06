@@ -1,7 +1,9 @@
-vim.pack.add {
+vim.pack.add({
   -- MAIN: Treesitter for syntax highlighting and more
   'https://github.com/nvim-treesitter/nvim-treesitter',
-}
+}, {
+  confirm = false,
+})
 
 -- Configure Treesitter
 require('nvim-treesitter.configs').setup {

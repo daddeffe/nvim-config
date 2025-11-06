@@ -1,7 +1,4 @@
-vim.pack.add {
-  -- Modern autocompletion
-  'https://github.com/saghen/blink.cmp',
-
+vim.pack.add({
   -- Snippet engine and snippets
   'https://github.com/L3MON4D3/LuaSnip',
   'https://github.com/rafamadriz/friendly-snippets',
@@ -11,8 +8,14 @@ vim.pack.add {
 
   -- Command line completion
   'https://github.com/hrsh7th/nvim-cmp',
+  'https://github.com/hrsh7th/cmp-nvim-lsp',
+  'https://github.com/hrsh7th/cmp-buffer',
+  'https://github.com/hrsh7th/cmp-path',
   'https://github.com/hrsh7th/cmp-cmdline',
-}
+  'https://github.com/saadparwaiz1/cmp_luasnip',
+}, {
+  confirm = false,
+})
 
 -- Configure lazydev for Lua LSP
 require('lazydev').setup {
@@ -24,84 +27,334 @@ require('lazydev').setup {
 
 -- Configure LuaSnip
 local luasnip_ok, luasnip = pcall(require, 'luasnip')
-if luasnip_ok then
-  require('luasnip.loaders.from_vscode').lazy_load()
-end
+--if luasnip_ok then
+--  require('luasnip.loaders.from_vscode').lazy_load()
+--  -- Enable friendly-snippets
+--  require('luasnip.loaders.from_vscode').lazy_load { paths = vim.fn.stdpath 'data' .. '/site/pack/*/start/friendly-snippets' }
+--end
 
--- Configure blink.cmp
-local blink_ok, blink = pcall(require, 'blink.cmp')
-if blink_ok then
-  blink.setup {
-    keymap = {
-      -- All presets have the following mappings:
-      -- <tab>/<s-tab>: move to right/left of your snippet expansion
-      -- <c-space>: Open menu or open docs if already open
-      -- <c-n>/<c-p> or <up>/<down>: Select next/previous item
-      -- <c-e>: Hide menu
-      -- <c-k>: Toggle signature help
-      preset = 'default',
-    },
+-- Configure cmp
+local cmp = require 'cmp'
 
-    appearance = {
-      nerd_font_variant = 'normal',
-    },
+-- Icons for completion kinds
+local kind_icons = {
+  Text = '󰉿',
+  Method = '󰆧',
+  Function = '󰊕',
+  Field = '󰜢',
+  Variable = '󰀫',
+  Class = '󰠱',
+  Property = '󰜢',
+  Unit = '󰑭',
+  Value = '󰎠',
+  Keyword = '󰌋',
+  Color = '󰏘',
+  File = '󰈙',
+  Reference = '󰈇',
+  Folder = '󰉋',
+  Constant = '󰏿',
+  Struct = '󰙅',
+  Operator = '󰆕',
+}
 
-    completion = {
-      -- By default, you may press `<c-space>` to show the documentation.
-      -- Optionally, set `auto_show = true` to show the documentation after a delay.
-      documentation = {
-        auto_show_delay_ms = 500,
-        treesitter_highlighting = true,
-      },
-    },
-
-    sources = {
-      default = { 'lsp', 'path', 'snippets', 'lazydev' },
-      providers = {
-        lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
-      },
-    },
-
-    snippets = { preset = 'luasnip' },
-
-    -- Blink.cmp includes an optional, recommended rust fuzzy matcher,
-    -- which automatically downloads a prebuilt binary when enabled.
-    -- By default, we use the Lua implementation instead
-    fuzzy = { implementation = 'lua' },
-
-    -- Shows a signature help window while you type arguments for a function
-    signature = {
-      enabled = true,
-    },
-  }
-end
-
--- Configure nvim-cmp for command line
-vim.api.nvim_create_autocmd({ 'InsertEnter', 'CmdLineEnter' }, {
-  callback = function()
-    local cmp_ok, cmp = pcall(require, 'cmp')
-    if cmp_ok then
-      -- `:` cmdline setup.
-      cmp.setup.cmdline(':', {
-        completion = {
-          completeopt = 'menu,menuone',
-        },
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { name = 'path' },
-        }, {
-          {
-            name = 'cmdline',
-            option = {
-              ignore_cmds = {
-                --'Man',
-                -- '!',
-              },
-            },
-          },
-        }),
-      })
+cmp.setup {
+  -- Enable/disable completion
+  enabled = function()
+    -- Disable in comments
+    local context = require 'cmp.config.context'
+    if vim.api.nvim_get_mode().mode == 'c' then
+      return true
+    else
+      return not context.in_treesitter_capture 'comment' and not context.in_syntax_group 'Comment'
     end
   end,
-  once = true,
+
+  -- Snippet configuration
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
+      -- Also support native snippets for Neovim 0.10+
+      vim.snippet.expand(args.body)
+    end,
+  },
+
+  -- Completion behavior
+  completion = {
+    keyword_length = 1,
+    completeopt = 'menu,menuone',
+    autocomplete = {
+      require('cmp.types').cmp.TriggerEvent.TextChanged,
+    },
+  },
+
+  -- Preselect first item
+  preselect = cmp.PreselectMode.Item,
+
+  -- Window configuration
+  window = {
+    completion = cmp.config.window.bordered {
+      border = 'rounded',
+      winhighlight = 'Normal:Normal,FloatBorder:FloatBorder,CursorLine:Visual,Search:None',
+      scrollbar = true,
+    },
+    documentation = cmp.config.window.bordered {
+      border = 'rounded',
+      winhighlight = 'Normal:Normal,FloatBorder:FloatBorder,CursorLine:Visual,Search:None',
+      max_width = 80,
+      max_height = 20,
+    },
+  },
+
+  -- View configuration
+  view = {
+    entries = {
+      name = 'custom',
+      selection_order = 'near_cursor',
+    },
+    docs = {
+      auto_open = true,
+    },
+  },
+
+  -- Formatting
+  formatting = {
+    fields = { 'kind', 'abbr', 'menu' },
+    expandable_indicator = true,
+    format = function(entry, vim_item)
+      -- Add icons
+      if kind_icons[vim_item.kind] then
+        vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind)
+      end
+
+      -- Truncate long items
+      local max_width = 50
+      if #vim_item.abbr > max_width then
+        vim_item.abbr = vim.fn.strcharpart(vim_item.abbr, 0, max_width - 1) .. '…'
+      end
+
+      -- Add source name
+      vim_item.menu = ({
+        nvim_lsp = '[LSP]',
+        luasnip = '[Snippet]',
+        buffer = '[Buffer]',
+        path = '[Path]',
+        lazydev = '[Lazy]',
+      })[entry.source.name]
+
+      return vim_item
+    end,
+  },
+
+  -- Mapping
+  mapping = cmp.mapping.preset.insert {
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm { select = true },
+    ['<S-CR>'] = cmp.mapping.confirm {
+      behavior = cmp.ConfirmBehavior.Replace,
+      select = true,
+    },
+    ['<Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip_ok and luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+    ['<S-Tab>'] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip_ok and luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+    ['<C-l>'] = cmp.mapping(function()
+      if luasnip_ok and luasnip.expand_or_locally_jumpable() then
+        luasnip.expand_or_jump()
+      end
+    end, { 'i', 's' }),
+    ['<C-h>'] = cmp.mapping(function()
+      if luasnip_ok and luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      end
+    end, { 'i', 's' }),
+  },
+
+  -- Sources configuration
+  sources = cmp.config.sources({
+    {
+      name = 'lazydev',
+      group_index = 0,
+    },
+    {
+      name = 'nvim_lsp',
+      priority = 1000,
+      max_item_count = 50,
+      entry_filter = function(entry, ctx)
+        -- Filter out Text kind from LSP
+        local kind = require('cmp.types').lsp.CompletionItemKind[entry:get_kind()]
+        if kind == 'Text' then
+          return false
+        end
+        return true
+      end,
+    },
+    {
+      name = 'luasnip',
+      priority = 750,
+      max_item_count = 10,
+      keyword_length = 2,
+    },
+    {
+      name = 'path',
+      priority = 500,
+      max_item_count = 20,
+      keyword_length = 3,
+    },
+  }, {
+    {
+      name = 'buffer',
+      priority = 250,
+      max_item_count = 10,
+      keyword_length = 3,
+      option = {
+        get_bufnrs = function()
+          -- Complete from all visible buffers
+          local bufs = {}
+          for _, win in ipairs(vim.api.nvim_list_wins()) do
+            bufs[vim.api.nvim_win_get_buf(win)] = true
+          end
+          return vim.tbl_keys(bufs)
+        end,
+      },
+    },
+  }),
+
+  -- Matching configuration
+  matching = {
+    disallow_fuzzy_matching = false,
+    disallow_fullfuzzy_matching = false,
+    disallow_partial_fuzzy_matching = false,
+    disallow_partial_matching = false,
+    disallow_prefix_unmatching = false,
+    disallow_symbol_nonprefix_matching = false,
+  },
+
+  -- Sorting
+  sorting = {
+    priority_weight = 2,
+    comparators = {
+      cmp.config.compare.offset,
+      cmp.config.compare.exact,
+      cmp.config.compare.score,
+      cmp.config.compare.recently_used,
+      cmp.config.compare.locality,
+      cmp.config.compare.kind,
+      cmp.config.compare.length,
+      cmp.config.compare.order,
+    },
+  },
+
+  -- Performance
+  performance = {
+    debounce = 60,
+    throttle = 30,
+    fetching_timeout = 500,
+    confirm_resolve_timeout = 80,
+    async_budget = 1,
+    max_view_entries = 200,
+  },
+
+  -- Experimental features
+  experimental = {
+    ghost_text = {
+      hl_group = 'CmpGhostText',
+    },
+  },
+}
+
+-- Search mode completion
+cmp.setup.cmdline({ '/', '?' }, {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    {
+      name = 'buffer',
+      option = {
+        keyword_pattern = [[\k\+]],
+      },
+    },
+  },
+  view = {
+    entries = { name = 'wildmenu', separator = ' | ' },
+  },
 })
+
+-- Command mode completion
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    {
+      name = 'path',
+      option = { trailing_slash = true },
+    },
+  }, { { name = 'cmdline' } }),
+  matching = { disallow_symbol_nonprefix_matching = false },
+})
+
+-- Setup LSP capabilities and export them
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+-- Additional capabilities for better LSP support
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.textDocument.completion.completionItem.resolveSupport = {
+  properties = {
+    'documentation',
+    'detail',
+    'additionalTextEdits',
+  },
+}
+
+-- Dynamically assign capabilities to all LSP servers
+-- This function updates all configured LSP servers with cmp capabilities
+local function update_lsp_capabilities()
+  local lspconfig_ok, lspconfig = pcall(require, 'lspconfig')
+  if not lspconfig_ok then
+    return
+  end
+
+  -- Get all available LSP configurations
+  local util = require 'lspconfig.util'
+  local configs = require 'lspconfig.configs'
+
+  -- Iterate through all configured servers and update their capabilities
+  for server_name, config in pairs(configs) do
+    if config and config.manager then
+      -- Server is already configured, update its default config
+      local default_config = config.manager.config
+      if default_config then
+        default_config.capabilities = vim.tbl_deep_extend('force', default_config.capabilities or {}, capabilities)
+      end
+    end
+  end
+
+  -- Also update any active LSP clients
+  local clients = vim.lsp.get_clients()
+  for _, client in ipairs(clients) do
+    if client.config and client.config.capabilities then
+      client.config.capabilities = vim.tbl_deep_extend('force', client.config.capabilities, capabilities)
+    end
+  end
+
+  vim.notify('LSP capabilities updated with nvim-cmp support', vim.log.levels.INFO)
+end
+
+-- Update capabilities when this module loads (after lsp.lua)
+vim.schedule(function()
+  update_lsp_capabilities()
+end)

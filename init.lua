@@ -68,6 +68,13 @@ vim.opt.listchars = {
   nbsp = '␣',
 }
 
+--folding
+
+--vim.o.foldmethod = 'expr' -- Definisci i fold usando un'espressione
+vim.o.foldlevel = 99 -- Apri tutti i fold di default all'apertura di un file
+--vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Usa Treesitter per il folding
+vim.opt.foldtext = '' -- Evidenzia la sintassi della prima riga del fold
+
 -- length of an actual \t character:
 vim.o.tabstop = 2
 vim.o.softtabstop = -1
@@ -91,7 +98,7 @@ vim.o.confirm = true
 -- Clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list', silent = true })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -119,19 +126,20 @@ vim.keymap.set('i', '<C-j>', '<Down>')
 vim.keymap.set('i', '<C-k>', '<Up>')
 vim.keymap.set('i', '<C-l>', '<Right>')
 
-vim.keymap.set('n', '<leader>x', ':bdelete<CR>', { desc = '[X]Delete Buffer' })
-vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = '[W]rite file' })
-vim.keymap.set('n', '<leader>Q', ':qa<CR>', { desc = '[Q]Close all' })
+vim.keymap.set('n', '<leader>x', ':bdelete<CR>', { desc = '[X]Delete Buffer', silent = true })
+vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = '[W]rite file', silent = true })
+vim.keymap.set('n', '<leader>q ', ':qa<CR>', { desc = '[Q]Close all', silent = true })
 
-vim.keymap.set('n', '<leader>s', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = 'Sed current line' })
-vim.keymap.set('n', '<leader><leader>', ':lua vim.cmd.so()<CR>', { desc = 'Source file' })
+vim.keymap.set('n', '<leader><leader>', ':lua vim.cmd.so()<CR>', { desc = 'Source file', silent = true })
 
 -- create a keymap to exit from insert mode and save the file when pressing jk
-vim.keymap.set('i', 'jk', '<Esc>:w<CR>', { desc = 'Exit insert mode and save file' })
+vim.keymap.set('i', 'jk', '<Esc><CR>', { desc = 'Exit insert mode', silent = true })
 
 -- Move block in visual line
-vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
-vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+vim.keymap.set('v', 'J', ":m '>+1<CR>", { silent = true })
+vim.keymap.set('v', 'K', ":m '<-2<CR>", { silent = true })
+
+vim.keymap.set('n', '<leader>D', ':lua Snacks.dashboard()<CR>', { silent = true })
 
 -- Force cursor at center during J, nav and serach
 vim.keymap.set('n', 'J', 'mzJ`z')
@@ -139,6 +147,15 @@ vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 vim.keymap.set('n', 'n', 'nzzzv')
 vim.keymap.set('n', 'N', 'Nzzzv')
+
+-- No more Q
+vim.keymap.set('n', 'Q', '<nop>')
+
+-- Easy
+vim.keymap.set('i', '<C-c>', '<Esc>')
+
+-- No super interpreted
+vim.keymap.set({ 'n', 'i', 'v' }, '<Super>', '<Nop>', { silent = true })
 
 -- Paste with yanking to null reg
 vim.keymap.set('x', '<leader>p', '"_dP', { desc = 'Paste without overvrite last yank' })
@@ -161,6 +178,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
   callback = function()
     vim.hl.on_yank()
+
+    -- The line beneath this is called `modeline`. See `:help modeline`
+    -- vim: ts=2 sts=2 sw=2 et
   end,
 })
 

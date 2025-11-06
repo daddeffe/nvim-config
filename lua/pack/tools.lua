@@ -1,4 +1,4 @@
-vim.pack.add {
+vim.pack.add({
   -- Plugin store
   'https://github.com/alex-popov-tech/store.nvim',
 
@@ -15,7 +15,9 @@ vim.pack.add {
 
   -- AutoReload file
   'https://github.com/manuuurino/autoread.nvim',
-}
+}, {
+  confirm = false,
+})
 
 -- Load optional packages
 vim.cmd.packadd 'store.nvim'

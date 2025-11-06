@@ -1,3 +1,12 @@
+-- Add custom packpath
+vim.opt.packpath:append(vim.fn.expand '~/.local/share/nvim/site/pack/core')
+
+-- Compatibility shim for deprecated vim.tbl_flatten
+vim.tbl_flatten = function(t)
+  return vim.iter(t):flatten():totable()
+end
+
+counter = 0
 -- Core dependencies and shared libraries
 require 'pack.core'
 
@@ -30,3 +39,7 @@ if vim.fn.isdirectory(plugins_dir) == 1 then
     end
   end
 end
+
+vim.schedule(function()
+  vim.notify 'Plugin caricati'
+end)

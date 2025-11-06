@@ -1,4 +1,4 @@
-vim.pack.add {
+vim.pack.add({
   -- LSP Configuration
   'https://github.com/neovim/nvim-lspconfig',
 
@@ -13,7 +13,9 @@ vim.pack.add {
   'https://github.com/mason-org/mason.nvim',
   'https://github.com/mason-org/mason-lspconfig.nvim',
   'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
-}
+}, {
+  confirm = false,
+})
 
 -- IMPORTANT: Initialize Mason BEFORE mason-lspconfig
 require('mason').setup {}
@@ -65,18 +67,64 @@ lint.linters_by_ft = {
   markdown = { 'markdownlint' },
 }
 
--- Create autocommand for linting
+local FORCE_DISABLE_FT = {
+  'DiffviewFiles',
+  'Oil',
+  'Telescope',
+  'TelescopePrompt',
+  'Trouble',
+  'alpha',
+  'checkhealth',
+  'dap-repl',
+  'dashboard',
+  'fugitive',
+  'git',
+  'help',
+  'lazy',
+  'mason',
+  'md',
+  'nofile',
+  'oil',
+  'promt',
+  'qf',
+}
+
+local function in_list(ft, list)
+  for _, v in ipairs(list) do
+    if v == ft then
+      return true
+    end
+  end
+  return false
+end
+
+-- -- Create autocommand for linting
 local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
 vim.api.nvim_create_autocmd({
   'BufEnter',
+  'BufWinEnter',
   'BufWritePost',
   'InsertLeave',
+  'TermEnter',
+  'TextChanged',
 }, {
   group = lint_augroup,
   callback = function()
     -- Only run the linter in buffers that you can modify
-    if vim.bo.modifiable then
+    --vim.notify(vim.inspect {
+    --  mod = vim.bo.modifiable,
+    --  buft = in_list(vim.bo.buftype, FORCE_DISABLE_FT),
+    --  ft = in_list(vim.bo.ft, FORCE_DISABLE_FT),
+    --})
+    if not vim.bo.modifiable or (in_list(vim.bo.buftype, FORCE_DISABLE_FT) or in_list(vim.bo.ft, FORCE_DISABLE_FT)) then
+      vim.opt.colorcolumn = '0'
+      --vim.notify 'Disabled lint'
+      vim.o.list = false
+    else
       lint.try_lint()
+      vim.notify 'Linted'
+      vim.opt.colorcolumn = '85'
+      vim.o.list = true
     end
   end,
 })
@@ -160,130 +208,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
-vim.opt.foldmethod = 'manual'
-vim.opt.foldexpr = ''
-
--- 2) Liste
-local FORCE_DISABLE_FT = {
-  'DiffviewFiles',
-  'NvimTree',
-  'TelescopePrompt',
-  'Trouble',
-  'alpha',
-  'checkhealth',
-  'dap-repl',
-  'dashboard',
-  'fugitive',
-  'git',
-  'help',
-  'lazy',
-  'mason',
-  'md',
-  'neo-tree',
-  'oil',
-  'qf',
-}
-
-local TREESITTER_FT = {
-  'lua',
-  'vim',
-  'vimdoc',
-  'python',
-  'typescript',
-  'javascript',
-  'go',
-  'rust',
-  'c',
-  'cpp',
-  'java',
-  'ruby',
-  'php',
-  'json',
-  'yaml',
-  'toml',
-  'markdown',
-}
-
-local function in_list(ft, list)
-  for _, v in ipairs(list) do
-    if v == ft then
-      return true
-    end
-  end
-  return false
-end
-
--- 3) FileType “speciali”: disattiva fold
-vim.api.nvim_create_autocmd('FileType', {
-  callback = function(args)
-    local ft = vim.bo[args.buf].filetype
-    if in_list(ft, FORCE_DISABLE_FT) then
-      vim.api.nvim_buf_set_option(args.buf, 'foldmethod', 'manual')
-      vim.api.nvim_buf_set_option(args.buf, 'foldexpr', '')
-      pcall(vim.cmd, 'normal! zR') -- apri tutto
-    end
-  end,
-})
-
--- 4) Abilita fold LSP solo quando un client si ATTACCA
-vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(args)
-    local bufnr = args.buf
-    local ft = vim.bo[bufnr].filetype
-    if in_list(ft, FORCE_DISABLE_FT) then
-      return
-    end
-
-    -- attiva fold via LSP (Neovim ≥ 0.10)
-    vim.api.nvim_buf_set_option(bufnr, 'foldmethod', 'expr')
-    vim.api.nvim_buf_set_option(bufnr, 'foldexpr', 'v:lua.vim.lsp.foldexpr()')
-  end,
-})
-
--- 5) Se non c’è LSP, fallback opzionale a Treesitter o manual
-vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
-  callback = function(ctx)
-    local bufnr = ctx.buf
-    local ft = vim.bo[bufnr].filetype
-
-    if in_list(ft, FORCE_DISABLE_FT) then
-      return
-    end
-    local clients = vim.lsp.get_clients { bufnr = bufnr }
-    if clients and #clients > 0 then
-      return
-    end
-
-    vim.api.nvim_buf_set_option(bufnr, 'foldmethod', 'manual')
-    vim.api.nvim_buf_set_option(bufnr, 'foldexpr', '')
-
-    -- fallback opzionale Treesitter
-    if in_list(ft, TREESITTER_FT) then
-      vim.api.nvim_buf_set_option(bufnr, 'foldmethod', 'expr')
-      vim.api.nvim_buf_set_option(bufnr, 'foldexpr', 'nvim_treesitter#foldexpr()')
-      pcall(vim.cmd, 'normal! zR')
-    end
-  end,
-})
-
--- 6) Se un LSP si stacca, torna manual
-vim.api.nvim_create_autocmd('LspDetach', {
-  callback = function(args)
-    local bufnr = args.buf
-    local ft = vim.bo[bufnr].filetype
-    if in_list(ft, FORCE_DISABLE_FT) then
-      return
-    end
-
-    local clients = vim.lsp.get_clients { bufnr = bufnr }
-    if not clients or #clients == 0 then
-      vim.api.nvim_buf_set_option(bufnr, 'foldmethod', 'manual')
-      vim.api.nvim_buf_set_option(bufnr, 'foldexpr', '')
-      pcall(vim.cmd, 'normal! zR')
-    end
-  end,
-})
-
 -- Diagnostic Config
 vim.diagnostic.config {
   severity_sort = true,
@@ -312,44 +236,59 @@ vim.diagnostic.config {
   },
 }
 
--- Get LSP capabilities from blink.cmp (if available)
-local capabilities = {}
-local blink_ok, blink = pcall(require, 'blink.cmp')
-if blink_ok then
-  capabilities = blink.get_lsp_capabilities()
-end
-
--- LSP servers configuration
-local servers = {
-  lua_ls = {
-    settings = {
-      Lua = {
-        completion = {
-          callSnippet = 'Replace',
-        },
-      },
-    },
-  },
-}
-
 -- Ensure tools are installed
-local ensure_installed = vim.tbl_keys(servers or {})
+local ensure_installed = vim.tbl_keys {}
 vim.list_extend(ensure_installed, {
-  'stylua', -- Used to format Lua code
+  'duster',
+  'lua_ls',
+  'markdownlint',
+  'pint',
+  'prettier',
+  'stylua',
 })
 require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
 -- Setup LSP servers with mason-lspconfig
 require('mason-lspconfig').setup {
-  ensure_installed = {}, -- explicitly set to empty (populated via mason-tool-installer)
-  automatic_installation = false,
-  handlers = {
-    function(server_name)
-      local server = servers[server_name] or {}
-      -- This handles overriding only values explicitly passed
-      -- by the server configuration above
-      server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-      require('lspconfig')[server_name].setup(server)
-    end,
-  },
+  automatic_installation = true,
+  --handlers = {
+  --  function(server_name)
+  --    local server = servers[server_name] or {}
+  --    -- This handles overriding only values explicitly passed
+  --    -- by the server configuration above
+
+  --    -- Get LSP capabilities from blink.cmp (if available)
+  --    local capabilities = {}
+  --    local blink_ok, blink = pcall(require, 'blink.cmp')
+  --    if blink_ok then
+  --      capabilities = blink.get_lsp_capabilities()
+  --    end
+
+  --    server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+  --    require('lspconfig')[server_name].setup(server)
+  --  end,
+  --},
+  --
 }
+local grp = vim.api.nvim_create_augroup('TermMarkdown', { clear = true })
+
+local function mark_highlight(ev)
+  if vim.bo[ev.buf].buftype == 'terminal' then
+    -- Prova Treesitter, fallback a :syntax
+    pcall(vim.treesitter.start, ev.buf, 'markdown')
+    vim.bo[ev.buf].filetype = 'markdown'
+    vim.cmd 'syntax enable'
+  end
+end
+
+vim.api.nvim_create_autocmd('ModeChanged', {
+  group = grp,
+  pattern = '*:t', -- entrando in terminal-mode
+  callback = mark_highlight,
+})
+
+vim.api.nvim_create_autocmd('ModeChanged', {
+  group = grp,
+  pattern = 't:*', -- uscendo da terminal-mode
+  callback = mark_highlight,
+})

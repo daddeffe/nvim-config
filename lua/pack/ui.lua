@@ -1,4 +1,4 @@
-vim.pack.add {
+vim.pack.add({
   'https://github.com/catppuccin/nvim',
   'https://github.com/nvim-lualine/lualine.nvim',
   'https://github.com/nvim-tree/nvim-web-devicons',
@@ -8,14 +8,17 @@ vim.pack.add {
 
   -- DEPENDENCY for noice: nui.nvim
   'https://github.com/MunifTanjim/nui.nvim',
-}
+}, {
+  confirm = false,
+})
 
 require('lualine').setup {
   options = {
     component_separators = { left = '', right = '' },
     section_separators = { left = '', right = '' },
+    globalstatus = true,
   },
-  extensions = { 'undotree', 'oil', 'fzf', 'man', 'mason' },
+  extensions = { 'oil', 'fzf', 'man', 'mason' },
   sections = {
     lualine_a = {
       {
@@ -115,13 +118,7 @@ require('noice').setup {
   },
   -- Notification settings
   notify = {
-    enabled = true,
-    view = 'notify',
-  },
-  views = {
-    notify = {
-      timeout = 6000,
-    },
+    enabled = false,
   },
   -- you can enable a preset for easier configuration
   presets = {

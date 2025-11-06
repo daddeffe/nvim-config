@@ -1,20 +1,23 @@
 -- Core dependencies used by multiple plugins
-vim.pack.add {
+vim.pack.add({
   -- Core library used by many plugins
   'https://github.com/nvim-lua/plenary.nvim',
 
   -- Icon support
   'https://github.com/nvim-tree/nvim-web-devicons',
 
-  -- Mini.nvim - Collection of minimal, independent plugins
+  -- Mini.nvim & Snacks - Collection of minimal, independent plugins
   'https://github.com/echasnovski/mini.nvim',
+  'https://github.com/folke/snacks.nvim',
 
   -- Package manager UI
   'https://github.com/mplusp/pack-manager.nvim',
 
   -- Keymap helper
   'https://github.com/folke/which-key.nvim',
-}
+}, {
+  confirm = false,
+})
 
 -- Setup pack-manager
 require('pack-manager').setup()
@@ -33,6 +36,195 @@ statusline.setup { use_icons = vim.g.have_nerd_font }
 statusline.section_location = function()
   return '%2l:%-2v'
 end
+
+-- mini.comment - Comment lines
+require('mini.comment').setup()
+
+-- mini.pairs - Autopairs (can replace nvim-autopairs)
+require('mini.pairs').setup()
+
+-- mini.bracketed - Navigate with brackets []
+require('mini.bracketed').setup()
+
+-- mini.bufremove - Delete buffers without closing windows
+require('mini.bufremove').setup()
+
+-- mini.cursorword - Highlight word under cursor
+require('mini.cursorword').setup()
+
+-- mini.hipatterns - Highlight patterns in text (colors, todos, etc)
+require('mini.hipatterns').setup {
+  highlighters = {
+    -- Highlight hex colors
+    hex_color = require('mini.hipatterns').gen_highlighter.hex_color(),
+  },
+}
+
+-- mini.indentscope - Visualize indent scope
+require('mini.indentscope').setup {
+  symbol = '│',
+  options = { try_as_border = true },
+}
+
+-- mini.jump - Jump to next/previous single character
+require('mini.jump').setup()
+
+-- mini.jump2d - Jump to any visible location
+require('mini.jump2d').setup()
+
+-- mini.trailspace - Highlight and remove trailing whitespace
+require('mini.trailspace').setup()
+
+-- mini.notify - Notification manager
+require('mini.notify').setup()
+
+-- mini.git - Git integration
+require('mini.git').setup()
+
+-- mini.diff - Visualize diff hunks
+require('mini.diff').setup()
+
+-- mini.move - Move selected lines/blocks
+require('mini.move').setup()
+
+-- mini.operators - Text operators (evaluate, exchange, multiply, replace, sort)
+require('mini.operators').setup()
+
+-- mini.align - Align text interactively
+require('mini.align').setup()
+
+-- mini.visits - Track and reuse file system visits
+require('mini.visits').setup()
+
+-- mini.misc - Miscellaneous useful functions
+require('mini.misc').setup()
+-- Make mini.misc functions globally available
+MiniMisc = require 'mini.misc'
+
+--configure snacks
+require('snacks').setup {
+  -- Performance & Core
+  bigfile = { enabled = true },
+  quickfile = { enabled = true },
+
+  -- UI & Visual
+  dashboard = {
+    enabled = true,
+
+    width = 60,
+    row = nil, -- dashboard position. nil for center
+    col = nil, -- dashboard position. nil for center
+    pane_gap = 4, -- empty columns between vertical panes
+    autokeys = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', -- autokey sequence
+    -- These settings are used by some built-in sections
+    preset = {
+      -- Defaults to a picker that supports `fzf-lua`, `telescope.nvim` and `mini.pick`
+      ---@type fun(cmd:string, opts:table)|nil
+      pick = nil,
+      -- Used by the `keys` section to show keymaps.
+      -- Set your custom keymaps here.
+      -- When using a function, the `items` argument are the default keymaps.
+      ---@type snacks.dashboard.Item[]
+      keys = {
+        { icon = ' ', key = 'f', desc = 'Find File', action = ":lua Snacks.dashboard.pick('files')" },
+        { icon = ' ', key = 'n', desc = 'New File', action = ':ene | startinsert' },
+        { icon = ' ', key = 'g', desc = 'Find Text', action = ":lua Snacks.dashboard.pick('live_grep')" },
+        { icon = ' ', key = 'r', desc = 'Recent Files', action = ":lua Snacks.dashboard.pick('oldfiles')" },
+        { icon = ' ', key = 'c', desc = 'Config', action = ":lua Snacks.dashboard.pick('files', {cwd = vim.fn.stdpath('config')})" },
+        { icon = ' ', key = 's', desc = 'Restore Session', section = 'session' },
+        { icon = '󰒲 ', key = 'L', desc = 'Lazy', action = ':Lazy', enabled = package.loaded.lazy ~= nil },
+        { icon = ' ', key = 'q', desc = 'Quit', action = ':qa' },
+      },
+      -- Used by the `header` section
+      header = [[
+    ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
+    ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
+    ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
+    ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
+    ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
+    ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝]],
+    },
+    -- item field formatters
+    formats = {
+      icon = function(item)
+        if item.file and item.icon == 'file' or item.icon == 'directory' then
+          return Snacks.dashboard.icon(item.file, item.icon)
+        end
+        return { item.icon, width = 2, hl = 'icon' }
+      end,
+      footer = { '%s', align = 'center' },
+      header = { '%s', align = 'center' },
+      file = function(item, ctx)
+        local fname = vim.fn.fnamemodify(item.file, ':~')
+        fname = ctx.width and #fname > ctx.width and vim.fn.pathshorten(fname) or fname
+        if #fname > ctx.width then
+          local dir = vim.fn.fnamemodify(fname, ':h')
+          local file = vim.fn.fnamemodify(fname, ':t')
+          if dir and file then
+            file = file:sub(-(ctx.width - #dir - 2))
+            fname = dir .. '/…' .. file
+          end
+        end
+        local dir, file = fname:match '^(.*)/(.+)$'
+        return dir and { { dir .. '/', hl = 'dir' }, { file, hl = 'file' } } or { { fname, hl = 'file' } }
+      end,
+    },
+    sections = {
+      { section = 'header' },
+      {
+        --pane = 2,
+
+        icon = ' ',
+        title = 'Git Status',
+        section = 'terminal',
+        enabled = function()
+          return Snacks.git.get_root() ~= nil
+        end,
+        cmd = 'git status --short --branch --renames',
+        height = 5,
+        padding = 1,
+        ttl = 5 * 60,
+        indent = 3,
+      },
+      { section = 'keys', gap = 1, padding = 1 },
+      --{ section = 'startup' },
+    },
+  },
+
+  -- File & Navigation
+  explorer = { enabled = true },
+  picker = { enabled = true },
+
+  -- Editing & Code
+  indent = { enabled = true },
+  scope = { enabled = true },
+  words = { enabled = true },
+
+  -- Git
+  git = { enabled = true },
+  gitbrowse = { enabled = true },
+
+  -- Utilities
+  input = { enabled = true },
+  notifier = { enabled = true },
+  rename = { enabled = true },
+  bufdelete = { enabled = true },
+  scratch = { enabled = true },
+  terminal = { enabled = true },
+  toggle = { enabled = true },
+
+  -- Visual enhancements
+  image = { enabled = true },
+  scroll = { enabled = true },
+  dim = { enabled = true },
+  animate = { enabled = true }, -- Disabled by default for performance
+  zen = { enabled = true },
+  statuscolumn = { enabled = false }, -- Disabled, might conflict with custom settings
+
+  -- Development
+  debug = { enabled = true },
+  profiler = { enabled = false }, -- Disabled by default, enable when needed
+}
 
 -- Configure which-key
 require('which-key').setup {

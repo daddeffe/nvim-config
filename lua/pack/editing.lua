@@ -1,4 +1,4 @@
-vim.pack.add {
+vim.pack.add({
   -- Autopairs
   'https://github.com/windwp/nvim-autopairs',
 
@@ -13,7 +13,9 @@ vim.pack.add {
 
   -- Color highlighting for hex codes
   'https://github.com/norcalli/nvim-colorizer.lua',
-}
+}, {
+  confirm = false,
+})
 
 -- Load optional packages
 vim.cmd.packadd 'nvim-autopairs'
