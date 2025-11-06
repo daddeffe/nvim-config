@@ -132,9 +132,6 @@ vim.keymap.set('i', '<C-j>', '<Down>')
 vim.keymap.set('i', '<C-k>', '<Up>')
 vim.keymap.set('i', '<C-l>', '<Right>')
 
-vim.keymap.set('n', '<leader>x', ':bdelete<CR>', { desc = '[X]Delete Buffer', silent = true })
-vim.keymap.set('n', '<leader>w', ':w<CR>', { desc = '[W]rite file', silent = true })
-
 vim.keymap.set('n', '<leader><leader>', ':lua vim.cmd.so()<CR>', { desc = 'Source file', silent = true })
 
 -- create a keymap to exit from insert mode and save the file when pressing jk
@@ -143,8 +140,6 @@ vim.keymap.set('i', 'jk', '<Esc><CR>', { desc = 'Exit insert mode', silent = tru
 -- Move block in visual line
 vim.keymap.set('v', 'J', ":m '>+1<CR>", { silent = true })
 vim.keymap.set('v', 'K', ":m '<-2<CR>", { silent = true })
-
-vim.keymap.set('n', '<leader>D', ':lua Snacks.dashboard()<CR>', { silent = true })
 
 -- Force cursor at center during J, nav and serach
 vim.keymap.set('n', 'J', 'mzJ`z')

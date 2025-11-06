@@ -1,6 +1,4 @@
 vim.pack.add({
-  -- Plugin store
-  'https://github.com/alex-popov-tech/store.nvim',
 
   -- Git integration
   'https://github.com/lewis6991/gitsigns.nvim',
@@ -12,15 +10,11 @@ vim.pack.add({
 
   -- Text manipulation
   'https://github.com/tpope/vim-surround',
-
-  -- AutoReload file
-  'https://github.com/manuuurino/autoread.nvim',
 }, {
   confirm = false,
 })
 
 -- Load optional packages
-vim.cmd.packadd 'store.nvim'
 vim.cmd.packadd 'gitsigns.nvim'
 vim.cmd.packadd 'telescope.nvim'
 vim.cmd.packadd 'telescope-fzf-native.nvim'
@@ -32,18 +26,6 @@ vim.cmd.packadd 'autoread.nvim'
 local telescope_ok, telescope = pcall(require, 'telescope')
 if telescope_ok then
   telescope.setup { -- Fuzzy Finder (files, lsp, etc)
-    -- Telescope is a fuzzy finder that comes with a lot of different things that
-    -- it can fuzzy find! It's more than just a "file finder", it can search
-    -- many different aspects of Neovim, your workspace, LSP, and more!
-
-    --     Here are the headline features of the previous releases; for details see the release notes.
-    -- The easiest way to use Telescope, is to start by doing something like:
-    --  :Telescope help_tags
-    --
-    -- After running this command, a window will open up and you're able to
-    -- type in the prompt window. You'll see a list of `help_tags` options and
-    -- a corresponding preview of the help.
-    --
     -- Two important keymaps to use while in Telescope are:
     --  - Insert mode: <c-/>
     --  - Normal mode: ?
@@ -141,35 +123,35 @@ require('gitsigns').setup {
     end)
 
     -- Actions
-    map('n', '<leader>hs', gitsigns.stage_hunk)
-    map('n', '<leader>hr', gitsigns.reset_hunk)
+    map('n', '<leader>hs', gitsigns.stage_hunk, { desc = '[H]unk [S]tage' })
+    map('n', '<leader>hr', gitsigns.reset_hunk, { desc = '[H]unk [R]eset' })
     map('v', '<leader>hs', function()
       gitsigns.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
-    end)
+    end, { desc = '[H]unk [S]tage (visual)' })
     map('v', '<leader>hr', function()
       gitsigns.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
-    end)
-    map('n', '<leader>hS', gitsigns.stage_buffer)
-    map('n', '<leader>hR', gitsigns.reset_buffer)
-    map('n', '<leader>hp', gitsigns.preview_hunk)
+    end, { desc = '[H]unk [R]eset (visual)' })
+    map('n', '<leader>hS', gitsigns.stage_buffer, { desc = '[H]unk [S]tage buffer' })
+    map('n', '<leader>hR', gitsigns.reset_buffer, { desc = '[H]unk [R]eset buffer' })
+    map('n', '<leader>hp', gitsigns.preview_hunk, { desc = '[H]unk [P]review' })
     map('n', '<leader>hb', function()
       gitsigns.blame_line { full = true }
-    end)
-    map('n', '<leader>hd', gitsigns.diffthis)
+    end, { desc = '[H]unk [B]lame line' })
+    map('n', '<leader>hd', gitsigns.diffthis, { desc = '[H]unk [D]iff' })
     map('n', '<leader>hD', function()
       gitsigns.diffthis '~'
-    end)
+    end, { desc = '[H]unk [D]iff ~' })
     map('n', '<leader>hQ', function()
       gitsigns.setqflist 'all'
-    end)
-    map('n', '<leader>hq', gitsigns.setqflist)
+    end, { desc = '[H]unk [Q]uickfix list (all)' })
+    map('n', '<leader>hq', gitsigns.setqflist, { desc = '[H]unk [Q]uickfix list' })
     -- Text object
-    map({ 'o', 'x' }, 'ih', gitsigns.select_hunk)
+    map({ 'o', 'x' }, 'ih', gitsigns.select_hunk, { desc = '[I]nner [H]unk' })
   end,
   signs_staged_enable = true,
   signcolumn = false, -- Toggle with `:Gitsigns toggle_signs`
   numhl = true, -- Toggle with `:Gitsigns toggle_numhl`
-  linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
+  linehl = true, -- Toggle with `:Gitsigns toggle_linehl`
   word_diff = true, -- Toggle with `:Gitsigns toggle_word_diff`
   watch_gitdir = {
     follow_files = true,
@@ -185,21 +167,7 @@ require('gitsigns').setup {
     virt_text_priority = 100,
     use_focus = true,
   },
-  current_line_blame_formatter = '<author>, <author_time:%R> - <summary>',
+  current_line_blame_formatter = '  -- <author>, <author_time:%R> - <summary>',
   sign_priority = 6,
   update_debounce = 100,
 }
-
-require('autoread').setup {
-  interval = 500,
-  notify_on_change = true,
-  cursor_behavior = 'scroll_down',
-}
-
--- vim.api.nvim_create_autocmd('User', {
---   pattern = 'AutoreadPostReload',
---   callback = function(event)
---     -- event.data contains the FileChangedShellPost event data
---     print('File reloaded:', event.data.file)
---   end,
--- })

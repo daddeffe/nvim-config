@@ -12,46 +12,46 @@ vim.pack.add({
   confirm = false,
 })
 
-require('lualine').setup {
-  options = {
-    component_separators = { left = '', right = '' },
-    section_separators = { left = '', right = '' },
-    globalstatus = true,
-  },
-  extensions = { 'oil', 'fzf', 'man', 'mason' },
-  sections = {
-    lualine_a = {
-      {
-        'mode',
-      },
-      {
-        'tabs',
-      },
-    },
-    lualine_b = {
-      {
-        'buffers',
-      },
-    },
-    lualine_c = {
-      'branch',
-      'diff',
-      'diagnostics',
-    },
-    lualine_x = {
-      'progress',
-      'location',
-    },
-    lualine_y = {
-      'encoding',
-      'fileformat',
-      'filetype',
-    },
-    lualine_z = {
-      'lsp_status',
-    },
-  },
-}
+--require('lualine').setup {
+--  options = {
+--    component_separators = { left = '', right = '' },
+--    section_separators = { left = '', right = '' },
+--    globalstatus = true,
+--  },
+--  extensions = { 'oil', 'fzf', 'man', 'mason' },
+--  sections = {
+--    lualine_a = {
+--      {
+--        'mode',
+--      },
+--      {
+--        'tabs',
+--      },
+--    },
+--    lualine_b = {
+--      {
+--        'buffers',
+--      },
+--    },
+--    lualine_c = {
+--      'branch',
+--      'diff',
+--      'diagnostics',
+--    },
+--    lualine_x = {
+--      'progress',
+--      'location',
+--    },
+--    lualine_y = {
+--      'encoding',
+--      'fileformat',
+--      'filetype',
+--    },
+--    lualine_z = {
+--      'lsp_status',
+--    },
+--  },
+--}
 
 require('catppuccin').setup {
   opts = {
