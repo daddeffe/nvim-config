@@ -1,12 +1,12 @@
 vim.pack.add({
-  -- Store.nvim - Plugin store (already in tools.lua, adding config here)
-  -- DEPENDENCY for store: markview.nvim
   'https://github.com/OXY2DEV/markview.nvim',
+  'https://github.com/alex-popov-tech/store.nvim',
 
-  -- Claude Code integration
-  'https://github.com/coder/claudecode.nvim',
+  -- Text manipulation
+  'https://github.com/tpope/vim-surround',
 
-  -- DEPENDENCY for claudecode: snacks.nvim
+  -- AutoReload file
+  'https://github.com/manuuurino/autoread.nvim',
 
   -- Vim Coach
   'https://github.com/shahshlok/vim-coach.nvim',
@@ -16,52 +16,10 @@ vim.pack.add({
 
 -- Load optional packages
 vim.cmd.packadd 'markview.nvim'
-vim.cmd.packadd 'claudecode.nvim'
 vim.cmd.packadd 'snacks.nvim'
 vim.cmd.packadd 'vim-coach.nvim'
+vim.cmd.packadd 'store.nvim'
 --
--- Configure Store.nvim
-vim.keymap.set('n', '<leader>S', '<cmd>Store<cr>', { desc = 'Open Plugin Store' })
-
--- Configure Claude Code
-local claudecode_ok, claudecode = pcall(require, 'claudecode')
-if claudecode_ok then
-  claudecode.setup {
-    terminal_cmd = '~/.claude/local/claude', -- Point to local installation
-    diff_opts = {
-      layout = 'vertical',
-      open_in_new_tab = true, -- Open diff in a new tab (false = use current tab)
-      keep_terminal_focus = true, -- If true, moves focus back to terminal after diff opens
-      hide_terminal_in_new_tab = false, -- If true and opening in a new tab, do not show Claude terminal there
-      on_new_file_reject = 'close_window', -- "keep_empty" leaves an empty buffer; "close_window" closes the placeholder split
-    },
-  }
-
-  -- Claude Code keymaps
-  -- Note: <leader>a is used as a prefix for Claude Code commands
-  vim.keymap.set('n', '<leader>cc', '<cmd>ClaudeCode<cr>', { desc = 'Toggle Claude' })
-  vim.keymap.set('n', '<leader>cf', '<cmd>ClaudeCodeFocus<cr>', { desc = 'Focus Claude' })
-  vim.keymap.set('n', '<leader>cr', '<cmd>ClaudeCode --resume<cr>', { desc = 'Resume Claude' })
-  vim.keymap.set('n', '<leader>cC', '<cmd>ClaudeCode --continue<cr>', { desc = 'Continue Claude' })
-  vim.keymap.set('n', '<leader>cm', '<cmd>ClaudeCodeSelectModel<cr>', { desc = 'Select Claude model' })
-  vim.keymap.set('n', '<leader>cb', '<cmd>ClaudeCodeAdd %<cr>', { desc = 'Add current buffer' })
-  vim.keymap.set('v', '<leader>cs', '<cmd>ClaudeCodeSend<cr>', { desc = 'Send to Claude' })
-
-  -- Special keymap for file trees
-  vim.api.nvim_create_autocmd('FileType', {
-    pattern = { 'NvimTree', 'neo-tree', 'oil', 'minifiles' },
-    callback = function()
-      vim.keymap.set('n', '<leader>cS', '<cmd>ClaudeCodeTreeAdd<cr>', {
-        buffer = true,
-        desc = 'Add file',
-      })
-    end,
-  })
-
-  -- Diff management
-  vim.keymap.set('n', '<leader>ca', '<cmd>ClaudeCodeDiffAccept<cr>', { desc = 'Accept diff' })
-  vim.keymap.set('n', '<leader>cd', '<cmd>ClaudeCodeDiffDeny<cr>', { desc = 'Deny diff' })
-end
 
 -- Autocomando che intercetta apertura in modalità diff
 vim.api.nvim_create_autocmd('BufReadPost', {

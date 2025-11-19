@@ -6,7 +6,10 @@ vim.tbl_flatten = function(t)
   return vim.iter(t):flatten():totable()
 end
 
-counter = 0
+require 'pack.opt'
+require 'pack.binds'
+require 'pack.autocmd'
+
 -- Core dependencies and shared libraries
 require 'pack.core'
 
@@ -39,3 +42,7 @@ if vim.fn.isdirectory(plugins_dir) == 1 then
     end
   end
 end
+
+vim.api.nvim_create_user_command('AlignColumns', function(opts)
+  vim.cmd(string.format("%d,%d!column -t | sed 's/ = /=/'", opts.line1, opts.line2))
+end, { range = true })

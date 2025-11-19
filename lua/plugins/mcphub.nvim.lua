@@ -79,4 +79,3 @@ require('mcphub').setup {
     prefix = 'MCPHub',
   },
 }
-

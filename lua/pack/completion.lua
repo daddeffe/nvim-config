@@ -74,7 +74,7 @@ cmp.setup {
     expand = function(args)
       luasnip.lsp_expand(args.body)
       -- Also support native snippets for Neovim 0.10+
-      vim.snippet.expand(args.body)
+      -- vim.snippet.expand(args.body)
     end,
   },
 
@@ -279,16 +279,9 @@ cmp.setup {
     },
   },
 }
-
 -- Common cmdline mappings (shared between search and command mode)
 local cmdline_mapping = cmp.mapping.preset.cmdline {
   ['<CR>'] = cmp.mapping.confirm { select = true },
-  ['<Space>'] = cmp.mapping(function(fallback)
-    if cmp.visible() and cmp.get_selected_entry() then
-      cmp.confirm { select = true }
-    end
-    fallback()
-  end, { 'c' }),
   ['<Tab>'] = cmp.mapping(function(fallback)
     if cmp.visible() then
       cmp.select_next_item()
@@ -296,8 +289,6 @@ local cmdline_mapping = cmp.mapping.preset.cmdline {
       fallback()
     end
   end, { 'c' }),
-  ['<C-n>'] = cmp.mapping.select_next_item(),
-  ['<C-p>'] = cmp.mapping.select_prev_item(),
 }
 
 -- Search mode completion

@@ -20,7 +20,6 @@ vim.cmd.packadd 'telescope.nvim'
 vim.cmd.packadd 'telescope-fzf-native.nvim'
 vim.cmd.packadd 'telescope-ui-select.nvim'
 vim.cmd.packadd 'vim-surround'
-vim.cmd.packadd 'autoread.nvim'
 
 -- Configure Telescope with error handling
 local telescope_ok, telescope = pcall(require, 'telescope')
