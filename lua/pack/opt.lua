@@ -11,19 +11,30 @@ vim.g.have_nerd_font = true
 
 vim.o.number = true
 vim.o.wrap = false
+vim.o.linebreak = true
+vim.o.showbreak = '↪'
+
+vim.o.list = true
+vim.opt.listchars = {
+  tab = '>-',
+  trail = '·',
+  nbsp = '␣',
+  --eol = '↲',
+  --space = '·',
+  multispace = '···+',
+  lead = '·',
+  extends = '⟩',
+  precedes = '⟨',
+  conceal = '┊',
+}
+
 vim.o.relativenumber = true
 
 vim.o.mouse = 'a'
 
 vim.o.showmode = false
 
--- Sync clipboard between OS and Neovim.
---  Schedule the setting after `UiEnter` because it can increase startup-time.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.schedule(function()
-  vim.o.clipboard = 'unnamedplus'
-end)
+vim.o.clipboard = 'unnamedplus'
 
 vim.o.breakindent = false
 vim.o.undofile = true
@@ -42,20 +53,13 @@ vim.opt.splitright = true
 vim.opt.splitbelow = false
 vim.opt.splitkeep = 'topline'
 
-vim.o.list = true
-vim.opt.listchars = {
-  tab = '» ',
-  trail = '·',
-  nbsp = '␣',
-}
-
 --vim.o.foldmethod = 'expr' -- Definisci i fold usando un'espressione
 --vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Usa Treesitter per il folding
 vim.o.foldlevel = 99 -- Apri tutti i fold di default all'apertura di un file
 vim.opt.foldtext = '' -- Evidenzia la sintassi della prima riga del fold
 
 -- length of an actual \t character:
-vim.o.tabstop = 2
+vim.o.tabstop = 4
 vim.o.softtabstop = -1
 vim.o.shiftwidth = 0
 vim.opt.shiftround = true

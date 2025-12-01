@@ -4,11 +4,6 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list', silent = true })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
--- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
--- is not what someone will guess without a bit more experience.
---
--- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
--- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- Keybinds to make split navigation easier.
@@ -32,7 +27,8 @@ vim.keymap.set('i', '<C-l>', '<Right>')
 vim.keymap.set('n', '<leader><leader>', ':lua vim.cmd.so()<CR>', { desc = 'Source file', silent = true })
 vim.keymap.set('v', '<leader>x', '<cmd>.lua<CR><ESC>', { desc = 'Execute the current line' })
 -- create a keymap to exit from insert mode and save the file when pressing jk
-vim.keymap.set('i', 'jk', '<Esc><CR>', { desc = 'Exit insert mode', silent = true })
+vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode', silent = true })
+vim.keymap.set('n', 'xc', ':w<CR>', { desc = 'Exit insert mode', silent = true })
 
 -- Move block in visual line
 vim.keymap.set('v', 'J', ":m '>+1<CR>", { silent = true })
@@ -78,3 +74,32 @@ vim.keymap.set('v', '<leader>r', function()
   vim.cmd 'terminal'
   vim.fn.chansend(vim.b.terminal_job_id, command .. '\n')
 end, { desc = 'Execute selection in new terminal split' })
+
+-- Toggle options under <leader>t
+vim.keymap.set('n', '<leader>tW', function()
+  vim.cmd 'setlocal wrap!'
+end, { desc = 'Toggle [W]rap' })
+
+vim.keymap.set('n', '<leader>ts', function()
+  vim.wo.signcolumn = (vim.wo.signcolumn == 'yes') and 'no' or 'yes'
+end, { desc = 'Toggle [S]igncolumn' })
+
+vim.keymap.set('n', '<leader>td', function()
+  vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+end, { desc = 'Toggle [D]iagnostics' })
+
+vim.keymap.set('n', '<leader>tp', function()
+  vim.cmd 'setlocal spell!'
+end, { desc = 'Toggle S[p]ell' })
+
+vim.keymap.set('n', '<leader>tL', function()
+  vim.wo.list = not vim.wo.list
+end, { desc = 'Toggle [L]ist chars' })
+
+vim.keymap.set('n', '<leader>tc', function()
+  if vim.wo.colorcolumn == '0' or vim.wo.colorcolumn == '' then
+    vim.wo.colorcolumn = '85'
+  else
+    vim.wo.colorcolumn = '0'
+  end
+end, { desc = 'Toggle [C]olor column' })

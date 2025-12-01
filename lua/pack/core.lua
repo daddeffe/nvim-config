@@ -331,16 +331,58 @@ require('snacks').setup {
   -- Editing & Code
   indent = {
     enabled = true,
-    -- Animate indent changes
+    -- Disable animation to prevent visual artifacts when switching windows
     animate = {
-      enabled = true,
-      -- duration = 20, -- ms
+      enabled = false,
     },
+    -- Filter to show indent guides only in code buffers
+    filter = function(buf, win)
+      local buftype = vim.bo[buf].buftype
+      local filetype = vim.bo[buf].filetype
+
+      -- Exclude special buffer types
+      if buftype ~= '' and buftype ~= 'acwrite' then
+        return false
+      end
+
+      -- Exclude specific filetypes
+      local excluded_filetypes = {
+        'help',
+        'man',
+        'markdown',
+        'text',
+        'txt',
+        'dashboard',
+        'alpha',
+        'starter',
+        'NvimTree',
+        'neo-tree',
+        'oil',
+        'Trouble',
+        'qf',
+        'help',
+        'fugitive',
+        'git',
+      }
+
+      for _, ft in ipairs(excluded_filetypes) do
+        if filetype == ft then
+          return false
+        end
+      end
+
+      -- Show indent guides for actual code files
+      return true
+    end,
   },
   scope = {
     enabled = true,
     -- Enable tree-sitter scope detection
     treesitter = { enabled = true },
+    -- Disable animation to prevent visual artifacts
+    animate = {
+      enabled = false,
+    },
   },
   words = {
     enabled = true,

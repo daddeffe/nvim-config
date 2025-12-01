@@ -19,54 +19,19 @@ vim.cmd.packadd 'markview.nvim'
 vim.cmd.packadd 'snacks.nvim'
 vim.cmd.packadd 'vim-coach.nvim'
 vim.cmd.packadd 'store.nvim'
+vim.cmd.packadd 'autoread.nvim'
 --
 
--- Autocomando che intercetta apertura in modalità diff
-vim.api.nvim_create_autocmd('BufReadPost', {
-  callback = function(args)
-    -- Se non siamo in modalità diff, esci
-    if not vim.wo.diff then
-      return
-    end
-
-    local buf = args.buf
-    local file = vim.api.nvim_buf_get_name(buf)
-    if file == '' then
-      return
-    end
-
-    -- Cerca se il file è già aperto in un’altra finestra
-    local target_buf = vim.fn.bufnr(file, false)
-    local target_win = vim.fn.bufwinid(target_buf)
-
-    if target_win ~= -1 and target_win ~= vim.api.nvim_get_current_win() then
-      -- Il buffer è già visibile da un'altra parte
-      -- Rimuovi diff dallo split corrente per non sovrapporre
-      vim.cmd 'diffoff'
-
-      -- Sposta la modalità diff nella finestra originale
-      local current_win = vim.api.nvim_get_current_win()
-      vim.api.nvim_set_current_win(target_win)
-      vim.cmd 'diffthis'
-      vim.api.nvim_set_current_win(current_win)
-
-      -- Notifica (opzionale)
-      vim.notify('Diff riassegnato alla finestra già aperta per: ' .. file, vim.log.levels.INFO)
-    else
-      -- Se non esiste, crea diff verticale
-      vim.cmd('vertical diffsplit ' .. vim.fn.fnameescape(file))
-    end
-  end,
-})
-
--- Autocomand per entrare in modalita' insert entrando in un buffer terminale
-vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter' }, {
-  group = group,
-  pattern = 'term://*',
-  callback = function()
-    vim.cmd 'startinsert'
-  end,
-})
+-- Configure AutoRead
+local autoread_ok, autoread = pcall(require, 'autoread')
+if autoread_ok then
+  autoread.setup {
+    -- Check for file changes every 200ms
+    poll_time = 200,
+    -- Notify when file is reloaded
+    notify = false,
+  }
+end
 
 -- Configure Vim Coach
 local coach_ok, coach = pcall(require, 'vim-coach')
