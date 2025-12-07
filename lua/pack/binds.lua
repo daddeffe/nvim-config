@@ -42,7 +42,7 @@ vim.keymap.set('n', 'n', 'nzzzv')
 vim.keymap.set('n', 'N', 'Nzzzv')
 
 -- No more Q
-vim.keymap.set('n', 'Q', '<nop>')
+--vim.keymap.set('n', 'Q', '<nop>')
 
 -- Easy
 vim.keymap.set('i', '<C-c>', '<Esc>')
