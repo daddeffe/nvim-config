@@ -17,6 +17,15 @@ vim.pack.add({
   confirm = false,
 })
 
+-- Setup OpenCode completion source
+require('plugins.cmp-opencode').setup {
+  model = 'anthropic/claude-3-5-haiku-20241022', -- Formato: provider/model
+  max_completions = 3,
+  min_chars = 3,
+  timeout = 5000,
+  debounce = 800,
+}
+
 -- Configure lazydev for Lua LSP
 require('lazydev').setup {
   library = {
@@ -55,6 +64,7 @@ local kind_icons = {
   Constant = '󰏿',
   Struct = '󰙅',
   Operator = '󰆕',
+  AI = '🤖', -- OpenCode AI completions
 }
 
 cmp.setup {
@@ -121,9 +131,14 @@ cmp.setup {
     fields = { 'kind', 'abbr', 'menu' },
     expandable_indicator = true,
     format = function(entry, vim_item)
-      -- Add icons
-      if kind_icons[vim_item.kind] then
-        vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind)
+      -- Special handling for OpenCode AI
+      if entry.source.name == 'opencode' then
+        vim_item.kind = string.format('%s %s', kind_icons.AI or '🤖', 'AI')
+      else
+        -- Add icons for other sources
+        if kind_icons[vim_item.kind] then
+          vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind)
+        end
       end
 
       -- Truncate long items
@@ -135,6 +150,7 @@ cmp.setup {
       -- Add source name
       vim_item.menu = ({
         nvim_lsp = '[LSP]',
+        opencode = '[Haiku]',
         luasnip = '[Snippet]',
         buffer = '[Buffer]',
         path = '[Path]',
@@ -205,6 +221,12 @@ cmp.setup {
         end
         return true
       end,
+    },
+    {
+      name = 'opencode', -- OpenCode AI completions with Haiku
+      priority = 800,
+      max_item_count = 3,
+      keyword_length = 3,
     },
     {
       name = 'luasnip',

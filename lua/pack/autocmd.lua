@@ -99,12 +99,15 @@ vim.api.nvim_create_autocmd('CursorMovedI', {
   end,
 })
 
--- Autocomand per entrare in modalita' insert entrando in un buffer terminale
+-- Autocomand per entrare in modalita' insert entrando in un buffer terminale con focus obbligatorio
 vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter' }, {
-  group = group,
+  group = vim.api.nvim_create_augroup('terminal_auto_insert', { clear = true }),
   pattern = 'term://*',
   callback = function()
-    vim.cmd 'startinsert'
+    -- Focus obbligatorio e insert mode immediato per buffer terminali
+    vim.schedule(function()
+      vim.cmd 'startinsert'
+    end)
   end,
 })
 

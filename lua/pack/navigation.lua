@@ -22,7 +22,7 @@ require('barbecue').setup {
 require('macrobank').setup()
 
 -- Oil keymap (set before checking if Oil is loaded)
-vim.keymap.set('n', '_', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
 
 -- Configure Oil with error handling
 local oil_ok, oil = pcall(require, 'oil')

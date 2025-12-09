@@ -4,7 +4,15 @@
 vim.pack.add { 'https://github.com/folke/snacks.nvim' }
 vim.pack.add { 'https://github.com/NickvanDyke/opencode.nvim' }
 
-vim.g.opencode_opts = {}
+vim.g.opencode_opts = {
+  provider = {
+    snacks = {
+      win = {
+        enter = true, -- Autofocus quando apri opencode con <C-.>
+      },
+    },
+  },
+}
 vim.o.autoread = true
 vim.keymap.set({ 'n', 'x' }, '<C-a>', function()
   require('opencode').ask('@this: ', { submit = true })
@@ -24,8 +32,6 @@ end, { desc = 'opencode half page up' })
 vim.keymap.set('n', '<S-C-d>', function()
   require('opencode').command 'session.half.page.down'
 end, { desc = 'opencode half page down' })
-vim.keymap.set('n', '+', '<C-a>', { desc = 'Increment', noremap = true })
-vim.keymap.set('n', '-', '<C-x>', { desc = 'Decrement', noremap = true })
 
 -- Autocompletamento personalizzato
 vim.keymap.set({ 'n', 'i' }, '<C-k>', function()

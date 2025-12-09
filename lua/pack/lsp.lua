@@ -247,25 +247,41 @@ vim.list_extend(ensure_installed, {
 })
 require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+-- LSP server specific configurations
+local servers = {
+  ast_grep = {},
+  lua_ls = {
+    settings = {
+      Lua = {
+        completion = {
+          callSnippet = 'Replace',
+        },
+        diagnostics = {
+          globals = { 'vim' },
+        },
+      },
+    },
+  },
+}
+
 -- Setup LSP servers with mason-lspconfig
 require('mason-lspconfig').setup {
   automatic_installation = true,
-  --handlers = {
-  --  function(server_name)
-  --    local server = servers[server_name] or {}
-  --    -- This handles overriding only values explicitly passed
-  --    -- by the server configuration above
+  handlers = {
+    function(server_name)
+      local server = servers[server_name] or {}
+      -- This handles overriding only values explicitly passed
+      -- by the server configuration above
 
-  --    -- Get LSP capabilities from blink.cmp (if available)
-  --    local capabilities = {}
-  --    local blink_ok, blink = pcall(require, 'blink.cmp')
-  --    if blink_ok then
-  --      capabilities = blink.get_lsp_capabilities()
-  --    end
+      -- Get LSP capabilities from blink.cmp (if available)
+      local capabilities = {}
+      local blink_ok, blink = pcall(require, 'blink.cmp')
+      if blink_ok then
+        capabilities = blink.get_lsp_capabilities()
+      end
 
-  --    server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-  --    require('lspconfig')[server_name].setup(server)
-  --  end,
-  --},
-  --
+      server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+      require('lspconfig')[server_name].setup(server)
+    end,
+  },
 }
