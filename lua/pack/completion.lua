@@ -13,17 +13,40 @@ vim.pack.add({
   'https://github.com/hrsh7th/cmp-path',
   'https://github.com/hrsh7th/cmp-cmdline',
   'https://github.com/saadparwaiz1/cmp_luasnip',
+
+  -- AI completion via Ollama
+  'https://github.com/tzachar/cmp-ai',
 }, {
   confirm = false,
 })
 
--- Setup OpenCode completion source
-require('plugins.cmp-opencode').setup {
-  model = 'anthropic/claude-3-5-haiku-20241022', -- Formato: provider/model
-  max_completions = 3,
-  min_chars = 3,
-  timeout = 5000,
-  debounce = 800,
+-- Setup cmp-ai with Ollama
+local cmp_ai = require 'cmp_ai.config'
+
+cmp_ai:setup {
+  max_lines = 100,
+  provider = 'Ollama',
+  provider_options = {
+    model = 'qwen2.5-coder:0.5b', -- Puoi cambiare con qwen2.5-coder, deepseek-coder, ecc.
+    prompt = function(lines_before, lines_after)
+      local ft = vim.bo.filetype
+      return string.format(
+        'Filetype: %s\nProvide ready-to-run code completion. Keep it short and concise unless more detail is clearly needed. Infer the intent from context and provide an approximate but functional continuation.\n\n%s',
+        ft,
+        lines_before
+      )
+    end,
+  },
+  notify = true,
+  notify_callback = function(msg)
+    vim.notify(msg)
+  end,
+  run_on_every_keystroke = false,
+  ignored_file_types = {
+    -- default is not to ignore
+    -- uncomment to ignore in lua:
+    -- lua = true
+  },
 }
 
 -- Configure lazydev for Lua LSP
@@ -64,7 +87,7 @@ local kind_icons = {
   Constant = '󰏿',
   Struct = '󰙅',
   Operator = '󰆕',
-  AI = '🤖', -- OpenCode AI completions
+  AI = '🤖', -- Ollama AI completions
 }
 
 cmp.setup {
@@ -91,14 +114,19 @@ cmp.setup {
   -- Completion behavior
   completion = {
     keyword_length = 1,
-    completeopt = 'menu,menuone,noinsert,preview',
+    completeopt = 'menu,menuone,noselect',
     autocomplete = {
       require('cmp.types').cmp.TriggerEvent.TextChanged,
     },
   },
 
-  -- Preselect first item
-  preselect = cmp.PreselectMode.Item,
+  -- Confirmation behavior
+  confirmation = {
+    default_behavior = cmp.ConfirmBehavior.Insert,
+  },
+
+  -- Don't preselect first item
+  preselect = cmp.PreselectMode.None,
 
   -- Window configuration
   window = {
@@ -131,8 +159,8 @@ cmp.setup {
     fields = { 'kind', 'abbr', 'menu' },
     expandable_indicator = true,
     format = function(entry, vim_item)
-      -- Special handling for OpenCode AI
-      if entry.source.name == 'opencode' then
+      -- Special handling for cmp-ai (Ollama)
+      if entry.source.name == 'cmp_ai' then
         vim_item.kind = string.format('%s %s', kind_icons.AI or '🤖', 'AI')
       else
         -- Add icons for other sources
@@ -150,7 +178,7 @@ cmp.setup {
       -- Add source name
       vim_item.menu = ({
         nvim_lsp = '[LSP]',
-        opencode = '[Haiku]',
+        cmp_ai = '[Ollama]',
         luasnip = '[Snippet]',
         buffer = '[Buffer]',
         path = '[Path]',
@@ -167,9 +195,22 @@ cmp.setup {
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.abort(),
-    -- CR in insert mode: always insert newline (no confirm)
+    -- CR: confirm selected item or insert newline
     ['<CR>'] = cmp.mapping(function(fallback)
-      fallback()
+      if cmp.visible() and cmp.get_active_entry() then
+        cmp.confirm { select = false }
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+    -- Space: confirm and insert space
+    ['<Space>'] = cmp.mapping(function(fallback)
+      if cmp.visible() and cmp.get_active_entry() then
+        cmp.confirm { select = true }
+        vim.api.nvim_feedkeys(' ', 'n', false)
+      else
+        fallback()
+      end
     end, { 'i', 's' }),
     -- Tab: navigate completion menu
     ['<Tab>'] = cmp.mapping(function(fallback)
@@ -210,6 +251,12 @@ cmp.setup {
       group_index = 0,
     },
     {
+      name = 'cmp_ai', -- Ollama AI completions (priorità massima)
+      priority = 1500,
+      max_item_count = 5,
+      keyword_length = 3,
+    },
+    {
       name = 'nvim_lsp',
       priority = 1000,
       max_item_count = 50,
@@ -221,12 +268,6 @@ cmp.setup {
         end
         return true
       end,
-    },
-    {
-      name = 'opencode', -- OpenCode AI completions with Haiku
-      priority = 800,
-      max_item_count = 3,
-      keyword_length = 3,
     },
     {
       name = 'luasnip',
@@ -273,6 +314,19 @@ cmp.setup {
   sorting = {
     priority_weight = 2,
     comparators = {
+      -- AI completions vengono prima in base alla priority
+      function(entry1, entry2)
+        local kind1 = entry1:get_kind()
+        local kind2 = entry2:get_kind()
+        if kind1 ~= kind2 then
+          if entry1.source.name == 'cmp_ai' then
+            return true
+          end
+          if entry2.source.name == 'cmp_ai' then
+            return false
+          end
+        end
+      end,
       cmp.config.compare.offset,
       cmp.config.compare.exact,
       cmp.config.compare.score,

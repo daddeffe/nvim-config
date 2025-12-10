@@ -51,6 +51,15 @@ vim.api.nvim_create_autocmd('BufRead', {
   end,
 })
 
+-- Force filetype detection for Python files
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+  group = vim.api.nvim_create_augroup('python_ft', { clear = true }),
+  pattern = { '*.py', '*.pyw' },
+  callback = function()
+    vim.bo.filetype = 'python'
+  end,
+})
+
 -- show cursorline only in active window enable
 vim.api.nvim_create_autocmd({ 'WinEnter', 'BufEnter' }, {
   group = vim.api.nvim_create_augroup('active_cursorline', { clear = true }),
@@ -103,10 +112,13 @@ vim.api.nvim_create_autocmd('CursorMovedI', {
 vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter' }, {
   group = vim.api.nvim_create_augroup('terminal_auto_insert', { clear = true }),
   pattern = 'term://*',
-  callback = function()
+  callback = function(args)
     -- Focus obbligatorio e insert mode immediato per buffer terminali
     vim.schedule(function()
-      vim.cmd 'startinsert'
+      -- Verifica che il buffer sia ancora valido e che la finestra corrente sia quella giusta
+      if vim.api.nvim_buf_is_valid(args.buf) and vim.api.nvim_get_current_buf() == args.buf then
+        vim.cmd 'startinsert'
+      end
     end)
   end,
 })
@@ -125,7 +137,7 @@ vim.api.nvim_create_autocmd('BufReadPost', {
       return
     end
 
-    -- Cerca se il file è già aperto in un’altra finestra
+    -- Cerca se il file è già aperto in un'altra finestra
     local target_buf = vim.fn.bufnr(file, false)
     local target_win = vim.fn.bufwinid(target_buf)
 
@@ -145,6 +157,19 @@ vim.api.nvim_create_autocmd('BufReadPost', {
     else
       -- Se non esiste, crea diff verticale
       vim.cmd('vertical diffsplit ' .. vim.fn.fnameescape(file))
+    end
+  end,
+})
+
+-- Apri Oil quando vim viene aperto senza buffer
+vim.api.nvim_create_autocmd('VimEnter', {
+  group = vim.api.nvim_create_augroup('oil_auto_open', { clear = true }),
+  callback = function()
+    -- Controlla se non ci sono argomenti e se siamo nell'unico buffer vuoto
+    if vim.fn.argc() == 0 and vim.fn.line2byte(vim.fn.line '$') == -1 then
+      vim.schedule(function()
+        vim.cmd 'Oil'
+      end)
     end
   end,
 })

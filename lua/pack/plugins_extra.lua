@@ -5,9 +5,6 @@ vim.pack.add({
   -- Text manipulation
   'https://github.com/tpope/vim-surround',
 
-  -- AutoReload file
-  'https://github.com/manuuurino/autoread.nvim',
-
   -- Vim Coach
   'https://github.com/shahshlok/vim-coach.nvim',
 }, {
@@ -19,19 +16,7 @@ vim.cmd.packadd 'markview.nvim'
 vim.cmd.packadd 'snacks.nvim'
 vim.cmd.packadd 'vim-coach.nvim'
 vim.cmd.packadd 'store.nvim'
-vim.cmd.packadd 'autoread.nvim'
 --
-
--- Configure AutoRead
-local autoread_ok, autoread = pcall(require, 'autoread')
-if autoread_ok then
-  autoread.setup {
-    -- Check for file changes every 200ms
-    poll_time = 200,
-    -- Notify when file is reloaded
-    notify = false,
-  }
-end
 
 -- Configure Vim Coach
 local coach_ok, coach = pcall(require, 'vim-coach')

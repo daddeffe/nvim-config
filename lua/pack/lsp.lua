@@ -18,7 +18,16 @@ vim.pack.add({
 })
 
 -- IMPORTANT: Initialize Mason BEFORE mason-lspconfig
-require('mason').setup {}
+require('mason').setup {
+  ui = {
+    icons = {
+      package_installed = '✓',
+      package_pending = '➜',
+      package_uninstalled = '✗',
+    },
+  },
+  max_concurrent_installers = 4,
+}
 
 -- Configure fidget
 require('fidget').setup {}
@@ -34,7 +43,7 @@ require('conform').setup {
       return nil
     else
       return {
-        timeout_ms = 500,
+        timeout_ms = 5000,
         lsp_format = 'fallback',
       }
     end
@@ -244,8 +253,17 @@ vim.list_extend(ensure_installed, {
   'pint',
   'prettier',
   'stylua',
+  -- Python tools
+  'ruff',
+  'pyright',
+  'black',
+  'isort',
 })
-require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+require('mason-tool-installer').setup {
+  ensure_installed = ensure_installed,
+  auto_update = false,
+  run_on_start = true,
+}
 
 -- LSP server specific configurations
 local servers = {
@@ -262,10 +280,40 @@ local servers = {
       },
     },
   },
+  ruff = {
+    init_options = {
+      settings = {
+        -- Configurazione per supportare workspace configuration
+        configuration = {
+          format = {
+            preview = true,
+          },
+          lint = {
+            preview = true,
+          },
+        },
+        -- Disabilita il warning sulla registrazione dinamica
+        logLevel = 'error',
+      },
+    },
+  },
+  pyright = {
+    settings = {
+      python = {
+        analysis = {
+          autoSearchPaths = true,
+          diagnosticMode = 'workspace',
+          useLibraryCodeForTypes = true,
+          typeCheckingMode = 'basic',
+        },
+      },
+    },
+  },
 }
 
 -- Setup LSP servers with mason-lspconfig
 require('mason-lspconfig').setup {
+  ensure_installed = vim.tbl_keys(servers),
   automatic_installation = true,
   handlers = {
     function(server_name)
@@ -273,14 +321,27 @@ require('mason-lspconfig').setup {
       -- This handles overriding only values explicitly passed
       -- by the server configuration above
 
+      -- Get default LSP capabilities
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+      -- Add workspace configuration support
+      capabilities.workspace = capabilities.workspace or {}
+      capabilities.workspace.configuration = true
+      capabilities.workspace.didChangeConfiguration = {
+        dynamicRegistration = true,
+      }
+
+      -- Add workspace folders support
+      capabilities.workspace.workspaceFolders = true
+
       -- Get LSP capabilities from blink.cmp (if available)
-      local capabilities = {}
       local blink_ok, blink = pcall(require, 'blink.cmp')
       if blink_ok then
-        capabilities = blink.get_lsp_capabilities()
+        local blink_caps = blink.get_lsp_capabilities()
+        capabilities = vim.tbl_deep_extend('force', capabilities, blink_caps)
       end
 
-      server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+      server.capabilities = vim.tbl_deep_extend('force', capabilities, server.capabilities or {})
       require('lspconfig')[server_name].setup(server)
     end,
   },

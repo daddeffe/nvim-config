@@ -13,7 +13,6 @@ vim.g.opencode_opts = {
     },
   },
 }
-vim.o.autoread = true
 vim.keymap.set({ 'n', 'x' }, '<C-a>', function()
   require('opencode').ask('@this: ', { submit = true })
 end, { desc = 'Ask opencode' })
