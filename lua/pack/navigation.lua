@@ -6,6 +6,7 @@ vim.pack.add({
   -- File navigation
   'https://github.com/theprimeagen/harpoon',
   'https://github.com/stevearc/oil.nvim',
+  'https://github.com/refractalize/oil-git-status.nvim',
 
   -- Macro management
   'https://github.com/sahilsehwag/macrobank.nvim',
@@ -30,7 +31,7 @@ if oil_ok then
   oil.setup {
     default_file_explorer = true,
     columns = {
-      'icon',
+      -- 'icon',
       'permissions',
       'size',
       'mtime',
@@ -42,18 +43,18 @@ if oil_ok then
     -- Window-local options to use for oil buffers
     win_options = {
       wrap = false,
-      signcolumn = 'no',
-      cursorcolumn = false,
+      signcolumn = 'yes:1',
+      -- cursorcolumn = true,
       foldcolumn = '0',
       spell = false,
       list = false,
-      conceallevel = 3,
+      -- conceallevel = 3,
       concealcursor = 'nvic',
     },
     delete_to_trash = false,
     skip_confirm_for_simple_edits = true,
     prompt_save_on_select_new_entry = true,
-    cleanup_delay_ms = 2000,
+    cleanup_delay_ms = 1000,
     lsp_file_methods = {
       enabled = true,
       timeout_ms = 1000,
@@ -70,7 +71,6 @@ if oil_ok then
       ['<C-p>'] = 'actions.preview',
       ['<C-c>'] = { 'actions.close', mode = 'n' },
       ['<C-l>'] = 'actions.refresh',
-      --['-'] = { 'actions.parent ', mode = 'n' },
       ['_'] = { 'actions.open_cwd', mode = 'n' },
       ['`'] = { 'actions.cd', mode = 'n' },
       ['~'] = { 'actions.cd', opts = { scope = 'tab' }, mode = 'n' },
@@ -169,6 +169,8 @@ if oil_ok then
 else
   vim.notify('Oil plugin not loaded', vim.log.levels.WARN)
 end
+
+require('oil-git-status').setup()
 
 -- Harpoon keymaps
 require('harpoon').setup()

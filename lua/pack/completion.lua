@@ -21,27 +21,41 @@ vim.pack.add({
 })
 
 -- Setup cmp-ai with Ollama
+-- Prompt ottimizzato con formato INFILL per code completion:
+-- - System prompt: istruzioni minime
+-- - User prompt: formato <PRE> {prefix} <SUF>{suffix} <MID>
+--   (standard per Code Llama, CodeGemma, DeepSeek-Coder, ecc.)
+-- - max_lines ridotto a 30 (15+15) per response rapide
+-- - Token overhead minimale (~10 token vs ~100+ con formato custom)
+-- Ref: https://ollama.com/blog/how-to-prompt-code-llama
 local cmp_ai = require 'cmp_ai.config'
 
 cmp_ai:setup {
-  max_lines = 100,
+  max_lines = 30, -- Ridotto da 50 a 30 per velocità (15 before + 15 after)
   provider = 'Ollama',
   provider_options = {
-    model = 'qwen2.5-coder:0.5b', -- Puoi cambiare con qwen2.5-coder, deepseek-coder, ecc.
+    model = 'qwen2.5-coder:0.5b',
+    --model = 'deepseek-coder:1.3b',
+    --model = 'codellama:7b-code',
+
+    -- System prompt: istruzioni minime per code completion
+    system = 'You are a code completion model. You must output ONLY the code that replaces <MID>. Do NOT repeat <PRE> or <SUF>. Do NOT add imports, comments, helper functions, or explanations. Use only variables already defined in <PRE> and <SUF>. Preserve correct indentation.',
+    -- User prompt: formato infill ottimizzato per Code Llama
+    -- Formato: <PRE> {prefix} <SUF>{suffix} <MID>
     prompt = function(lines_before, lines_after)
-      local ft = vim.bo.filetype
-      return string.format(
-        'Filetype: %s\nProvide ready-to-run code completion. Keep it short and concise unless more detail is clearly needed. Infer the intent from context and provide an approximate but functional continuation.\n\n%s',
-        ft,
-        lines_before
-      )
+      local prefix = lines_before or ''
+      local suffix = lines_after or ''
+
+      -- Formato infill standard per modelli di code completion
+      -- Questo formato è ottimizzato per Code Llama, CodeGemma, DeepSeek-Coder, ecc.
+      return string.format('<PRE> %s <SUF>%s <MID>', prefix, suffix)
     end,
   },
   notify = true,
   notify_callback = function(msg)
     vim.notify(msg)
   end,
-  run_on_every_keystroke = false,
+  run_on_every_keystroke = true, -- Abilita completion automatiche
   ignored_file_types = {
     -- default is not to ignore
     -- uncomment to ignore in lua:
@@ -113,10 +127,10 @@ cmp.setup {
 
   -- Completion behavior
   completion = {
-    keyword_length = 1,
+    keyword_length = 1, -- Avvia completion dopo 1 carattere (LSP/buffer/snippets)
     completeopt = 'menu,menuone,noselect',
     autocomplete = {
-      require('cmp.types').cmp.TriggerEvent.TextChanged,
+      require('cmp.types').cmp.TriggerEvent.TextChanged, -- Trigger automatico su modifica testo
     },
   },
 
@@ -254,7 +268,7 @@ cmp.setup {
       name = 'cmp_ai', -- Ollama AI completions (priorità massima)
       priority = 1500,
       max_item_count = 5,
-      keyword_length = 3,
+      keyword_length = 2, -- Ridotto da 3 a 2 per completion più reattive
     },
     {
       name = 'nvim_lsp',
@@ -342,7 +356,7 @@ cmp.setup {
   performance = {
     debounce = 60,
     throttle = 30,
-    fetching_timeout = 500,
+    fetching_timeout = 1000,
     confirm_resolve_timeout = 80,
     async_budget = 1,
     max_view_entries = 200,
