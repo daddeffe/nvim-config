@@ -85,6 +85,3 @@ require('noice').setup {
     long_message_to_split = true, -- long messages will be sent to a split
   },
 }
-
--- Clear notifications
-vim.keymap.set('n', '<Esc>', '<cmd>NoiceDismiss<CR>')

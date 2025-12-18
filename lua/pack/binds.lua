@@ -1,5 +1,11 @@
 -- Clear highlights on search when pressing <Esc> in normal mode
-vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
+vim.keymap.set('n', '<Esc>', function()
+  vim.cmd 'nohlsearch'
+  -- Also dismiss Noice notifications if available
+  if pcall(require, 'noice') then
+    vim.cmd 'NoiceDismiss'
+  end
+end, { desc = 'Clear highlights and notifications' })
 
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list', silent = true })
 
@@ -28,7 +34,7 @@ vim.keymap.set('n', '<leader><leader>', ':lua vim.cmd.so()<CR>', { desc = 'Sourc
 vim.keymap.set('v', '<leader>x', '<cmd>.lua<CR><ESC>', { desc = 'Execute the current line' })
 -- create a keymap to exit from insert mode and save the file when pressing jk
 vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode', silent = true })
-vim.keymap.set('n', 'xc', ':w<CR>', { desc = 'Exit insert mode', silent = true })
+vim.keymap.set('n', 'xc', ':w<CR>', { desc = 'Write file', silent = true })
 
 -- Move block in visual line
 vim.keymap.set('v', 'J', ":m '>+1<CR>", { silent = true })
@@ -38,8 +44,10 @@ vim.keymap.set('v', 'K', ":m '<-2<CR>", { silent = true })
 vim.keymap.set('n', 'J', 'mzJ`z')
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
-vim.keymap.set('n', 'n', 'nzzzv')
-vim.keymap.set('n', 'N', 'Nzzzv')
+vim.keymap.set('n', '<PageUp>', '<C-u>zz')
+vim.keymap.set('n', '<PageDown>', '<C-d>zz')
+vim.keymap.set('n', 'n', 'nzz')
+vim.keymap.set('n', 'N', 'Nzz')
 
 -- No more Q
 --vim.keymap.set('n', 'Q', '<nop>')

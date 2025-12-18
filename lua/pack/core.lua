@@ -439,7 +439,7 @@ require('snacks').setup {
   -- Visual enhancements
   image = { enabled = true },
   scroll = {
-    enabled = true,
+    enabled = false,
     -- Smooth scrolling animation
   },
   dim = {
