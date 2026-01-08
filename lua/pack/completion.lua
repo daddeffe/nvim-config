@@ -34,24 +34,22 @@ cmp_ai:setup {
   max_lines = 30, -- Ridotto da 50 a 30 per velocità (15 before + 15 after)
   provider = 'Ollama',
   provider_options = {
+    --model = 'llama3.2:1b',
     model = 'qwen2.5-coder:0.5b',
+    --model = 'qwen2.5:0.5b',
     --model = 'deepseek-coder:1.3b',
-    --model = 'codellama:7b-code',
-
-    -- System prompt: istruzioni minime per code completion
-    system = 'You are a code completion model. You must output ONLY the code that replaces <MID>. Do NOT repeat <PRE> or <SUF>. Do NOT add imports, comments, helper functions, or explanations. Use only variables already defined in <PRE> and <SUF>. Preserve correct indentation.',
-    -- User prompt: formato infill ottimizzato per Code Llama
-    -- Formato: <PRE> {prefix} <SUF>{suffix} <MID>
+    -- model = 'codellama:7b-code',
     prompt = function(lines_before, lines_after)
-      local prefix = lines_before or ''
-      local suffix = lines_after or ''
+      --return lines_before
 
-      -- Formato infill standard per modelli di code completion
-      -- Questo formato è ottimizzato per Code Llama, CodeGemma, DeepSeek-Coder, ecc.
-      return string.format('<PRE> %s <SUF>%s <MID>', prefix, suffix)
+      --qwen
+      return '<|fim_prefix|>' .. lines_before .. '<|fim_suffix|>' .. lines_after .. '<|fim_middle|>'
+    end,
+    suffix = function(lines_after)
+      return lines_after
     end,
   },
-  notify = true,
+  notify = false,
   notify_callback = function(msg)
     vim.notify(msg)
   end,
