@@ -6,28 +6,23 @@ vim.tbl_flatten = function(t)
   return vim.iter(t):flatten():totable()
 end
 
-require 'pack.opt'
-require 'pack.binds'
-require 'pack.autocmd'
-
--- Core dependencies and shared libraries
 require 'pack.core'
 
--- UI and theming
 require 'pack.ui'
 
--- Development tools
-require 'pack.lsp'
 require 'pack.treesitter'
 require 'pack.completion'
 
--- Editor enhancements
-require 'pack.editing'
-require 'pack.navigation'
 require 'pack.tools'
+require 'pack.editing'
+require 'pack.lsp'
+require 'pack.navigation'
 
--- Additional plugins
 require 'pack.plugins_extra'
+
+require 'pack.opt'
+require 'pack.binds'
+require 'pack.autocmd'
 
 -- Load plugins from lua/plugins/ directory
 local fs = vim.fs -- nvim ≥ 0.9
@@ -44,5 +39,5 @@ if vim.fn.isdirectory(plugins_dir) == 1 then
 end
 
 vim.api.nvim_create_user_command('AlignColumns', function(opts)
-  vim.cmd(string.format("%d,%d!column -t | sed 's/ = /=/'", opts.line1, opts.line2))
+  vim.cmd(string.format("%d,%d!column -t -o ' ' | sed 's/ = /=/' | sed 's/[ \t]*$//'", opts.line1, opts.line2))
 end, { range = true })

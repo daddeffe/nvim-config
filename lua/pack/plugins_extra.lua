@@ -7,6 +7,12 @@ vim.pack.add({
 
   -- Vim Coach
   'https://github.com/shahshlok/vim-coach.nvim',
+
+  -- Presentations
+  'https://github.com/sotte/presenting.nvim',
+
+  -- Encryption
+  'https://github.com/Gitello448/aegis.nvim',
 }, {
   confirm = false,
 })
@@ -24,3 +30,6 @@ if coach_ok then
   coach.setup()
   vim.keymap.set('n', '<leader>?', '<cmd>VimCoach<cr>', { desc = 'Vim Coach' })
 end
+
+-- Configure presenting.nvim
+require('presenting').setup {}

@@ -10,13 +10,19 @@ vim.pack.add({
 
   -- Macro management
   'https://github.com/sahilsehwag/macrobank.nvim',
+
+  -- Buffer management
+  'https://github.com/serhez/bento.nvim',
 }, {
   confirm = false,
 })
 
 -- Configure barbecue
 require('barbecue').setup {
-  -- Configuration options can be added here
+  show_modified = true,
+  modifiers = {
+    dirname = ':~:.',
+  },
 }
 
 -- Configure macrobank
@@ -179,3 +185,50 @@ vim.keymap.set('n', '<leader>a', "<cmd>lua require('harpoon.mark').add_file()<cr
 vim.keymap.set('n', '<C-e>', "<cmd>lua require('harpoon.ui').toggle_quick_menu()<cr>", { desc = 'Harpoon UI' })
 vim.keymap.set({ 'n', 'x' }, ']]', "<cmd>lua require('harpoon.ui').nav_next()<cr>", { desc = 'Harpoon Next' })
 vim.keymap.set({ 'n', 'x' }, '[[', "<cmd>lua require('harpoon.ui').nav_prev()<cr>", { desc = 'Harpoon Previous' })
+
+-- Bento.nvim configuration
+require('bento').setup {
+  main_keymap = ';',
+  lock_char = '🔒',
+  buffer_deletion_metric = 'frecency_access',
+  buffer_notify_on_delete = true,
+  ordering_metric = 'access',
+  default_action = 'open',
+
+  ui = {
+    mode = 'floating',
+    floating = {
+      position = 'middle-right',
+      offset_x = 0,
+      offset_y = 0,
+      dash_char = '─',
+      label_padding = 1,
+      minimal_menu = 'dashed',
+      max_rendered_buffers = nil,
+    },
+    tabline = {
+      left_page_symbol = '❮',
+      right_page_symbol = '❯',
+      separator_symbol = '│',
+    },
+  },
+
+  highlights = {
+    current = 'Bold',
+    active = 'Normal',
+    inactive = 'Comment',
+    modified = 'DiagnosticWarn',
+    inactive_dash = 'Comment',
+    previous = 'Search',
+    label_open = 'DiagnosticVirtualTextHint',
+    label_vsplit = 'DiagnosticVirtualTextInfo',
+    label_split = 'DiagnosticVirtualTextInfo',
+    label_lock = 'DiagnosticVirtualTextWarn',
+    label_minimal = 'Visual',
+    window_bg = 'BentoNormal',
+    page_indicator = 'Comment',
+    separator = 'Normal',
+  },
+
+  actions = {},
+}

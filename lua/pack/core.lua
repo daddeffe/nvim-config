@@ -565,85 +565,85 @@ require('which-key').setup {
   },
 
   -- Document existing key chains
-  spec = {
-    { '<leader>q', desc = 'Diagnostic [Q]uickfix' },
-    { '<leader>x', desc = '[X] Delete Buffer' },
-    { '<leader>w', desc = '[W]rite file' },
-    { '<leader>zf', desc = 'Toggle LSP folding' },
-    { '<leader>p', desc = 'Paste without overwrite yank', mode = 'x' },
-    { '<leader>S', desc = 'Plugin Store' },
-    { '<leader>a', desc = 'Add File to Harpoon' },
-    { '<leader>?', desc = 'Vim Coach' },
+  -- spec = {
+  --   { '<leader>q', desc = 'Diagnostic [Q]uickfix' },
+  --   { '<leader>x', desc = '[X] Delete Buffer' },
+  --   { '<leader>w', desc = '[W]rite file' },
+  --   { '<leader>zf', desc = 'Toggle LSP folding' },
+  --   { '<leader>p', desc = 'Paste without overwrite yank', mode = 'x' },
+  --   { '<leader>S', desc = 'Plugin Store' },
+  --   { '<leader>a', desc = 'Add File to Harpoon' },
+  --   { '<leader>?', desc = 'Vim Coach' },
 
-    -- Buffer group
-    { '<leader>b', group = '[B]uffer' },
-    { '<leader>bd', desc = '[B]uffer [D]elete' },
-    { '<leader>bs', desc = '[B]uffer [S]cratch' },
-    { '<leader>bS', desc = '[B]uffer [S]cratch Select' },
+  --   -- Buffer group
+  --   { '<leader>b', group = '[B]uffer' },
+  --   { '<leader>bd', desc = '[B]uffer [D]elete' },
+  --   { '<leader>bs', desc = '[B]uffer [S]cratch' },
+  --   { '<leader>bS', desc = '[B]uffer [S]cratch Select' },
 
-    -- Notification group
-    { '<leader>n', group = '[N]otifications' },
-    { '<leader>nt', desc = '[N]otification His[t]ory' },
+  --   -- Notification group
+  --   { '<leader>n', group = '[N]otifications' },
+  --   { '<leader>nt', desc = '[N]otification His[t]ory' },
 
-    -- Zen/Zoom group
-    { '<leader>z', desc = '[Z]en Mode' },
-    { '<leader>Z', desc = '[Z]oom Window' },
+  --   -- Zen/Zoom group
+  --   { '<leader>z', desc = '[Z]en Mode' },
+  --   { '<leader>Z', desc = '[Z]oom Window' },
 
-    -- Buffer rename
-    { '<leader>br', desc = '[B]uffer [R]ename File' },
+  --   -- Buffer rename
+  --   { '<leader>br', desc = '[B]uffer [R]ename File' },
 
-    -- Trailing whitespace
-    { '<leader>tw', desc = 'Trim [T]railing [W]hitespace' },
-    { '<leader>tl', desc = 'Trim [T]railing [L]ines' },
+  --   -- Trailing whitespace
+  --   { '<leader>tw', desc = 'Trim [T]railing [W]hitespace' },
+  --   { '<leader>tl', desc = 'Trim [T]railing [L]ines' },
 
-    -- Dim toggle
-    { '<leader>dim', desc = 'Toggle [Dim] Inactive Windows' },
+  --   -- Dim toggle
+  --   { '<leader>dim', desc = 'Toggle [Dim] Inactive Windows' },
 
-    -- Search group
-    { '<leader>s', group = '[S]earch' },
-    { '<leader>sh', desc = '[S]earch [H]elp' },
-    { '<leader>sk', desc = '[S]earch [K]eymaps' },
-    { '<leader>sf', desc = '[S]earch [F]iles' },
-    { '<leader>ss', desc = '[S]earch [S]elect Telescope' },
-    { '<leader>sw', desc = '[S]earch current [W]ord' },
-    { '<leader>sg', desc = '[S]earch by [G]rep' },
-    { '<leader>sd', desc = '[S]earch [D]iagnostics' },
-    { '<leader>sr', desc = '[S]earch [R]esume' },
-    { '<leader>s.', desc = '[S]earch Recent Files' },
-    { '<leader>sb', desc = '[S]earch Buffers' },
-    { '<leader>s/', desc = '[S]earch in current buffer' },
-    { '<leader>sn', desc = '[S]earch Neovim config' },
+  --   -- Search group
+  --   { '<leader>s', group = '[S]earch' },
+  --   { '<leader>sh', desc = '[S]earch [H]elp' },
+  --   { '<leader>sk', desc = '[S]earch [K]eymaps' },
+  --   { '<leader>sf', desc = '[S]earch [F]iles' },
+  --   { '<leader>ss', desc = '[S]earch [S]elect Telescope' },
+  --   { '<leader>sw', desc = '[S]earch current [W]ord' },
+  --   { '<leader>sg', desc = '[S]earch by [G]rep' },
+  --   { '<leader>sd', desc = '[S]earch [D]iagnostics' },
+  --   { '<leader>sr', desc = '[S]earch [R]esume' },
+  --   { '<leader>s.', desc = '[S]earch Recent Files' },
+  --   { '<leader>sb', desc = '[S]earch Buffers' },
+  --   { '<leader>s/', desc = '[S]earch in current buffer' },
+  --   { '<leader>sn', desc = '[S]earch Neovim config' },
 
-    -- Toggle group
-    { '<leader>t', group = '[T]oggle' },
-    { '<leader>th', desc = 'Toggle inlay hints' },
+  --   -- Toggle group
+  --   { '<leader>t', group = '[T]oggle' },
+  --   { '<leader>th', desc = 'Toggle inlay hints' },
 
-    -- Git Hunk group
-    { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
-    { '<leader>hs', desc = '[H]unk Stage', mode = { 'n', 'v' } },
-    { '<leader>hr', desc = '[H]unk Reset', mode = { 'n', 'v' } },
-    { '<leader>hS', desc = 'Stage buffer' },
-    { '<leader>hR', desc = 'Reset buffer' },
-    { '<leader>hp', desc = 'Preview hunk' },
-    { '<leader>hb', desc = 'Blame line' },
-    { '<leader>hd', desc = 'Diff this' },
-    { '<leader>hD', desc = 'Diff this ~' },
-    { '<leader>hQ', desc = 'Quickfix all hunks' },
-    { '<leader>hq', desc = 'Quickfix hunks' },
+  --   -- Git Hunk group
+  --   { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+  --   { '<leader>hs', desc = '[H]unk Stage', mode = { 'n', 'v' } },
+  --   { '<leader>hr', desc = '[H]unk Reset', mode = { 'n', 'v' } },
+  --   { '<leader>hS', desc = 'Stage buffer' },
+  --   { '<leader>hR', desc = 'Reset buffer' },
+  --   { '<leader>hp', desc = 'Preview hunk' },
+  --   { '<leader>hb', desc = 'Blame line' },
+  --   { '<leader>hd', desc = 'Diff this' },
+  --   { '<leader>hD', desc = 'Diff this ~' },
+  --   { '<leader>hQ', desc = 'Quickfix all hunks' },
+  --   { '<leader>hq', desc = 'Quickfix hunks' },
 
-    -- Claude group
-    { '<leader>c', group = '[C]laude' },
-    { '<leader>cc', desc = 'Toggle Claude' },
-    { '<leader>cf', desc = 'Focus Claude' },
-    { '<leader>cr', desc = 'Resume Claude' },
-    { '<leader>cC', desc = 'Continue Claude' },
-    { '<leader>cm', desc = 'Select Claude model' },
-    { '<leader>cb', desc = 'Add current buffer' },
-    { '<leader>cs', desc = 'Send to Claude', mode = 'v' },
-    { '<leader>cS', desc = 'Add file tree' },
-    { '<leader>ca', desc = 'Accept diff' },
-    { '<leader>cd', desc = 'Deny diff' },
-  },
+  --   -- Claude group
+  --   { '<leader>c', group = '[C]laude' },
+  --   { '<leader>cc', desc = 'Toggle Claude' },
+  --   { '<leader>cf', desc = 'Focus Claude' },
+  --   { '<leader>cr', desc = 'Resume Claude' },
+  --   { '<leader>cC', desc = 'Continue Claude' },
+  --   { '<leader>cm', desc = 'Select Claude model' },
+  --   { '<leader>cb', desc = 'Add current buffer' },
+  --   { '<leader>cs', desc = 'Send to Claude', mode = 'v' },
+  --   { '<leader>cS', desc = 'Add file tree' },
+  --   { '<leader>ca', desc = 'Accept diff' },
+  --   { '<leader>cd', desc = 'Deny diff' },
+  -- },
 }
 
 --[[
