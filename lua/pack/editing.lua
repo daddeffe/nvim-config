@@ -16,7 +16,6 @@ vim.pack.add({
   'https://github.com/ziontee113/color-picker.nvim',
 
   -- Advanced editing
-  'https://github.com/m4xshen/hardtime.nvim',
   'https://github.com/smjonas/inc-rename.nvim',
 
   -- CSV viewing
@@ -26,6 +25,7 @@ vim.pack.add({
   'https://github.com/OXY2DEV/patterns.nvim',
 }, {
   confirm = false,
+  load = true,
 })
 
 -- Load optional packages
@@ -59,40 +59,6 @@ require('colorizer').setup {
   '*', -- Highlight all files, but customize some others.
   css = { rgb_fn = true }, -- Enable parsing rgb(...) functions in css.
   html = { names = false }, -- Disable parsing "names" like Blue or Gray
-}
-
--- Configure hardtime
-require('hardtime').setup {
-  disabled_filetypes = { 'quickfix', 'netrw', 'nerdtree', 'aerial', 'alpha', 'dashboard', 'lazy', 'mason', 'help' },
-  disabled_keys = {
-    -- '<Esc>',
-    -- '<CR>',
-    -- 'i',
-    -- 'I',
-    -- 'a',
-    -- 'A',
-    -- 'o',
-    -- 'O',
-    -- 'v',
-    -- 'V',
-    -- '<C-v>',
-    -- 'c',
-    -- 'r',
-    -- 'R',
-    -- '<C-r>',
-    -- 'C',
-    -- 's',
-    -- 'S',
-    -- '<C-s>',
-  },
-  --max_time = 3,
-  --allow_different_key = true,
-  --reset_highlights = true,
-  --hint = true,
-  --repeat_message = true,
-  --max_count = 3,
-  --sort_using_count = true,
-  --sorting_algorithm = 'favor_older_keys',
 }
 
 -- Configure increname

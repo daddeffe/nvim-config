@@ -61,10 +61,6 @@ vim.keymap.set({ 'n', 'i', 'v' }, '<Super>', '<Nop>', { silent = true })
 -- Paste with yanking to null reg
 vim.keymap.set('x', '<leader>p', '"_dP', { desc = 'Paste without overvrite last yank' })
 
--- Move block in visual line
-vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv'")
-vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv'")
-
 -- Execute selected lines in a new horizontal split terminal (for .sh files)
 vim.keymap.set('v', '<leader>r', function()
   -- Get the selected lines

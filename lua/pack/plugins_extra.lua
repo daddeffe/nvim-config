@@ -15,6 +15,7 @@ vim.pack.add({
   'https://github.com/Gitello448/aegis.nvim',
 }, {
   confirm = false,
+  load = true,
 })
 
 -- Load optional packages

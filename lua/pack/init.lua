@@ -6,9 +6,9 @@ vim.tbl_flatten = function(t)
   return vim.iter(t):flatten():totable()
 end
 
-require 'pack.core'
+require 'pack.opt'
 
-require 'pack.ui'
+require 'pack.core'
 
 require 'pack.treesitter'
 require 'pack.completion'
@@ -20,7 +20,6 @@ require 'pack.navigation'
 
 require 'pack.plugins_extra'
 
-require 'pack.opt'
 require 'pack.binds'
 require 'pack.autocmd'
 
@@ -41,3 +40,4 @@ end
 vim.api.nvim_create_user_command('AlignColumns', function(opts)
   vim.cmd(string.format("%d,%d!column -t -o ' ' | sed 's/ = /=/' | sed 's/[ \t]*$//'", opts.line1, opts.line2))
 end, { range = true })
+

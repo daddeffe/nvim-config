@@ -13,18 +13,152 @@ vim.pack.add({
   -- Package manager UI
   'https://github.com/mplusp/pack-manager.nvim',
 
-  -- Keymap helper
-  'https://github.com/folke/which-key.nvim',
+  'https://github.com/catppuccin/nvim',
+  'https://github.com/nvim-tree/nvim-web-devicons',
 }, {
   confirm = false,
+  load = true,
 })
 
 -- Setup pack-manager
 require('pack-manager').setup()
 
+require('catppuccin').setup {
+  opts = {
+    flavour = 'mocha', -- latte, frappe, macchiato, mocha
+  },
+  flavour = 'mocha', -- latte, frappe, macchiato, mocha
+  transparent_background = false, -- disables setting the background color.
+  show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
+  term_colors = true, -- sets terminal colors (e.g. `g:terminal_color_0`)
+  dim_inactive = {
+    enabled = false, -- dims the background color of inactive window
+  },
+  styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
+    comments = { 'italic' }, -- Change the style of comments
+    conditionals = { 'italic' },
+    loops = {},
+    functions = {},
+    keywords = {},
+    strings = {},
+    variables = {},
+    numbers = {},
+    booleans = {},
+    properties = {},
+    types = {},
+    operators = {},
+    miscs = {}, -- Uncomment to turn off hard-coded styles
+  },
+  color_overrides = {},
+  custom_highlights = {},
+  default_integrations = true,
+  integrations = {
+    cmp = true,
+    gitsigns = true,
+    nvimtree = true,
+    treesitter = true,
+    notify = false,
+    mini = {
+      enabled = true,
+      indentscope_color = '',
+    },
+    lsp_trouble = true,
+    lsp_saga = true,
+    mason = true,
+    telescope = true,
+    which_key = false,
+
+    -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+  },
+}
+
+--vim.notify(vim.inspect(require('lualine').get_config()))
+-- setup must be called before loading
+vim.cmd.colorscheme 'catppuccin'
 -- ========================================================================
 -- MINI.NVIM CONFIGURATION
 -- ========================================================================
+
+require('mini.misc').setup {
+  -- Collect various useful functions
+  make_global = {
+    'put',
+    'put_text',
+    'stat_summary',
+    'bench_time',
+  },
+}
+-- Make mini.misc functions globally available
+require('mini.misc').setup()
+
+-- mini.clue - Keymap helper (replaces which-key)
+require('mini.clue').setup {
+  triggers = {
+    -- Leader triggers
+    { mode = 'n', keys = '<Leader>' },
+    { mode = 'x', keys = '<Leader>' },
+
+    -- Built-in completion
+    { mode = 'i', keys = '<C-x>' },
+
+    -- `g` key
+    { mode = 'n', keys = 'g' },
+    { mode = 'x', keys = 'g' },
+
+    -- Marks
+    { mode = 'n', keys = "'" },
+    { mode = 'n', keys = '`' },
+    { mode = 'x', keys = "'" },
+    { mode = 'x', keys = '`' },
+
+    -- Registers
+    { mode = 'n', keys = '"' },
+    { mode = 'x', keys = '"' },
+    { mode = 'i', keys = '<C-r>' },
+    { mode = 'c', keys = '<C-r>' },
+
+    -- Window commands
+    { mode = 'n', keys = '<C-w>' },
+
+    -- `z` key
+    { mode = 'n', keys = 'z' },
+    { mode = 'x', keys = 'z' },
+
+    -- Brackets
+    { mode = 'n', keys = '[' },
+    { mode = 'n', keys = ']' },
+    { mode = 'x', keys = '[' },
+    { mode = 'x', keys = ']' },
+  },
+
+  clues = {
+    -- Enhance with builtin clues
+    require('mini.clue').gen_clues.builtin_completion(),
+    require('mini.clue').gen_clues.g(),
+    require('mini.clue').gen_clues.marks(),
+    require('mini.clue').gen_clues.registers(),
+    require('mini.clue').gen_clues.windows(),
+    require('mini.clue').gen_clues.z(),
+
+    -- Custom group descriptions
+    { mode = 'n', keys = '<Leader>b', desc = '+Buffer' },
+    { mode = 'n', keys = '<Leader>s', desc = '+Search' },
+    { mode = 'n', keys = '<Leader>t', desc = '+Toggle' },
+    { mode = 'n', keys = '<Leader>h', desc = '+Hunk/Git' },
+    { mode = 'x', keys = '<Leader>h', desc = '+Hunk/Git' },
+    { mode = 'n', keys = '<Leader>g', desc = '+Git' },
+    { mode = 'n', keys = '<Leader>n', desc = '+Notifications' },
+    { mode = 'n', keys = '<Leader>z', desc = '+Zen' },
+    { mode = 'n', keys = '<Leader>c', desc = '+Code/Claude' },
+  },
+
+  window = {
+    delay = 300,
+    config = {
+      width = 'auto',
+    },
+  },
+}
 
 -- mini.icons - Icon support (used by other plugins)
 require('mini.icons').setup()
@@ -87,9 +221,9 @@ statusline.setup {
 
 -- Custom statusline section for cursor location
 ---@diagnostic disable-next-line: duplicate-set-field
-statusline.section_location = function()
-  return '%2l:%-2v'
-end
+--statusline.section_location = function()
+--  return '%2l:%-2v'
+--end
 
 -- mini.comment - Smart and powerful comment plugin
 require('mini.comment').setup {
@@ -259,17 +393,6 @@ require('mini.visits').setup {
 }
 
 -- mini.misc - Miscellaneous useful functions
-require('mini.misc').setup {
-  -- Collect various useful functions
-  make_global = {
-    'put',
-    'put_text',
-    'stat_summary',
-    'bench_time',
-  },
-}
--- Make mini.misc functions globally available
-MiniMisc = require 'mini.misc'
 
 -- ========================================================================
 -- DISABLED MINI PLUGINS (available but not currently used)
@@ -433,7 +556,7 @@ require('snacks').setup {
   toggle = {
     enabled = true,
     -- Built-in toggle mappings
-    which_key = true, -- integrate with which-key
+    which_key = false, -- disabled, using mini.clue
   },
 
   -- Visual enhancements
@@ -479,246 +602,3 @@ require('snacks').setup {
 -- SNACKS KEYMAPS
 -- ========================================================================
 -- Add useful keymaps for snacks features
-vim.keymap.set('n', '<leader><Tab>', function()
-  Snacks.explorer()
-end, { desc = 'Explorer' })
-vim.keymap.set('n', '<leader>bw', ':w<CR>', {
-  desc = '[B]uffer [W]elete',
-  silent = true,
-})
-vim.keymap.set('n', '<leader>bd', function()
-  Snacks.bufdelete()
-end, { desc = '[B]uffer [D]elete' })
-vim.keymap.set('n', '<leader>bs', function()
-  Snacks.scratch()
-end, { desc = '[B]uffer [S]cratch' })
-vim.keymap.set('n', '<leader>bS', function()
-  Snacks.scratch.select()
-end, { desc = '[B]uffer [S]cratch Select' })
-
-vim.keymap.set('n', '<leader>nt', function()
-  Snacks.notifier.show_history()
-end, { desc = '[N]otification His[t]ory' })
-
-vim.keymap.set('n', '<leader>ze', function()
-  Snacks.zen()
-end, { desc = '[Z]en Mode' })
-vim.keymap.set('n', '<leader>Z', function()
-  Snacks.zen.zoom()
-end, { desc = '[Z]oom Window' })
-
-vim.keymap.set({ 'n', 't' }, '<C-\\>', function()
-  Snacks.terminal()
-end, { desc = 'Toggle Terminal' })
-
-vim.keymap.set('n', '<leader>dim', function()
-  Snacks.toggle.dim():toggle()
-end, { desc = 'Toggle [Dim] Inactive Windows' })
-vim.keymap.set('n', '<leader>br', function()
-  Snacks.rename.rename_file()
-end, { desc = '[B]uffer [R]ename File' })
-
--- ========================================================================
--- WHICH-KEY CONFIGURATION
--- ========================================================================
--- Which-key is a popup that displays available keybindings
-
-require('which-key').setup {
-  -- delay between pressing a key and opening which-key (milliseconds)
-  -- this setting is independent of vim.o.timeoutlen
-  delay = 0,
-  icons = {
-    -- set icon mappings to true if you have a Nerd Font
-    mappings = vim.g.have_nerd_font,
-    -- If you are using a Nerd Font: set icons.keys to an empty table which will use the
-    -- default which-key.nvim defined Nerd Font icons, otherwise define a string table
-    keys = vim.g.have_nerd_font and {} or {
-      Up = '<Up> ',
-      Down = '<Down> ',
-      Left = '<Left> ',
-      Right = '<Right> ',
-      C = '<C-…> ',
-      M = '<M-…> ',
-      D = '<D-…> ',
-      S = '<S-…> ',
-      CR = '<CR> ',
-      Esc = '<Esc> ',
-      ScrollWheelDown = '<ScrollWheelDown> ',
-      ScrollWheelUp = '<ScrollWheelUp> ',
-      NL = '<NL> ',
-      BS = '<BS> ',
-      Space = '<Space> ',
-      Tab = '<Tab> ',
-      F1 = '<F1>',
-      F2 = '<F2>',
-      F3 = '<F3>',
-      F4 = '<F4>',
-      F5 = '<F5>',
-      F6 = '<F6>',
-      F7 = '<F7>',
-      F8 = '<F8>',
-      F9 = '<F9>',
-      F10 = '<F10>',
-      F11 = '<F11>',
-      F12 = '<F12>',
-    },
-  },
-
-  -- Document existing key chains
-  -- spec = {
-  --   { '<leader>q', desc = 'Diagnostic [Q]uickfix' },
-  --   { '<leader>x', desc = '[X] Delete Buffer' },
-  --   { '<leader>w', desc = '[W]rite file' },
-  --   { '<leader>zf', desc = 'Toggle LSP folding' },
-  --   { '<leader>p', desc = 'Paste without overwrite yank', mode = 'x' },
-  --   { '<leader>S', desc = 'Plugin Store' },
-  --   { '<leader>a', desc = 'Add File to Harpoon' },
-  --   { '<leader>?', desc = 'Vim Coach' },
-
-  --   -- Buffer group
-  --   { '<leader>b', group = '[B]uffer' },
-  --   { '<leader>bd', desc = '[B]uffer [D]elete' },
-  --   { '<leader>bs', desc = '[B]uffer [S]cratch' },
-  --   { '<leader>bS', desc = '[B]uffer [S]cratch Select' },
-
-  --   -- Notification group
-  --   { '<leader>n', group = '[N]otifications' },
-  --   { '<leader>nt', desc = '[N]otification His[t]ory' },
-
-  --   -- Zen/Zoom group
-  --   { '<leader>z', desc = '[Z]en Mode' },
-  --   { '<leader>Z', desc = '[Z]oom Window' },
-
-  --   -- Buffer rename
-  --   { '<leader>br', desc = '[B]uffer [R]ename File' },
-
-  --   -- Trailing whitespace
-  --   { '<leader>tw', desc = 'Trim [T]railing [W]hitespace' },
-  --   { '<leader>tl', desc = 'Trim [T]railing [L]ines' },
-
-  --   -- Dim toggle
-  --   { '<leader>dim', desc = 'Toggle [Dim] Inactive Windows' },
-
-  --   -- Search group
-  --   { '<leader>s', group = '[S]earch' },
-  --   { '<leader>sh', desc = '[S]earch [H]elp' },
-  --   { '<leader>sk', desc = '[S]earch [K]eymaps' },
-  --   { '<leader>sf', desc = '[S]earch [F]iles' },
-  --   { '<leader>ss', desc = '[S]earch [S]elect Telescope' },
-  --   { '<leader>sw', desc = '[S]earch current [W]ord' },
-  --   { '<leader>sg', desc = '[S]earch by [G]rep' },
-  --   { '<leader>sd', desc = '[S]earch [D]iagnostics' },
-  --   { '<leader>sr', desc = '[S]earch [R]esume' },
-  --   { '<leader>s.', desc = '[S]earch Recent Files' },
-  --   { '<leader>sb', desc = '[S]earch Buffers' },
-  --   { '<leader>s/', desc = '[S]earch in current buffer' },
-  --   { '<leader>sn', desc = '[S]earch Neovim config' },
-
-  --   -- Toggle group
-  --   { '<leader>t', group = '[T]oggle' },
-  --   { '<leader>th', desc = 'Toggle inlay hints' },
-
-  --   -- Git Hunk group
-  --   { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
-  --   { '<leader>hs', desc = '[H]unk Stage', mode = { 'n', 'v' } },
-  --   { '<leader>hr', desc = '[H]unk Reset', mode = { 'n', 'v' } },
-  --   { '<leader>hS', desc = 'Stage buffer' },
-  --   { '<leader>hR', desc = 'Reset buffer' },
-  --   { '<leader>hp', desc = 'Preview hunk' },
-  --   { '<leader>hb', desc = 'Blame line' },
-  --   { '<leader>hd', desc = 'Diff this' },
-  --   { '<leader>hD', desc = 'Diff this ~' },
-  --   { '<leader>hQ', desc = 'Quickfix all hunks' },
-  --   { '<leader>hq', desc = 'Quickfix hunks' },
-
-  --   -- Claude group
-  --   { '<leader>c', group = '[C]laude' },
-  --   { '<leader>cc', desc = 'Toggle Claude' },
-  --   { '<leader>cf', desc = 'Focus Claude' },
-  --   { '<leader>cr', desc = 'Resume Claude' },
-  --   { '<leader>cC', desc = 'Continue Claude' },
-  --   { '<leader>cm', desc = 'Select Claude model' },
-  --   { '<leader>cb', desc = 'Add current buffer' },
-  --   { '<leader>cs', desc = 'Send to Claude', mode = 'v' },
-  --   { '<leader>cS', desc = 'Add file tree' },
-  --   { '<leader>ca', desc = 'Accept diff' },
-  --   { '<leader>cd', desc = 'Deny diff' },
-  -- },
-}
-
---[[
-✅ Plugin Git Disabilitati
-
-  - mini.git - disabilitato e commentato
-  - mini.diff - disabilitato e commentato
-  - snacks.git - impostato enabled = false
-  - snacks.gitbrowse - impostato enabled = false
-  - Sezione Git Status nel dashboard - commentata
-
-  🔄 Sovrapposizioni Risolte
-
-  Mantenuti in Snacks (disabilitati i duplicati in Mini):
-  - snacks.notifier al posto di mini.notify
-  - snacks.bufdelete al posto di mini.bufremove
-  - snacks.words al posto di mini.cursorword
-  - snacks.indent + scope al posto di mini.indentscope
-
-  ⚙️ Configurazioni Base Aggiunte
-
-  Mini.nvim:
-  - mini.ai - text objects avanzati con n_lines
-  configurabile
-  - mini.surround - mappings documentati
-  (sa/sd/sr/sf/sF/sh)
-  - mini.statusline - con sezione location personalizzata
-  - mini.comment - opzioni dettagliate per commenti
-  - mini.pairs - autopairs con skip intelligente
-  - mini.bracketed - tutti i suffix documentati
-  (b/c/d/f/i/j/l/o/q/t/u/w/y)
-  - mini.hipatterns - hex colors + TODO/FIXME/NOTE/HACK
-  highlighting
-  - mini.jump2d - labels e mappings configurati
-  - mini.trailspace - con keymaps per trim
-  - mini.move - mappings Alt+hjkl documentati
-  - mini.operators - prefissi chiari (g=/gx/gm/gr/gs)
-  - mini.align - mappings ga/gA
-  - mini.visits - store configurato
-  - mini.misc - funzioni globali abilitate
-
-  Snacks.nvim:
-  - picker - navigazione con Ctrl+j/k
-  - indent - animazioni configurate (20ms)
-  - scope - tree-sitter abilitato
-  - words - debounce 200ms
-  - notifier - timeout, dimensioni e margini
-  - bufdelete - documentato
-  - scratch - markdown default, autowrite off
-  - terminal - posizione bottom, height 0.4
-  - toggle - integrazione which-key
-  - scroll - animazione 100ms linear
-  - dim - scope siblings configurato
-  - animate - 20ms, 60 FPS
-  - zen - toggles e zoom configurati
-
-  🎹 Keymaps Aggiunti
-
-  - <leader>bd - Buffer Delete
-  - <leader>bs - Buffer Scratch
-  - <leader>bS - Buffer Scratch Select
-  - <leader>br - Buffer Rename File
-  - <leader>nt - Notification History
-  - <leader>z - Zen Mode
-  - <leader>Z - Zoom Window
-  - <C-\> - Toggle Terminal (normal e terminal mode)
-  - <leader>dim - Toggle Dim
-  - <leader>tw - Trim Trailing Whitespace
-  - <leader>tl - Trim Trailing Lines
-
-  📝 Organizzazione File
-
-  - Sezioni chiaramente separate con headers ASCII
-  - Commenti esplicativi per ogni plugin
-  - Plugin disabilitati raccolti in una sezione dedicata
-  - Which-key con tutte le descrizioni aggiornate
-
--]]

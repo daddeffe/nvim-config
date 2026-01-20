@@ -5,6 +5,7 @@ vim.pack.add({
   'https://github.com/nvim-lua/plenary.nvim',
   'https://github.com/kdheepak/lazygit.nvim',
   'https://github.com/afonsofrancof/worktrees.nvim',
+  'https://github.com/madmaxieee/unclash.nvim',
 
   -- Fuzzy finder
   'https://github.com/nvim-telescope/telescope.nvim',
@@ -27,6 +28,7 @@ vim.pack.add({
   'https://github.com/ravitemer/mcphub.nvim',
 }, {
   confirm = false,
+  load = true,
 })
 
 -- Load optional packages

@@ -15,6 +15,7 @@ vim.pack.add({
   'https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim',
 }, {
   confirm = false,
+  load = true,
 })
 
 -- IMPORTANT: Initialize Mason BEFORE mason-lspconfig

@@ -15,6 +15,7 @@ vim.pack.add({
   'https://github.com/serhez/bento.nvim',
 }, {
   confirm = false,
+  load = true,
 })
 
 -- Configure barbecue

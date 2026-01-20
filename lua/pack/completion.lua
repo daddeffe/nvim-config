@@ -18,6 +18,7 @@ vim.pack.add({
   'https://github.com/tzachar/cmp-ai',
 }, {
   confirm = false,
+  load = true,
 })
 
 -- Setup cmp-ai with Ollama
