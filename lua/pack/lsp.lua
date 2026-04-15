@@ -259,6 +259,8 @@ vim.list_extend(ensure_installed, {
   'pyright',
   'black',
   'isort',
+  -- PHP tools
+  'intelephense',
 })
 require('mason-tool-installer').setup {
   ensure_installed = ensure_installed,
@@ -268,7 +270,9 @@ require('mason-tool-installer').setup {
 
 -- LSP server specific configurations
 local servers = {
-  ast_grep = {},
+  ast_grep = {
+    filetypes = { 'lua', 'python', 'javascript', 'typescript' },
+  },
   lua_ls = {
     settings = {
       Lua = {
@@ -297,6 +301,9 @@ local servers = {
         logLevel = 'error',
       },
     },
+  },
+  intelephense = {
+    filetypes = { 'php' },
   },
   pyright = {
     settings = {

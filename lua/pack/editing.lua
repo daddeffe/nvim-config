@@ -15,14 +15,11 @@ vim.pack.add({
   'https://github.com/norcalli/nvim-colorizer.lua',
   'https://github.com/ziontee113/color-picker.nvim',
 
-  -- Advanced editing
-  'https://github.com/smjonas/inc-rename.nvim',
-
   -- CSV viewing
   'https://github.com/hat0uma/csvview.nvim',
 
-  -- Regex patterns
-  'https://github.com/OXY2DEV/patterns.nvim',
+  -- Markdown Auto Table
+  'https://github.com/Kicamon/markdown-table-mode.nvim',
 }, {
   confirm = false,
   load = true,
@@ -61,11 +58,6 @@ require('colorizer').setup {
   html = { names = false }, -- Disable parsing "names" like Blue or Gray
 }
 
--- Configure increname
-vim.keymap.set('n', '<leader>rn', function()
-  return ':IncRename ' .. vim.fn.expand '<cword>'
-end, { expr = true })
-
 -- Configure color-picker
 require('color-picker').setup {
   ['icons'] = { '=', '|' },
@@ -84,4 +76,5 @@ require('csvview').setup {
   },
 }
 
+require('markdown-table-mode').setup()
 -- Note: mini.nvim modules are configured in core.lua

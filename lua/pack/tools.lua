@@ -26,6 +26,13 @@ vim.pack.add({
 
   -- MCP
   'https://github.com/ravitemer/mcphub.nvim',
+
+  -- Jupiter Notebook plugin
+  'https://github.com/dccsillag/magma-nvim',
+
+  -- Obsidian
+  'https://github.com/nvim-lua/plenary.nvim',
+  'https://github.com/epwalsh/obsidian.nvim',
 }, {
   confirm = false,
   load = true,
@@ -378,4 +385,15 @@ require('mcphub').setup {
     file_path = nil,
     prefix = 'MCPHub',
   },
+}
+
+require('obsidian').setup {
+  workspaces = {
+    {
+      name = 'def',
+      path = '~/Obsidian',
+    },
+  },
+
+  -- see below for full list of options 👇
 }

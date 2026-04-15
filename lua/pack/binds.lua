@@ -12,23 +12,11 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- Keybinds to make split navigation easier.
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 vim.keymap.set('n', '<C-S-h>', '<C-w>H', { desc = 'Move window to the left' })
 vim.keymap.set('n', '<C-S-l>', '<C-w>L', { desc = 'Move window to the right' })
 vim.keymap.set('n', '<C-S-j>', '<C-w>J', { desc = 'Move window to the lower' })
 vim.keymap.set('n', '<C-S-k>', '<C-w>K', { desc = 'Move window to the upper' })
-
--- Move inside insert mode
-vim.keymap.set('i', '<C-h>', '<Left>')
-vim.keymap.set('i', '<C-j>', '<Down>')
-vim.keymap.set('i', '<C-k>', '<Up>')
-vim.keymap.set('i', '<C-l>', '<Right>')
 
 vim.keymap.set('n', '<leader><leader>', ':lua vim.cmd.so()<CR>', { desc = 'Source file', silent = true })
 vim.keymap.set('v', '<leader>x', '<cmd>.lua<CR><ESC>', { desc = 'Execute the current line' })
@@ -107,3 +95,10 @@ vim.keymap.set('n', '<leader>tc', function()
     vim.wo.colorcolumn = '0'
   end
 end, { desc = 'Toggle [C]olor column' })
+
+vim.keymap.set('n', '<leader>tb', function()
+  local cat = require 'catppuccin'
+  cat.options.transparent_background = not cat.options.transparent_background
+  cat.compile()
+  vim.cmd.colorscheme 'catppuccin'
+end, { desc = 'Toggle Transparent [B]ackground' })

@@ -14,53 +14,32 @@ vim.pack.add({
   'https://github.com/hrsh7th/cmp-cmdline',
   'https://github.com/saadparwaiz1/cmp_luasnip',
 
-  -- AI completion via Ollama
-  'https://github.com/tzachar/cmp-ai',
+  -- AI completion via OpenCode server
+  'https://github.com/jaswdr/opencode-completion.nvim',
 }, {
   confirm = false,
   load = true,
 })
 
--- Setup cmp-ai with Ollama
--- Prompt ottimizzato con formato INFILL per code completion:
--- - System prompt: istruzioni minime
--- - User prompt: formato <PRE> {prefix} <SUF>{suffix} <MID>
---   (standard per Code Llama, CodeGemma, DeepSeek-Coder, ecc.)
--- - max_lines ridotto a 30 (15+15) per response rapide
--- - Token overhead minimale (~10 token vs ~100+ con formato custom)
--- Ref: https://ollama.com/blog/how-to-prompt-code-llama
-local cmp_ai = require 'cmp_ai.config'
+-- Setup opencode-completion
+-- Requires: opencode serve --port=4096
+-- API key managed by OpenCode CLI (~/.local/share/opencode/auth.json)
+vim.fn.jobstart({ 'opencode', 'serve', '--port=4096' }, {
+  detach = true,
+})
 
-cmp_ai:setup {
-  max_lines = 30, -- Ridotto da 50 a 30 per velocità (15 before + 15 after)
-  provider = 'Ollama',
-  provider_options = {
-    --model = 'llama3.2:1b',
-    model = 'qwen2.5-coder:0.5b',
-    --model = 'qwen2.5:0.5b',
-    --model = 'deepseek-coder:1.3b',
-    -- model = 'codellama:7b-code',
-    prompt = function(lines_before, lines_after)
-      --return lines_before
+require('opencode-completion').setup()
 
-      --qwen
-      return '<|fim_prefix|>' .. lines_before .. '<|fim_suffix|>' .. lines_after .. '<|fim_middle|>'
-    end,
-    suffix = function(lines_after)
-      return lines_after
-    end,
-  },
-  notify = false,
-  notify_callback = function(msg)
-    vim.notify(msg)
-  end,
-  run_on_every_keystroke = true, -- Abilita completion automatiche
-  ignored_file_types = {
-    -- default is not to ignore
-    -- uncomment to ignore in lua:
-    -- lua = true
-  },
-}
+-- fibonacci in lua
+local function fibonacci(n)
+  if n <= 1 then
+    return n
+  end
+  return fibonacci(n - 1) + fibonacci(n - 2)
+end
+
+-- Example usage
+-- print(fibonacci(10)) -- Output: 55
 
 -- Configure lazydev for Lua LSP
 require('lazydev').setup {
@@ -100,7 +79,6 @@ local kind_icons = {
   Constant = '󰏿',
   Struct = '󰙅',
   Operator = '󰆕',
-  AI = '🤖', -- Ollama AI completions
 }
 
 cmp.setup {
@@ -172,14 +150,9 @@ cmp.setup {
     fields = { 'kind', 'abbr', 'menu' },
     expandable_indicator = true,
     format = function(entry, vim_item)
-      -- Special handling for cmp-ai (Ollama)
-      if entry.source.name == 'cmp_ai' then
-        vim_item.kind = string.format('%s %s', kind_icons.AI or '🤖', 'AI')
-      else
-        -- Add icons for other sources
-        if kind_icons[vim_item.kind] then
-          vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind)
-        end
+      -- Add icons for completion kinds
+      if kind_icons[vim_item.kind] then
+        vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind)
       end
 
       -- Truncate long items
@@ -191,7 +164,6 @@ cmp.setup {
       -- Add source name
       vim_item.menu = ({
         nvim_lsp = '[LSP]',
-        cmp_ai = '[Ollama]',
         luasnip = '[Snippet]',
         buffer = '[Buffer]',
         path = '[Path]',
@@ -264,12 +236,6 @@ cmp.setup {
       group_index = 0,
     },
     {
-      name = 'cmp_ai', -- Ollama AI completions (priorità massima)
-      priority = 1500,
-      max_item_count = 5,
-      keyword_length = 2, -- Ridotto da 3 a 2 per completion più reattive
-    },
-    {
       name = 'nvim_lsp',
       priority = 1000,
       max_item_count = 50,
@@ -327,19 +293,6 @@ cmp.setup {
   sorting = {
     priority_weight = 2,
     comparators = {
-      -- AI completions vengono prima in base alla priority
-      function(entry1, entry2)
-        local kind1 = entry1:get_kind()
-        local kind2 = entry2:get_kind()
-        if kind1 ~= kind2 then
-          if entry1.source.name == 'cmp_ai' then
-            return true
-          end
-          if entry2.source.name == 'cmp_ai' then
-            return false
-          end
-        end
-      end,
       cmp.config.compare.offset,
       cmp.config.compare.exact,
       cmp.config.compare.score,

@@ -77,3 +77,5 @@ vim.o.confirm = true
 
 vim.o.autoread = true
 vim.o.autowrite = true
+
+vim.o.termguicolors = true
