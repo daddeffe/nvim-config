@@ -2,7 +2,6 @@ vim.pack.add({
   -- Git integration
   'https://github.com/lewis6991/gitsigns.nvim',
   'https://github.com/tpope/vim-fugitive',
-  'https://github.com/nvim-lua/plenary.nvim',
   'https://github.com/kdheepak/lazygit.nvim',
   'https://github.com/afonsofrancof/worktrees.nvim',
   'https://github.com/madmaxieee/unclash.nvim',
@@ -23,15 +22,12 @@ vim.pack.add({
 
   -- AI
   'https://github.com/NickvanDyke/opencode.nvim',
-
-  -- MCP
-  'https://github.com/ravitemer/mcphub.nvim',
+  'https://github.com/ggml-org/llama.vim',
 
   -- Jupiter Notebook plugin
   'https://github.com/dccsillag/magma-nvim',
 
   -- Obsidian
-  'https://github.com/nvim-lua/plenary.nvim',
   'https://github.com/epwalsh/obsidian.nvim',
 }, {
   confirm = false,
@@ -249,41 +245,234 @@ vim.g.opencode_opts = {
     },
   },
 }
--- vim.keymap.set({ 'n', 'x' }, '<C-a>', function()
---   require('opencode').ask('@this: ', { submit = true })
--- end, { desc = 'Ask opencode' })
--- vim.keymap.set({ 'n', 'x' }, '<C-x>', function()
---   require('opencode').select()
--- end, { desc = 'Execute opencode action…' })
--- vim.keymap.set({ 'n', 'x' }, 'ga', function()
---   require('opencode').prompt '@this'
--- end, { desc = 'Add to opencode' })
--- vim.keymap.set({ 'n', 't' }, '<C-.>', function()
---   require('opencode').toggle()
--- end, { desc = 'Toggle opencode' })
--- vim.keymap.set('n', '<S-C-u>', function()
---   require('opencode').command 'session.half.page.up'
--- end, { desc = 'opencode half page up' })
--- vim.keymap.set('n', '<S-C-d>', function()
---   require('opencode').command 'session.half.page.down'
--- end, { desc = 'opencode half page down' })
 
--- vim.keymap.set({ 'n', 'i' }, '<C-k>', function()
---   if vim.fn.mode() == 'i' then
---     vim.cmd 'stopinsert'
---   end
---
---   local line = vim.api.nvim_get_current_line()
---   require('opencode').ask('@this Complete this code/comment: ' .. line, { submit = true })
--- end, { desc = 'OpenCode autocomplete from current line' })
---
--- vim.keymap.set({ 'n', 'x', 'i' }, '<C-S-k>', function()
---   if vim.fn.mode() == 'i' then
---     vim.cmd 'stopinsert'
---   end
---
---   require('opencode').ask('@this Continue writing this code naturally, providing only the next logical lines without explanation: ', { submit = true })
--- end, { desc = 'OpenCode smart completion' })
+vim.keymap.set({ 'n', 'x' }, '<C-a>', function()
+  require('opencode').ask('@this: ', { submit = true })
+end, { desc = 'Ask opencode' })
+
+vim.keymap.set({ 'n', 'x' }, '<C-x>', function()
+  require('opencode').select()
+end, { desc = 'Execute opencode action…' })
+
+-- 'ga' è già usato da mini.align — uso <leader>aa
+vim.keymap.set({ 'n', 'x' }, '<leader>aa', function()
+  require('opencode').prompt '@this'
+end, { desc = 'Add to opencode' })
+
+vim.keymap.set({ 'n', 't' }, '<C-.>', function()
+  require('opencode').toggle()
+end, { desc = 'Toggle opencode' })
+
+vim.keymap.set('n', '<S-C-u>', function()
+  require('opencode').command 'session.half.page.up'
+end, { desc = 'opencode half page up' })
+
+vim.keymap.set('n', '<S-C-d>', function()
+  require('opencode').command 'session.half.page.down'
+end, { desc = 'opencode half page down' })
+
+-- <C-k> e <C-S-k> originali confliggono con window-move in binds.lua
+-- (<C-S-k> = Move window upper). Uso <leader>ak / <leader>aK.
+vim.keymap.set({ 'n', 'i' }, '<leader>ak', function()
+  if vim.fn.mode() == 'i' then
+    vim.cmd 'stopinsert'
+  end
+  local line = vim.api.nvim_get_current_line()
+  require('opencode').ask('@this Complete this code/comment: ' .. line, { submit = true })
+end, { desc = 'OpenCode autocomplete from current line' })
+
+vim.keymap.set({ 'n', 'x', 'i' }, '<leader>aK', function()
+  if vim.fn.mode() == 'i' then
+    vim.cmd 'stopinsert'
+  end
+  require('opencode').ask('@this Continue writing this code naturally, providing only the next logical lines without explanation: ', { submit = true })
+end, { desc = 'OpenCode smart completion' })
+
+-- Unclash (merge conflict manager) — nessun setup, solo keymap
+local unclash = require 'unclash'
+vim.keymap.set('n', ']x', unclash.next_conflict, { desc = 'Next [C]onflict' })
+vim.keymap.set('n', '[x', unclash.prev_conflict, { desc = 'Prev [C]onflict' })
+vim.keymap.set('n', '<leader>co', unclash.open_merge_editor, { desc = '[C]onflict merge editor' })
+vim.keymap.set('n', '<leader>cc', unclash.accept_current, { desc = '[C]onflict accept [C]urrent' })
+vim.keymap.set('n', '<leader>ci', unclash.accept_incoming, { desc = '[C]onflict accept [I]ncoming' })
+vim.keymap.set('n', '<leader>cb', unclash.accept_both, { desc = '[C]onflict accept [B]oth' })
+
+-- Dressing.nvim — sostituisce vim.ui.input/select con UI migliore
+require('dressing').setup {
+  input = { enabled = true },
+  select = { enabled = true, backend = { 'telescope', 'builtin' } },
+}
+
+-- ========================================================================
+-- llama.vim — completion FIM locale via llama-server (llama.cpp)
+-- ========================================================================
+-- Config completa (la fusione Lua→Vim non eredita i default in alcune versioni).
+vim.g.llama_config = {
+  -- Server endpoints
+  endpoint_fim = 'http://127.0.0.1:8012/infill',
+  endpoint_inst = 'http://127.0.0.1:8012/v1/chat/completions',
+  model_fim = '',
+  model_inst = '',
+  api_key = '',
+  -- Sampling
+  n_prefix = 256,
+  n_suffix = 64,
+  n_predict = 128,
+  stop_strings = {},
+  t_max_prompt_ms = 500,
+  t_max_predict_ms = 1000,
+  -- UX
+  show_info = 2,
+  auto_fim = false, -- solo on-demand
+  max_line_suffix = 8,
+  -- Cache & ring context
+  max_cache_keys = 250,
+  ring_n_chunks = 16,
+  ring_chunk_size = 64,
+  ring_scope = 1024,
+  ring_update_ms = 1000,
+  -- Keymaps (default del plugin)
+  keymap_fim_trigger = '<leader>llf',
+  keymap_fim_accept_full = '<Tab>',
+  keymap_fim_accept_line = '<S-Tab>',
+  keymap_fim_accept_word = '<leader>ll]',
+  keymap_inst_trigger = '<leader>lli',
+  keymap_inst_rerun = '<leader>llr',
+  keymap_inst_continue = '<leader>llc',
+  keymap_inst_accept = '<Tab>',
+  keymap_inst_cancel = '<Esc>',
+  keymap_debug_toggle = '<leader>lld',
+  enable_at_startup = true,
+}
+
+-- Gestione llama-server come job di background.
+-- Default model: path locale se scaricato a mano, altrimenti repo HF.
+local llama_state = {
+  job = nil,
+  -- preferisco il file locale (più affidabile della cache hash di -hf)
+  model = vim.fn.expand '~/.cache/llama.cpp/qwen2.5-coder-3b-q8_0.gguf',
+  port = 8012,
+}
+
+local function llama_start(opts)
+  if llama_state.job and vim.fn.jobwait({ llama_state.job }, 0)[1] == -1 then
+    vim.notify('llama-server già in esecuzione (job ' .. llama_state.job .. ')', vim.log.levels.WARN)
+    return
+  end
+  local model = (opts and opts.args ~= '' and opts.args) or llama_state.model
+  -- Se l'arg sembra un path (inizia con /, ~, .) usa -m, altrimenti -hf
+  local model_flag = '-hf'
+  if model:match '^[/~%.]' then
+    model_flag = '-m'
+    model = vim.fn.expand(model)
+    if vim.fn.filereadable(model) ~= 1 then
+      vim.notify('Modello non trovato: ' .. model, vim.log.levels.ERROR)
+      return
+    end
+  end
+  local cmd = {
+    'llama-server',
+    model_flag,
+    model,
+    '--port',
+    tostring(llama_state.port),
+    '-ngl',
+    '99',
+    '-fa',
+    'on',
+    '--ubatch-size',
+    '512',
+    '-b',
+    '1024',
+    '-dt',
+    '0.1',
+    '--ctx-size',
+    '0',
+    '--cache-reuse',
+    '256',
+  }
+  local stderr_buf = {}
+  local stdout_buf = {}
+  llama_state.job = vim.fn.jobstart(cmd, {
+    detach = false,
+    stderr_buffered = false,
+    stdout_buffered = false,
+    on_stderr = function(_, data)
+      for _, line in ipairs(data) do
+        if line ~= '' then
+          table.insert(stderr_buf, line)
+        end
+      end
+    end,
+    on_stdout = function(_, data)
+      for _, line in ipairs(data) do
+        if line ~= '' then
+          table.insert(stdout_buf, line)
+        end
+      end
+    end,
+    on_exit = function(_, code)
+      vim.schedule(function()
+        local level = code == 0 and vim.log.levels.INFO or vim.log.levels.ERROR
+        local last_err = ''
+        if #stderr_buf > 0 then
+          local from = math.max(1, #stderr_buf - 9)
+          last_err = '\n--- stderr (ultime righe) ---\n' .. table.concat({ unpack(stderr_buf, from) }, '\n')
+        elseif #stdout_buf > 0 then
+          local from = math.max(1, #stdout_buf - 9)
+          last_err = '\n--- stdout (ultime righe) ---\n' .. table.concat({ unpack(stdout_buf, from) }, '\n')
+        end
+        vim.notify('llama-server exit ' .. code .. last_err, level)
+      end)
+      llama_state.job = nil
+    end,
+  })
+  if llama_state.job > 0 then
+    vim.notify('llama-server avviato: ' .. model .. ' :' .. llama_state.port, vim.log.levels.INFO)
+  else
+    vim.notify('Errore avvio llama-server (job=' .. llama_state.job .. ')', vim.log.levels.ERROR)
+    llama_state.job = nil
+  end
+end
+
+local function llama_stop()
+  if not llama_state.job then
+    vim.notify('llama-server non attivo', vim.log.levels.WARN)
+    return
+  end
+  vim.fn.jobstop(llama_state.job)
+  llama_state.job = nil
+end
+
+local function llama_status()
+  if llama_state.job and vim.fn.jobwait({ llama_state.job }, 0)[1] == -1 then
+    vim.notify('llama-server attivo (job ' .. llama_state.job .. ', porta ' .. llama_state.port .. ')', vim.log.levels.INFO)
+  else
+    vim.notify('llama-server non attivo', vim.log.levels.INFO)
+  end
+end
+
+vim.api.nvim_create_user_command('LlamaStart', llama_start, { nargs = '?', desc = 'Avvia llama-server (arg opzionale: modello HF)' })
+vim.api.nvim_create_user_command('LlamaStop', llama_stop, { desc = 'Ferma llama-server' })
+vim.api.nvim_create_user_command('LlamaStatus', llama_status, { desc = 'Stato llama-server' })
+
+-- Termina il server se nvim viene chiuso
+vim.api.nvim_create_autocmd('VimLeavePre', {
+  callback = function()
+    if llama_state.job then
+      pcall(vim.fn.jobstop, llama_state.job)
+    end
+  end,
+})
+
+-- Magma-nvim (Jupyter) — usa <leader>j come prefix
+vim.keymap.set('n', '<leader>ji', '<cmd>MagmaInit<CR>', { desc = '[J]upyter [I]nit' })
+vim.keymap.set('n', '<leader>jd', '<cmd>MagmaDeinit<CR>', { desc = '[J]upyter [D]einit' })
+vim.keymap.set('n', '<leader>jr', '<cmd>MagmaEvaluateLine<CR>', { desc = '[J]upyter [R]un line' })
+vim.keymap.set('x', '<leader>jr', ':<C-u>MagmaEvaluateVisual<CR>', { desc = '[J]upyter [R]un selection' })
+vim.keymap.set('n', '<leader>jc', '<cmd>MagmaReevaluateCell<CR>', { desc = '[J]upyter [C]ell re-evaluate' })
+vim.keymap.set('n', '<leader>jo', '<cmd>MagmaShowOutput<CR>', { desc = '[J]upyter [O]utput' })
+vim.keymap.set('n', '<leader>jx', '<cmd>MagmaDelete<CR>', { desc = '[J]upyter delete cell' })
 
 -- Lazygit configuration
 require('telescope').load_extension 'lazygit'
@@ -318,75 +507,7 @@ require('yeet').setup {
   custom_eval = nil,
 }
 
--- MCPHub configuration
-require('mcphub').setup {
-  config = vim.fn.expand '~/.config/mcphub/servers.json',
-  port = 37373,
-  shutdown_delay = 5 * 60 * 000,
-  use_bundled_binary = false,
-  mcp_request_timeout = 60000,
-  global_env = {},
-  workspace = {
-    enabled = true,
-    look_for = { '.mcphub/servers.json', '.vscode/mcp.json', '.cursor/mcp.json' },
-    reload_on_dir_changed = true,
-    port_range = { min = 40000, max = 41000 },
-    get_port = nil,
-  },
-  auto_approve = false,
-  auto_toggle_mcp_servers = true,
-  extensions = {
-    avante = {
-      make_slash_commands = true,
-    },
-  },
-  native_servers = {},
-  builtin_tools = {
-    edit_file = {
-      parser = {
-        track_issues = true,
-        extract_inline_content = true,
-      },
-      locator = {
-        fuzzy_threshold = 0.8,
-        enable_fuzzy_matching = true,
-      },
-      ui = {
-        go_to_origin_on_complete = true,
-        keybindings = {
-          accept = '.',
-          reject = ',',
-          next = 'n',
-          prev = 'p',
-          accept_all = 'ga',
-          reject_all = 'gr',
-        },
-      },
-    },
-  },
-  ui = {
-    window = {
-      width = 0.8,
-      height = 0.8,
-      align = 'center',
-      relative = 'editor',
-      zindex = 50,
-      border = 'rounded',
-    },
-    wo = {
-      winhl = 'Normal:MCPHubNormal,FloatBorder:MCPHubBorder',
-    },
-  },
-  on_ready = function(hub) end,
-  on_error = function(err) end,
-  log = {
-    level = vim.log.levels.WARN,
-    to_file = false,
-    file_path = nil,
-    prefix = 'MCPHub',
-  },
-}
-
+-- Obsidian Setup
 require('obsidian').setup {
   workspaces = {
     {

@@ -317,40 +317,35 @@ local servers = {
       },
     },
   },
+  rust_analyzer = {
+    settings = {
+      ['rust-analyzer'] = {
+        cargo = { allFeatures = true },
+        checkOnSave = { command = 'clippy' },
+      },
+    },
+  },
 }
 
--- Setup LSP servers with mason-lspconfig
+-- Build capabilities (workspace config + cmp-nvim-lsp)
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.workspace = capabilities.workspace or {}
+capabilities.workspace.configuration = true
+capabilities.workspace.didChangeConfiguration = { dynamicRegistration = true }
+capabilities.workspace.workspaceFolders = true
+
+local cmp_lsp_ok, cmp_lsp = pcall(require, 'cmp_nvim_lsp')
+if cmp_lsp_ok then
+  capabilities = vim.tbl_deep_extend('force', capabilities, cmp_lsp.default_capabilities())
+end
+
+-- Register per-server settings (mason-lspconfig v2 removed `handlers`;
+-- servers are enabled automatically and read config via vim.lsp.config)
+for server_name, server in pairs(servers) do
+  server.capabilities = vim.tbl_deep_extend('force', capabilities, server.capabilities or {})
+  vim.lsp.config(server_name, server)
+end
+
 require('mason-lspconfig').setup {
   ensure_installed = vim.tbl_keys(servers),
-  automatic_installation = true,
-  handlers = {
-    function(server_name)
-      local server = servers[server_name] or {}
-      -- This handles overriding only values explicitly passed
-      -- by the server configuration above
-
-      -- Get default LSP capabilities
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-
-      -- Add workspace configuration support
-      capabilities.workspace = capabilities.workspace or {}
-      capabilities.workspace.configuration = true
-      capabilities.workspace.didChangeConfiguration = {
-        dynamicRegistration = true,
-      }
-
-      -- Add workspace folders support
-      capabilities.workspace.workspaceFolders = true
-
-      -- Get LSP capabilities from blink.cmp (if available)
-      local blink_ok, blink = pcall(require, 'blink.cmp')
-      if blink_ok then
-        local blink_caps = blink.get_lsp_capabilities()
-        capabilities = vim.tbl_deep_extend('force', capabilities, blink_caps)
-      end
-
-      server.capabilities = vim.tbl_deep_extend('force', capabilities, server.capabilities or {})
-      require('lspconfig')[server_name].setup(server)
-    end,
-  },
 }

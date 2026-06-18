@@ -13,9 +13,6 @@ vim.pack.add({
   -- Package manager UI
   'https://github.com/mplusp/pack-manager.nvim',
 
-  'https://github.com/catppuccin/nvim',
-  'https://github.com/nvim-tree/nvim-web-devicons',
-
   -- Which-key
   'https://github.com/folke/which-key.nvim',
 }, {
@@ -26,58 +23,6 @@ vim.pack.add({
 -- Setup pack-manager
 require('pack-manager').setup()
 
-require('catppuccin').setup {
-  opts = {
-    flavour = 'mocha', -- latte, frappe, macchiato, mocha
-  },
-  flavour = 'mocha', -- latte, frappe, macchiato, mocha
-  transparent_background = true, -- disables setting the background color.
-  show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
-  term_colors = true, -- sets terminal colors (e.g. `g:terminal_color_0`)
-  dim_inactive = {
-    enabled = false, -- dims the background color of inactive window
-  },
-  styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
-    comments = { 'italic' }, -- Change the style of comments
-    conditionals = { 'italic' },
-    loops = {},
-    functions = {},
-    keywords = {},
-    strings = {},
-    variables = {},
-    numbers = {},
-    booleans = {},
-    properties = {},
-    types = {},
-    operators = {},
-    miscs = {}, -- Uncomment to turn off hard-coded styles
-  },
-  color_overrides = {},
-  custom_highlights = {},
-  default_integrations = true,
-  integrations = {
-    cmp = true,
-    gitsigns = true,
-    nvimtree = true,
-    treesitter = true,
-    notify = false,
-    mini = {
-      enabled = true,
-      indentscope_color = '',
-    },
-    lsp_trouble = true,
-    lsp_saga = true,
-    mason = true,
-    telescope = true,
-    which_key = false,
-
-    -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
-  },
-}
-
---vim.notify(vim.inspect(require('lualine').get_config()))
--- setup must be called before loading
-vim.cmd.colorscheme 'catppuccin'
 
 -- ========================================================================
 -- MINI.NVIM CONFIGURATION
@@ -197,8 +142,6 @@ if true then
     modes = { insert = true, command = false, terminal = false },
     -- Skip autopair when next character is one of these
     skip_next = [=[[%w%%%'%[%"%.%`%$]]=],
-    -- Skip autopair when the cursor is inside these treesitter nodes
-    skip_ts = { 'string' },
     -- Skip autopair when next character is closing pair and there are more closing pairs than opening pairs
     skip_unbalanced = true,
     -- Better deal with markdown code blocks
@@ -220,7 +163,6 @@ if true then
     location = { suffix = 'l', options = {} },
     oldfile = { suffix = 'o', options = {} },
     quickfix = { suffix = 'q', options = {} },
-    treesitter = { suffix = 't', options = {} },
     undo = { suffix = 'u', options = {} },
     window = { suffix = 'w', options = {} },
     yank = { suffix = 'y', options = {} },
@@ -255,7 +197,7 @@ if true then
   -- mini.trailspace - Highlight and remove trailing whitespace
   require('mini.trailspace').setup()
   -- Keymap to remove trailing whitespace (add to your keymaps file)
-  vim.keymap.set('n', '<leader>tw', MiniTrailspace.trim, { desc = 'Trim [T]railing [W]hitespace' })
+  vim.keymap.set('n', '<leader>tW', MiniTrailspace.trim, { desc = 'Trim [T]railing [W]hitespace' })
   vim.keymap.set('n', '<leader>tl', MiniTrailspace.trim_last_lines, { desc = 'Trim [T]railing [L]ines' })
 
   -- mini.move - Move selected lines/blocks
@@ -368,172 +310,67 @@ require('snacks').setup {
   bigfile = { enabled = true },
   quickfile = { enabled = true },
 
-  -- UI & Visual
+  -- UI: notifier abilitato, input disabilitato (usa dressing.nvim)
   dashboard = { enabled = false },
-
-  -- File & Navigation
-  explorer = { enabled = true },
-  picker = {
-    enabled = true,
-    -- Default picker to use (auto-detects available pickers)
-    -- Can be 'telescope', 'fzf-lua', or 'mini.pick'
-    picker = nil,
-    -- Key mappings for the picker
-    win = {
-      input = {
-        keys = {
-          ['<C-j>'] = { 'list_down', mode = { 'i', 'n' } },
-          ['<C-k>'] = { 'list_up', mode = { 'i', 'n' } },
-        },
-      },
-    },
-  },
-
-  -- Editing & Code
-  indent = {
-    enabled = true,
-    -- Disable animation to prevent visual artifacts when switching windows
-    animate = {
-      enabled = false,
-    },
-    -- Filter to show indent guides only in code buffers
-    filter = function(buf, win)
-      local buftype = vim.bo[buf].buftype
-      local filetype = vim.bo[buf].filetype
-
-      -- Exclude special buffer types
-      if buftype ~= '' and buftype ~= 'acwrite' then
-        return false
-      end
-
-      -- Exclude specific filetypes
-      local excluded_filetypes = {
-        'help',
-        'man',
-        'markdown',
-        'text',
-        'txt',
-        'dashboard',
-        'alpha',
-        'starter',
-        'NvimTree',
-        'neo-tree',
-        'oil',
-        'Trouble',
-        'qf',
-        'help',
-        'fugitive',
-        'git',
-      }
-
-      for _, ft in ipairs(excluded_filetypes) do
-        if filetype == ft then
-          return false
-        end
-      end
-
-      -- Show indent guides for actual code files
-      return true
-    end,
-  },
-  scope = {
-    enabled = true,
-    -- Enable tree-sitter scope detection
-    treesitter = { enabled = true },
-    -- Disable animation to prevent visual artifacts
-    animate = {
-      enabled = false,
-    },
-  },
-  words = {
-    enabled = true,
-    -- Debounce time in ms for highlighting word references
-    debounce = 200,
-  },
-
-  -- Git (disabled - using dedicated git plugin)
-  git = { enabled = false },
-  gitbrowse = { enabled = false },
-
-  -- Utilities
-  input = { enabled = true },
   notifier = {
     enabled = true,
-    -- Timeout for notifications in ms
     timeout = 3000,
-    -- Width of notification window
     width = { min = 40, max = 0.4 },
-    -- Height of notification window
     height = { min = 1, max = 0.6 },
-    -- Margin from edges
     margin = { top = 0, right = 1, bottom = 0 },
   },
+  input = { enabled = false }, -- delegato a dressing.nvim
   rename = { enabled = true },
-  bufdelete = {
-    enabled = true,
-    -- Delete buffer without closing window
-  },
+  bufdelete = { enabled = true },
   scratch = {
     enabled = true,
-    -- Scratch buffer configuration
     name = 'Scratch',
-    ft = 'markdown', -- default filetype
+    ft = 'markdown',
     icon = '󰠮',
-    -- Auto-create scratch buffer at startup
     autowrite = false,
+  },
+
+  -- Disabilitati per conflitto con plugin esistenti
+  explorer = { enabled = true }, -- usiamo oil.nvim
+  picker = { enabled = false }, -- usiamo telescope
+  indent = { enabled = true }, -- usiamo indent-blankline
+  scope = { enabled = false }, -- richiederebbe treesitter
+  statuscolumn = { enabled = false },
+  git = { enabled = true },
+  gitbrowse = { enabled = false },
+
+  -- Word highlighting / terminale / toggles
+  words = {
+    enabled = true,
+    modes = { 'n', 'i', 'c' }, -- modes to show references
+    filter = function(buf) -- what buffers to enable `snacks.words`
+      return vim.g.snacks_words ~= false and vim.b[buf].snacks_words ~= false
+    end,
   },
   terminal = {
     enabled = true,
-    -- Terminal configuration
     shell = vim.o.shell,
-    win = {
-      position = 'bottom',
-      height = 0.4,
-    },
-  },
-  toggle = {
-    enabled = true,
-    -- Built-in toggle mappings
-    which_key = true,
+    win = { position = 'bottom', height = 0.4 },
   },
 
-  -- Visual enhancements
+  -- Effetti visivi
   image = { enabled = true },
-  scroll = {
-    enabled = false,
-    -- Smooth scrolling animation
-  },
+  scroll = { enabled = true },
   dim = {
     enabled = true,
-    -- Dim inactive windows
-    scope = {
-      min_size = 5,
-      max_size = 15,
-      siblings = true,
-    },
+    scope = { min_size = 5, max_size = 15, siblings = true },
   },
-  animate = {
-    enabled = true,
-  },
+  animate = { enabled = true },
   zen = {
     enabled = true,
-    -- Zen mode configuration
-    toggles = {
-      dim = true,
-      git_signs = false,
-      mini_diff = false,
-      diagnostics = false,
-    },
-    zoom = {
-      width = 120,
-      height = 0.9,
-    },
+    toggles = { dim = true, git_signs = false, mini_diff = false, diagnostics = false },
+    zoom = { width = 120, height = 0.9 },
   },
-  statuscolumn = { enabled = false }, -- Disabled, might conflict with custom settings
+  toggle = { enabled = true, which_key = true },
 
-  -- Development
+  -- Dev tools
   debug = { enabled = true },
-  profiler = { enabled = false }, -- Disabled by default, enable when needed
+  profiler = { enabled = false },
 }
 
 -- ========================================================================

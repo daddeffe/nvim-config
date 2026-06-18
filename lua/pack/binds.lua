@@ -24,10 +24,6 @@ vim.keymap.set('v', '<leader>x', '<cmd>.lua<CR><ESC>', { desc = 'Execute the cur
 vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit insert mode', silent = true })
 vim.keymap.set('n', 'xc', ':w<CR>', { desc = 'Write file', silent = true })
 
--- Move block in visual line
-vim.keymap.set('v', 'J', ":m '>+1<CR>", { silent = true })
-vim.keymap.set('v', 'K', ":m '<-2<CR>", { silent = true })
-
 -- Force cursor at center during J, nav and serach
 vim.keymap.set('n', 'J', 'mzJ`z')
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
@@ -36,9 +32,6 @@ vim.keymap.set('n', '<PageUp>', '<C-u>zz')
 vim.keymap.set('n', '<PageDown>', '<C-d>zz')
 vim.keymap.set('n', 'n', 'nzz')
 vim.keymap.set('n', 'N', 'Nzz')
-
--- No more Q
---vim.keymap.set('n', 'Q', '<nop>')
 
 -- Easy
 vim.keymap.set('i', '<C-c>', '<Esc>')
@@ -67,12 +60,24 @@ vim.keymap.set('v', '<leader>r', function()
   vim.fn.chansend(vim.b.terminal_job_id, command .. '\n')
 end, { desc = 'Execute selection in new terminal split' })
 
+vim.keymap.set('n', '<leader>T', function()
+  Snacks.terminal()
+end, { desc = 'Open [T]erminal' })
+
+vim.keymap.set('n', '<leader>tD', function()
+  Snacks.toggle.dim()
+end, { desc = 'Toggle [W]rap' })
+
+vim.keymap.set('n', '<leader>tz', function()
+  Snacks.zen()
+end, { desc = 'Toggle [Z]en' })
+
 -- Toggle options under <leader>t
-vim.keymap.set('n', '<leader>tW', function()
+vim.keymap.set('n', '<leader>tw', function()
   vim.cmd 'setlocal wrap!'
 end, { desc = 'Toggle [W]rap' })
 
-vim.keymap.set('n', '<leader>ts', function()
+vim.keymap.set('n', '<leader>tS', function()
   vim.wo.signcolumn = (vim.wo.signcolumn == 'yes') and 'no' or 'yes'
 end, { desc = 'Toggle [S]igncolumn' })
 
@@ -80,7 +85,7 @@ vim.keymap.set('n', '<leader>td', function()
   vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 end, { desc = 'Toggle [D]iagnostics' })
 
-vim.keymap.set('n', '<leader>tp', function()
+vim.keymap.set('n', '<leader>ts', function()
   vim.cmd 'setlocal spell!'
 end, { desc = 'Toggle S[p]ell' })
 

@@ -13,33 +13,10 @@ vim.pack.add({
   'https://github.com/hrsh7th/cmp-path',
   'https://github.com/hrsh7th/cmp-cmdline',
   'https://github.com/saadparwaiz1/cmp_luasnip',
-
-  -- AI completion via OpenCode server
-  'https://github.com/jaswdr/opencode-completion.nvim',
 }, {
   confirm = false,
   load = true,
 })
-
--- Setup opencode-completion
--- Requires: opencode serve --port=4096
--- API key managed by OpenCode CLI (~/.local/share/opencode/auth.json)
-vim.fn.jobstart({ 'opencode', 'serve', '--port=4096' }, {
-  detach = true,
-})
-
-require('opencode-completion').setup()
-
--- fibonacci in lua
-local function fibonacci(n)
-  if n <= 1 then
-    return n
-  end
-  return fibonacci(n - 1) + fibonacci(n - 2)
-end
-
--- Example usage
--- print(fibonacci(10)) -- Output: 55
 
 -- Configure lazydev for Lua LSP
 require('lazydev').setup {
@@ -82,15 +59,13 @@ local kind_icons = {
 }
 
 cmp.setup {
-  -- Enable/disable completion
+  -- Enable/disable completion (disabilita nei commenti via syntax regex)
   enabled = function()
-    -- Disable in comments
-    local context = require 'cmp.config.context'
     if vim.api.nvim_get_mode().mode == 'c' then
       return true
-    else
-      return not context.in_treesitter_capture 'comment' and not context.in_syntax_group 'Comment'
     end
+    local context = require 'cmp.config.context'
+    return not context.in_syntax_group 'Comment'
   end,
 
   -- Snippet configuration
@@ -358,54 +333,5 @@ cmp.setup.cmdline(':', {
   matching = { disallow_symbol_nonprefix_matching = false },
 })
 
--- Setup LSP capabilities and export them
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
--- Additional capabilities for better LSP support
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities.textDocument.completion.completionItem.resolveSupport = {
-  properties = {
-    'documentation',
-    'detail',
-    'additionalTextEdits',
-  },
-}
-
--- Dynamically assign capabilities to all LSP servers
--- This function updates all configured LSP servers with cmp capabilities
-local function update_lsp_capabilities()
-  local lspconfig_ok, lspconfig = pcall(require, 'lspconfig')
-  if not lspconfig_ok then
-    return
-  end
-
-  -- Get all available LSP configurations
-  local util = require 'lspconfig.util'
-  local configs = require 'lspconfig.configs'
-
-  -- Iterate through all configured servers and update their capabilities
-  for server_name, config in pairs(configs) do
-    if config and config.manager then
-      -- Server is already configured, update its default config
-      local default_config = config.manager.config
-      if default_config then
-        default_config.capabilities = vim.tbl_deep_extend('force', default_config.capabilities or {}, capabilities)
-      end
-    end
-  end
-
-  -- Also update any active LSP clients
-  local clients = vim.lsp.get_clients()
-  for _, client in ipairs(clients) do
-    if client.config and client.config.capabilities then
-      client.config.capabilities = vim.tbl_deep_extend('force', client.config.capabilities, capabilities)
-    end
-  end
-
-  vim.notify('LSP capabilities updated with nvim-cmp support', vim.log.levels.INFO)
-end
-
--- Update capabilities when this module loads (after lsp.lua)
-vim.schedule(function()
-  update_lsp_capabilities()
-end)
+-- Le capabilities cmp-nvim-lsp sono ora settate direttamente in pack.lsp
+-- al momento della configurazione di ogni server (vedi lsp.lua handler).

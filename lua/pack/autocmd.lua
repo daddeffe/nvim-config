@@ -51,15 +51,6 @@ vim.api.nvim_create_autocmd('BufRead', {
   end,
 })
 
--- Force filetype detection for Python files
-vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
-  group = vim.api.nvim_create_augroup('python_ft', { clear = true }),
-  pattern = { '*.py', '*.pyw' },
-  callback = function()
-    vim.bo.filetype = 'python'
-  end,
-})
-
 -- show cursorline only in active window enable
 vim.api.nvim_create_autocmd({ 'WinEnter', 'BufEnter' }, {
   group = vim.api.nvim_create_augroup('active_cursorline', { clear = true }),
@@ -74,39 +65,6 @@ vim.api.nvim_create_autocmd({ 'WinLeave', 'BufLeave' }, {
   end,
 })
 
--- ide like highlight when stopping cursor
-vim.api.nvim_create_autocmd('CursorMoved', {
-  group = vim.api.nvim_create_augroup('LspReferenceHighlight', { clear = true }),
-  desc = 'Highlight references under cursor',
-  callback = function()
-    -- Only run if the cursor is not in insert mode
-    if vim.fn.mode() ~= 'i' then
-      local clients = vim.lsp.get_clients { bufnr = 0 }
-      local supports_highlight = false
-      for _, client in ipairs(clients) do
-        if client.server_capabilities.documentHighlightProvider then
-          supports_highlight = true
-          break -- Found a supporting client, no need to check others
-        end
-      end
-
-      -- 3. Proceed only if an LSP is active AND supports the feature
-      if supports_highlight then
-        vim.lsp.buf.clear_references()
-        vim.lsp.buf.document_highlight()
-      end
-    end
-  end,
-})
-
--- ide like highlight when stopping cursor
-vim.api.nvim_create_autocmd('CursorMovedI', {
-  group = 'LspReferenceHighlight',
-  desc = 'Clear highlights when entering insert mode',
-  callback = function()
-    vim.lsp.buf.clear_references()
-  end,
-})
 
 -- Autocomand per entrare in modalita' insert entrando in un buffer terminale con focus obbligatorio
 vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter' }, {
@@ -120,6 +78,14 @@ vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter' }, {
         vim.cmd 'startinsert'
       end
     end)
+  end,
+})
+
+vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter' }, {
+  group = vim.api.nvim_create_augroup('terminal_no_spell', { clear = true }),
+  pattern = 'term://*',
+  callback = function()
+    vim.opt_local.spell = false
   end,
 })
 

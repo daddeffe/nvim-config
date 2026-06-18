@@ -53,8 +53,6 @@ vim.opt.splitright = true
 vim.opt.splitbelow = false
 vim.opt.splitkeep = 'topline'
 
---vim.o.foldmethod = 'expr' -- Definisci i fold usando un'espressione
---vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Usa Treesitter per il folding
 vim.o.foldlevel = 99 -- Apri tutti i fold di default all'apertura di un file
 vim.opt.foldtext = '' -- Evidenzia la sintassi della prima riga del fold
 

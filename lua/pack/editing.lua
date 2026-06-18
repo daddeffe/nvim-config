@@ -5,9 +5,6 @@ vim.pack.add({
   -- Folding
   'https://github.com/chrisgrieser/nvim-origami',
 
-  -- Indentation guides
-  'https://github.com/lukas-reineke/indent-blankline.nvim',
-
   -- TODO comments highlighting
   'https://github.com/folke/todo-comments.nvim',
 
@@ -43,8 +40,6 @@ local origami_ok, origami = pcall(require, 'origami')
 if origami_ok then
   origami.setup {}
 end
--- Configure indent-blankline
-require('ibl').setup {}
 
 -- Configure todo-comments
 require('todo-comments').setup {

@@ -13,6 +13,9 @@ vim.pack.add({
 
   -- Encryption
   'https://github.com/Gitello448/aegis.nvim',
+
+  -- Store
+  'https://github.com/alex-popov-tech/store.nvim',
 }, {
   confirm = false,
   load = true,

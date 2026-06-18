@@ -9,8 +9,8 @@ end
 require 'pack.opt'
 
 require 'pack.core'
+require 'pack.ui'
 
-require 'pack.treesitter'
 require 'pack.completion'
 
 require 'pack.tools'
@@ -18,7 +18,7 @@ require 'pack.editing'
 require 'pack.lsp'
 require 'pack.navigation'
 
-require 'pack.plugins_extra'
+--require 'pack.plugins_extra'
 
 require 'pack.binds'
 require 'pack.autocmd'
@@ -40,4 +40,3 @@ end
 vim.api.nvim_create_user_command('AlignColumns', function(opts)
   vim.cmd(string.format("%d,%d!column -t -o ' ' | sed 's/ = /=/' | sed 's/[ \t]*$//'", opts.line1, opts.line2))
 end, { range = true })
-
