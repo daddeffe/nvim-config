@@ -22,7 +22,7 @@ vim.pack.add({
 
   -- AI
   'https://github.com/NickvanDyke/opencode.nvim',
-  'https://github.com/ggml-org/llama.vim',
+'https://github.com/ggml-org/llama.vim',
 
   -- Jupiter Notebook plugin
   'https://github.com/dccsillag/magma-nvim',

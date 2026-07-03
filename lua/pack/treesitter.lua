@@ -54,16 +54,4 @@ require('nvim-treesitter.configs').setup {
     -- Use traditional vim regex highlighting for Python instead
     additional_vim_regex_highlighting = { 'python' },
   },
-  --indent = { enable = false },
-  --fold = { enable = false },
 }
-
--- Build treesitter parsers on first run
--- Commented out to avoid conflicts
--- vim.api.nvim_create_autocmd('VimEnter', {
---   callback = function()
---     local ts_update = require('nvim-treesitter.install').update { with_sync = false }
---     ts_update()
---   end,
---   once = true,
--- })
