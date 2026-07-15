@@ -2,6 +2,12 @@ local servers = {
   ast_grep = {
     filetypes = { 'lua', 'python', 'javascript', 'typescript' },
   },
+  bashls = {},
+  denols = {
+    root_markers = { 'deno.json', 'deno.jsonc', 'deno.lock' },
+    settings = { deno = { enable = true, lint = true, unstable = true } },
+  },
+  tsgo = {},
   lua_ls = {
     settings = {
       Lua = {

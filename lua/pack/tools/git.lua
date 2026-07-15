@@ -2,7 +2,6 @@ vim.pack.add({
   'https://github.com/lewis6991/gitsigns.nvim',
   'https://github.com/tpope/vim-fugitive',
   'https://github.com/kdheepak/lazygit.nvim',
-  'https://github.com/afonsofrancof/worktrees.nvim',
   'https://github.com/madmaxieee/unclash.nvim',
 }, { confirm = false, load = true })
 
@@ -64,30 +63,22 @@ require('gitsigns').setup {
   attach_to_untracked = false,
   current_line_blame = true,
   current_line_blame_opts = { virt_text = true, virt_text_pos = 'eol', delay = 300, ignore_whitespace = false, virt_text_priority = 100, use_focus = true },
-  current_line_blame_formatter = '  -- <author>, <author_time:%R> - <summary>',
+  current_line_blame_formatter = ' -- <author>, <author_time:%R> - <summary>',
   sign_priority = 6,
   update_debounce = 100,
 }
 
-vim.keymap.set('n', '<leader>gg', '<cmd>Git<CR>', { desc = '[G]it Status' })
-vim.keymap.set('n', '<leader>gd', '<cmd>Gdiffsplit!<CR>', { desc = '[G]it [D]iff' })
-vim.keymap.set('n', '<leader>gc', '<cmd>Git commit<CR>', { desc = '[G]it [C]ommit' })
-vim.keymap.set('n', '<leader>gp', '<cmd>Git push<CR>', { desc = '[G]it [P]ush' })
-vim.keymap.set('n', '<leader>gP', '<cmd>Git pull<CR>', { desc = '[G]it [P]ull' })
+local unclash = require 'unclash'
+vim.keymap.set('n', '<leader>hco', unclash.open_merge_editor, { desc = '[C]onflict merge editor' })
+vim.keymap.set('n', '<leader>hcc', unclash.accept_current, { desc = '[C]onflict accept [C]urrent' })
+vim.keymap.set('n', '<leader>hci', unclash.accept_incoming, { desc = '[C]onflict accept [I]ncoming' })
+vim.keymap.set('n', '<leader>hcb', unclash.accept_both, { desc = '[C]onflict accept [B]oth' })
+
+vim.keymap.set('n', '<leader>hg', '<cmd>Git<CR>', { desc = '[H]it [G]it Status' })
+vim.keymap.set('n', '<leader>hG', '<cmd>Gdiffsplit!<CR>', { desc = '[H]it [G]diffsplit' })
+vim.keymap.set('n', '<leader>hi', '<cmd>Git commit<CR>', { desc = '[H]it comm[I]t' })
+vim.keymap.set('n', '<leader>hu', '<cmd>Git push<CR>', { desc = '[H]it p[U]sh' })
+vim.keymap.set('n', '<leader>hU', '<cmd>Git pull<CR>', { desc = '[H]it p[U]ll' })
 
 require('telescope').load_extension 'lazygit'
-
-require('worktrees').setup {
-  base_path = '../.tree',
-  path_template = '{branch}',
-  commands = { create = 'WorktreeCreate', delete = 'WorktreeDelete', switch = 'WorktreeSwitch' },
-  mappings = { create = '<leader>hwc', delete = '<leader>hwd', switch = '<leader>hws' },
-}
-
-local unclash = require 'unclash'
-vim.keymap.set('n', ']x', unclash.next_conflict, { desc = 'Next [C]onflict' })
-vim.keymap.set('n', '[x', unclash.prev_conflict, { desc = 'Prev [C]onflict' })
-vim.keymap.set('n', '<leader>co', unclash.open_merge_editor, { desc = '[C]onflict merge editor' })
-vim.keymap.set('n', '<leader>cc', unclash.accept_current, { desc = '[C]onflict accept [C]urrent' })
-vim.keymap.set('n', '<leader>ci', unclash.accept_incoming, { desc = '[C]onflict accept [I]ncoming' })
-vim.keymap.set('n', '<leader>cb', unclash.accept_both, { desc = '[C]onflict accept [B]oth' })
+vim.keymap.set('n', '<leader>hl', '<cmd>LazyGit<CR>', { desc = '[H]it [L]azyGit' })

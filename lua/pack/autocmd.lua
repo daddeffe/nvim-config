@@ -55,7 +55,9 @@ vim.api.nvim_create_autocmd('BufRead', {
 vim.api.nvim_create_autocmd({ 'WinEnter', 'BufEnter' }, {
   group = vim.api.nvim_create_augroup('active_cursorline', { clear = true }),
   callback = function()
-    vim.opt_local.cursorline = true
+    if vim.bo.filetype ~= 'snacks_dashboard' then
+      vim.opt_local.cursorline = true
+    end
   end,
 })
 vim.api.nvim_create_autocmd({ 'WinLeave', 'BufLeave' }, {

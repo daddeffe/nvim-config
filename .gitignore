@@ -4,5 +4,7 @@ test.sh
 nvim
 nvim-pack-lock.json
 
+.claude
+.omo
 spell/
 lazy-lock.json

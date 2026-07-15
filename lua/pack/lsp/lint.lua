@@ -5,21 +5,44 @@ lint.linters_by_ft = {
 }
 
 local FORCE_DISABLE_FT = {
-  'DiffviewFiles', 'Oil', 'Telescope', 'TelescopePrompt', 'Trouble',
-  'alpha', 'checkhealth', 'dap-repl', 'dashboard', 'fugitive', 'git',
-  'help', 'lazy', 'mason', 'md', 'nofile', 'oil', 'promt', 'qf',
+  'DiffviewFiles',
+  'Oil',
+  'Telescope',
+  'TelescopePrompt',
+  'Trouble',
+  'alpha',
+  'checkhealth',
+  'dap-repl',
+  'dashboard',
+  'fugitive',
+  'git',
+  'help',
+  'lazy',
+  'mason',
+  'md',
+  'nofile',
+  'oil',
+  'promt',
+  'qf',
 }
 
 local function in_list(ft, list)
   for _, v in ipairs(list) do
-    if v == ft then return true end
+    if v == ft then
+      return true
+    end
   end
   return false
 end
 
 local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
 vim.api.nvim_create_autocmd({
-  'BufEnter', 'BufWinEnter', 'BufWritePost', 'InsertLeave', 'TermEnter', 'TextChanged',
+  'BufEnter',
+  'BufWinEnter',
+  'BufWritePost',
+  'InsertLeave',
+  'TermEnter',
+  'TextChanged',
 }, {
   group = lint_augroup,
   callback = function()

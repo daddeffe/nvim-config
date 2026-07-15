@@ -14,5 +14,4 @@ vim.pack.add({
 -- Plugin disabilitati: decommenta per attivare
 -- require 'pack.misc.obsidian'
 -- require 'pack.misc.magma'
--- require 'pack.misc.coach'
 -- require 'pack.misc.marp'

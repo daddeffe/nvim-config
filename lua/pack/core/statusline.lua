@@ -2,8 +2,12 @@ local navic_ok, navic = pcall(require, 'nvim-navic')
 
 if navic_ok then
   navic.setup {
-    icons = { enabled = false }, highlight = false, separator = ' > ',
-    depth_limit = 0, depth_limit_indicator = '..', safe_output = true,
+    icons = { enabled = false },
+    highlight = false,
+    separator = ' > ',
+    depth_limit = 0,
+    depth_limit_indicator = '..',
+    safe_output = true,
     lsp = { auto_attach = true },
   }
 end

@@ -1,3 +1,3 @@
--- require('obsidian').setup {
---   workspaces = { { name = 'def', path = '~/Obsidian' } },
--- }
+require('obsidian').setup {
+  workspaces = { { name = 'def', path = '~/Obsidian' } },
+}

@@ -12,3 +12,5 @@ require('pack-manager').setup()
 
 require 'pack.core.mini'
 require 'pack.core.whichkey'
+require 'pack.core.statusline'
+require 'pack.core.dashboard'

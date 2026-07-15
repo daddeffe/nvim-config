@@ -6,8 +6,12 @@ if oil_ok then
     columns = { 'permissions', 'size', 'mtime' },
     buf_options = { buflisted = false, bufhidden = 'hide' },
     win_options = {
-      wrap = false, signcolumn = 'yes:1', foldcolumn = '0',
-      spell = false, list = false, concealcursor = 'nvic',
+      wrap = false,
+      signcolumn = 'yes:1',
+      foldcolumn = '0',
+      spell = false,
+      list = false,
+      concealcursor = 'nvic',
     },
     delete_to_trash = false,
     skip_confirm_for_simple_edits = true,
@@ -39,26 +43,46 @@ if oil_ok then
       is_hidden_file = function(name, bufnr)
         return name:match '^%.' ~= nil
       end,
-      is_always_hidden = function(name, bufnr) return false end,
-      natural_order = 'fast', case_insensitive = false,
+      is_always_hidden = function(name, bufnr)
+        return false
+      end,
+      natural_order = 'fast',
+      case_insensitive = false,
       sort = { { 'type', 'asc' }, { 'name', 'asc' } },
-      highlight_filename = function(entry, is_hidden, is_link_target, is_link_orphan) return nil end,
+      highlight_filename = function(entry, is_hidden, is_link_target, is_link_orphan)
+        return nil
+      end,
     },
     extra_scp_args = {},
     git = {
-      add = function(path) return false end,
-      mv = function(src_path, dest_path) return false end,
-      rm = function(path) return false end,
+      add = function(path)
+        return false
+      end,
+      mv = function(src_path, dest_path)
+        return false
+      end,
+      rm = function(path)
+        return false
+      end,
     },
     float = {
-      padding = 2, max_width = 0, max_height = 0, border = 'rounded',
+      padding = 2,
+      max_width = 0,
+      max_height = 0,
+      border = 'rounded',
       win_options = { winblend = 0 },
       preview_split = 'left',
-      override = function(conf) return conf end,
+      override = function(conf)
+        return conf
+      end,
     },
     preview_win = {
-      update_on_cursor_moved = true, preview_method = 'fast_scratch',
-      disable_preview = function(filename) return false end, win_options = {},
+      update_on_cursor_moved = true,
+      preview_method = 'fast_scratch',
+      disable_preview = function(filename)
+        return false
+      end,
+      win_options = {},
     },
   }
 end

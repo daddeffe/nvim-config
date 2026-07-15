@@ -1,26 +1,36 @@
 require('conform').setup {
   notify_on_error = true,
-  format_on_save = function(bufnr)
-    local disable_filetypes = { c = true, cpp = true }
-    if disable_filetypes[vim.bo[bufnr].filetype] then
-      return nil
-    end
-    return { timeout_ms = 5000, lsp_format = 'fallback' }
-  end,
+  format_on_save = nil,
+  formatexpr = true,
   formatters_by_ft = {
+    lua = { 'stylua' },
+    python = { 'isort', 'black' },
+    php = { 'pint' },
+    blade = { 'pint' },
     javascript = { 'prettier' },
     typescript = { 'prettier' },
     javascriptreact = { 'prettier' },
     typescriptreact = { 'prettier' },
     svelte = { 'prettier' },
+    vue = { 'prettier' },
     css = { 'prettier' },
+    scss = { 'prettier' },
+    less = { 'prettier' },
     html = { 'prettier' },
     json = { 'prettier' },
+    jsonc = { 'prettier' },
     yaml = { 'prettier' },
     markdown = { 'prettier' },
     graphql = { 'prettier' },
-    lua = { 'stylua' },
-    python = { 'isort', 'black' },
+    bash = { 'shfmt' },
+    sh = { 'shfmt' },
+    zsh = { 'shfmt' },
+    go = { 'gofumpt', 'goimports' },
+    rust = { 'rustfmt' },
+    dockerfile = { 'hadolint' },
+  },
+  formatters = {
+    shfmt = { prepend_args = { '-i', '2' } },
   },
 }
 
