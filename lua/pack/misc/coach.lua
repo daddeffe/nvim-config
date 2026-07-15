@@ -1,0 +1,5 @@
+-- local coach_ok, coach = pcall(require, 'vim-coach')
+-- if coach_ok then
+--   coach.setup()
+--   vim.keymap.set('n', '<leader>?', '<cmd>VimCoach<cr>', { desc = 'Vim Coach' })
+-- end

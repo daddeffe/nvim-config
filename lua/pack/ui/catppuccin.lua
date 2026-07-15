@@ -1,0 +1,23 @@
+require('catppuccin').setup {
+  flavour = 'mocha',
+  transparent_background = false,
+  show_end_of_buffer = false,
+  term_colors = true,
+  dim_inactive = { enabled = false },
+  styles = {
+    comments = { 'italic' }, conditionals = { 'italic' },
+    loops = {}, functions = {}, keywords = {}, strings = {},
+    variables = {}, numbers = {}, booleans = {}, properties = {},
+    types = {}, operators = {}, miscs = {},
+  },
+  color_overrides = {},
+  custom_highlights = {},
+  default_integrations = true,
+  integrations = {
+    gitsigns = true, nvimtree = true, treesitter = true, notify = false,
+    mini = { enabled = true, indentscope_color = '' },
+    lsp_trouble = true, lsp_saga = true, mason = true, telescope = true, which_key = true,
+  },
+}
+
+vim.cmd.colorscheme 'catppuccin'

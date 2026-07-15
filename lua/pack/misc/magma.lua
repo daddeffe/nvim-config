@@ -1,0 +1,7 @@
+-- vim.keymap.set('n', '<leader>ji', '<cmd>MagmaInit<CR>', { desc = '[J]upyter [I]nit' })
+-- vim.keymap.set('n', '<leader>jd', '<cmd>MagmaDeinit<CR>', { desc = '[J]upyter [D]einit' })
+-- vim.keymap.set('n', '<leader>jr', '<cmd>MagmaEvaluateLine<CR>', { desc = '[J]upyter [R]un line' })
+-- vim.keymap.set('x', '<leader>jr', ':<C-u>MagmaEvaluateVisual<CR>', { desc = '[J]upyter [R]un selection' })
+-- vim.keymap.set('n', '<leader>jc', '<cmd>MagmaReevaluateCell<CR>', { desc = '[J]upyter [C]ell re-evaluate' })
+-- vim.keymap.set('n', '<leader>jo', '<cmd>MagmaShowOutput<CR>', { desc = '[J]upyter [O]utput' })
+-- vim.keymap.set('n', '<leader>jx', '<cmd>MagmaDelete<CR>', { desc = '[J]upyter delete cell' })

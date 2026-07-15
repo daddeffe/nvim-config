@@ -65,7 +65,6 @@ vim.api.nvim_create_autocmd({ 'WinLeave', 'BufLeave' }, {
   end,
 })
 
-
 -- Autocomand per entrare in modalita' insert entrando in un buffer terminale con focus obbligatorio
 vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter' }, {
   group = vim.api.nvim_create_augroup('terminal_auto_insert', { clear = true }),
@@ -126,19 +125,3 @@ vim.api.nvim_create_autocmd('BufReadPost', {
     end
   end,
 })
-
--- Apri Oil quando vim viene aperto senza buffer (split sinistro 30%)
--- vim.api.nvim_create_autocmd('VimEnter', {
---   group = vim.api.nvim_create_augroup('oil_auto_open', { clear = true }),
---   callback = function()
---     -- Controlla se non ci sono argomenti e se siamo nell'unico buffer vuoto
---     if vim.fn.argc() == 0 and vim.fn.line2byte(vim.fn.line '$') == -1 then
---       if vim.fn.getcwd() == vim.env.HOME then
---         return
---       end
---       vim.schedule(function()
---         vim.cmd 'Oil'
---       end)
---     end
---   end,
--- })
