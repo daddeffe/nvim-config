@@ -64,9 +64,13 @@ vim.keymap.set('n', '<leader>T', function()
   Snacks.terminal()
 end, { desc = 'Open [T]erminal' })
 
+vim.keymap.set('n', '<leader>tH', function()
+  Snacks.dashboard.open()
+end, { desc = 'Toggle [D]im' })
+
 vim.keymap.set('n', '<leader>tD', function()
   Snacks.toggle.dim()
-end, { desc = 'Toggle [W]rap' })
+end, { desc = 'Toggle [D]im' })
 
 vim.keymap.set('n', '<leader>tz', function()
   Snacks.zen()
