@@ -36,6 +36,7 @@ vim.o.relativenumber = true
 vim.o.mouse = 'a'
 
 vim.o.showmode = false
+vim.opt.shortmess:append 'sI'
 
 vim.o.clipboard = 'unnamedplus'
 
