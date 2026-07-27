@@ -8,8 +8,10 @@ vim.pack.add({
   'https://github.com/hrsh7th/cmp-path',
   'https://github.com/hrsh7th/cmp-cmdline',
   'https://github.com/saadparwaiz1/cmp_luasnip',
+  'https://github.com/zzhirong/cmp-llm',
 }, { confirm = false, load = true })
 
 require 'pack.completion.lazydev'
 require 'pack.completion.luasnip'
 require 'pack.completion.cmp'
+require 'pack.completion.llm'

@@ -8,3 +8,4 @@ nvim-pack-lock.json
 .omo
 spell/
 lazy-lock.json
+lua/pack/completion/llm-local.lua

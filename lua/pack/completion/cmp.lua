@@ -57,6 +57,7 @@ cmp.setup {
       vim_item.menu = ({
         nvim_lsp = '[LSP]', luasnip = '[Snippet]',
         buffer = '[Buffer]', path = '[Path]', lazydev = '[Lazy]',
+        llm = '[LLM]',
       })[entry.source.name]
       return vim_item
     end,
@@ -103,6 +104,7 @@ cmp.setup {
     },
     { name = 'luasnip', priority = 750, max_item_count = 10, keyword_length = 2 },
     { name = 'path', priority = 500, max_item_count = 20, keyword_length = 3 },
+    { name = 'llm', priority = 400, max_item_count = 5 },
   }, {
     { name = 'buffer', priority = 250, max_item_count = 10, keyword_length = 3,
       option = {

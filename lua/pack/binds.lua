@@ -111,3 +111,43 @@ vim.keymap.set('n', '<leader>tb', function()
   cat.compile()
   vim.cmd.colorscheme 'catppuccin'
 end, { desc = 'Toggle Transparent [B]ackground' })
+
+vim.keymap.set('n', '<leader>w-', '<C-w>s', { desc = 'Split horizontal' })
+vim.keymap.set('n', '<leader>w|', '<C-w>v', { desc = 'Split vertical' })
+vim.keymap.set('n', '<leader>wq', '<C-w>q', { desc = 'Close window' })
+vim.keymap.set('n', '<leader>wo', '<C-w>o', { desc = 'Only this window' })
+vim.keymap.set('n', '<leader>w=', '<C-w>=', { desc = 'Equalize windows' })
+
+vim.keymap.set('n', '<leader>bn', ':bnext<CR>', { desc = 'Buffer next' })
+vim.keymap.set('n', '<leader>bp', ':bprevious<CR>', { desc = 'Buffer previous' })
+vim.keymap.set('n', '<leader>bd', ':bd<CR>', { desc = 'Buffer delete' })
+vim.keymap.set('n', '<leader>bD', ':bd!<CR>', { desc = 'Buffer force delete' })
+vim.keymap.set('n', '<leader>bs', ':w<CR>', { desc = 'Buffer save' })
+
+vim.keymap.set('n', '<leader>ee', '<cmd>Oil<CR>', { desc = 'Oil explorer' })
+vim.keymap.set('n', '<leader>ef', '<cmd>Oil --float<CR>', { desc = 'Oil float' })
+vim.keymap.set('n', '<leader>ed', function()
+  vim.cmd('Oil ' .. vim.fn.expand '%:p:h')
+end, { desc = 'Oil current dir' })
+
+vim.keymap.set('n', '<leader>fn', ':enew<CR>', { desc = 'New buffer' })
+vim.keymap.set('n', '<leader>fS', ':wa<CR>', { desc = 'Save all files' })
+
+vim.keymap.set('n', '<leader>li', '<cmd>LspInfo<CR>', { desc = 'LSP info' })
+vim.keymap.set('n', '<leader>lr', '<cmd>LspRestart<CR>', { desc = 'LSP restart' })
+vim.keymap.set('n', '<leader>ll', '<cmd>LspLog<CR>', { desc = 'LSP log' })
+
+vim.keymap.set('n', '<leader>yy', '"+yy', { desc = 'Yank line to clipboard' })
+vim.keymap.set('n', '<leader>yY', function()
+  vim.fn.setreg('+', vim.fn.expand '%:p')
+end, { desc = 'Yank file path to clipboard' })
+vim.keymap.set('n', '<leader>yr', '<cmd>Telescope registers<CR>', { desc = 'Telescope registers' })
+
+vim.keymap.set('n', '<leader>mm', '<cmd>Telescope marks<CR>', { desc = 'List marks' })
+
+vim.keymap.set('n', '<leader>nn', ':enew<CR>', { desc = 'New scratch buffer' })
+vim.keymap.set('n', '<leader>np', ':e ~/scratchpad.md<CR>', { desc = 'Open scratchpad' })
+
+vim.keymap.set('n', '<leader>vr', function()
+  vim.wo.relativenumber = not vim.wo.relativenumber
+end, { desc = 'Toggle relative number' })

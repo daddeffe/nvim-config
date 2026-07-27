@@ -43,9 +43,13 @@ require('gitsigns').setup {
     map('n', '<leader>hb', function()
       gitsigns.blame_line { full = true }
     end, { desc = '[H]unk [B]lame line' })
-    map('n', '<leader>hd', gitsigns.diffthis, { desc = '[H]unk [D]iff' })
+    map('n', '<leader>hd', function()
+      gitsigns.diffthis()
+      vim.cmd 'wincmd w'
+    end, { desc = '[H]unk [D]iff' })
     map('n', '<leader>hD', function()
       gitsigns.diffthis '~'
+      vim.cmd 'wincmd w'
     end, { desc = '[H]unk [D]iff ~' })
     map('n', '<leader>hQ', function()
       gitsigns.setqflist 'all'
@@ -75,7 +79,7 @@ vim.keymap.set('n', '<leader>hci', unclash.accept_incoming, { desc = '[C]onflict
 vim.keymap.set('n', '<leader>hcb', unclash.accept_both, { desc = '[C]onflict accept [B]oth' })
 
 vim.keymap.set('n', '<leader>hg', '<cmd>Git<CR>', { desc = '[H]it [G]it Status' })
-vim.keymap.set('n', '<leader>hG', '<cmd>Gdiffsplit!<CR>', { desc = '[H]it [G]diffsplit' })
+vim.keymap.set('n', '<leader>hG', '<cmd>Gdiffsplit<CR>', { desc = '[H]it [G]diffsplit' })
 vim.keymap.set('n', '<leader>hi', '<cmd>Git commit<CR>', { desc = '[H]it comm[I]t' })
 vim.keymap.set('n', '<leader>hu', '<cmd>Git push<CR>', { desc = '[H]it p[U]sh' })
 vim.keymap.set('n', '<leader>hU', '<cmd>Git pull<CR>', { desc = '[H]it p[U]ll' })

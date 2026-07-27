@@ -23,6 +23,8 @@ require 'pack.navigation'
 require 'pack.binds'
 require 'pack.autocmd'
 
+require 'pack.misc'
+
 vim.api.nvim_create_user_command('AlignColumns', function(opts)
   vim.cmd(string.format("%d,%d!column -t -o ' ' | sed 's/ = /=/' | sed 's/[ \t]*$//'", opts.line1, opts.line2))
 end, { range = true })
