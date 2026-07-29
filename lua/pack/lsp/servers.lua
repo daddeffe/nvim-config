@@ -77,7 +77,7 @@ capabilities.workspace.configuration = true
 capabilities.workspace.didChangeConfiguration = { dynamicRegistration = true }
 capabilities.workspace.workspaceFolders = true
 
-local css_bin = vim.fn.stdpath('data') .. '/mason/packages/css-lsp/node_modules/.bin'
+local css_bin = vim.fn.stdpath 'data' .. '/mason/packages/css-lsp/node_modules/.bin'
 
 for server_name, server in pairs(servers) do
   server.capabilities = vim.tbl_deep_extend('force', capabilities, server.capabilities or {})

@@ -91,10 +91,25 @@ vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter' }, {
 })
 
 local force_disable_ft = {
-  'DiffviewFiles', 'Oil', 'Telescope', 'TelescopePrompt',
-  'Trouble', 'alpha', 'checkhealth', 'dap-repl', 'dashboard',
-  'fugitive', 'git', 'help', 'lazy', 'mason', 'md', 'nofile',
-  'oil', 'promt', 'qf',
+  'DiffviewFiles',
+  'Oil',
+  'Telescope',
+  'TelescopePrompt',
+  'Trouble',
+  'alpha',
+  'checkhealth',
+  'dap-repl',
+  'dashboard',
+  'fugitive',
+  'git',
+  'help',
+  'lazy',
+  'mason',
+  'md',
+  'nofile',
+  'oil',
+  'promt',
+  'qf',
 }
 
 vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'BufWritePost', 'InsertLeave', 'TermEnter', 'TextChanged' }, {

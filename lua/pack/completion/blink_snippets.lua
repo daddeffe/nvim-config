@@ -9,7 +9,7 @@ return {
         vim.schedule(function()
           vim.notify('blink snippets source failed: ' .. tostring(result), vim.log.levels.WARN)
         end)
-        callback({ is_incomplete_forward = false, is_incomplete_backward = false, items = {} })
+        callback { is_incomplete_forward = false, is_incomplete_backward = false, items = {} }
       end
     end
 

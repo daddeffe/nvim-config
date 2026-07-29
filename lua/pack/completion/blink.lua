@@ -1,27 +1,41 @@
-local cmp_types = require('blink.cmp.types')
+local cmp_types = require 'blink.cmp.types'
 
 local kind_icons = {
-  Text = '󰉿', Method = '󰆧', Function = '󰊕', Field = '󰜢',
-  Variable = '󰀫', Class = '󰠱', Property = '󰜢', Unit = '󰑭',
-  Value = '󰎠', Keyword = '󰌋', Color = '󰏘', File = '󰈙',
-  Reference = '󰈇', Folder = '󰉋', Constant = '󰏿', Struct = '󰙅',
+  Text = '󰉿',
+  Method = '󰆧',
+  Function = '󰊕',
+  Field = '󰜢',
+  Variable = '󰀫',
+  Class = '󰠱',
+  Property = '󰜢',
+  Unit = '󰑭',
+  Value = '󰎠',
+  Keyword = '󰌋',
+  Color = '󰏘',
+  File = '󰈙',
+  Reference = '󰈇',
+  Folder = '󰉋',
+  Constant = '󰏿',
+  Struct = '󰙅',
   Operator = '󰆕',
 }
 
 local function in_comment()
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
   for _, id in ipairs(vim.fn.synstack(row - 1, col)) do
-    if vim.fn.synIDattr(id, 'name') == 'Comment' then return true end
+    if vim.fn.synIDattr(id, 'name') == 'Comment' then
+      return true
+    end
   end
   return false
 end
 
 require('blink.cmp').setup {
   enabled = function()
-    if vim.api.nvim_get_mode().mode == 'c' then return true end
-    return vim.b.completion ~= false
-      and vim.bo.buftype ~= 'prompt'
-      and not in_comment()
+    if vim.api.nvim_get_mode().mode == 'c' then
+      return true
+    end
+    return vim.b.completion ~= false and vim.bo.buftype ~= 'prompt' and not in_comment()
   end,
 
   snippets = { preset = 'luasnip' },
@@ -46,16 +60,24 @@ require('blink.cmp').setup {
 
     ['<Space>'] = {
       function(cmp)
-        if not cmp.is_menu_visible() then return false end
+        if not cmp.is_menu_visible() then
+          return false
+        end
         local keys = vim.api.nvim_replace_termcodes('<Space>', true, false, true)
-        return cmp.accept { callback = function() vim.api.nvim_feedkeys(keys, 'n', false) end }
+        return cmp.accept {
+          callback = function()
+            vim.api.nvim_feedkeys(keys, 'n', false)
+          end,
+        }
       end,
       'fallback',
     },
 
     ['<Tab>'] = {
       function(cmp)
-        if cmp.is_menu_visible() then return cmp.select_next() end
+        if cmp.is_menu_visible() then
+          return cmp.select_next()
+        end
         local ls = require 'luasnip'
         if ls and ls.expand_or_jumpable() then
           ls.expand_or_jump()
@@ -68,7 +90,9 @@ require('blink.cmp').setup {
 
     ['<S-Tab>'] = {
       function(cmp)
-        if cmp.is_menu_visible() then return cmp.select_prev() end
+        if cmp.is_menu_visible() then
+          return cmp.select_prev()
+        end
         local ls = require 'luasnip'
         if ls and ls.jumpable(-1) then
           ls.jump(-1)
@@ -82,14 +106,18 @@ require('blink.cmp').setup {
     ['<C-l>'] = {
       function()
         local ls = require 'luasnip'
-        if ls and ls.expand_or_locally_jumpable() then ls.expand_or_jump() end
+        if ls and ls.expand_or_locally_jumpable() then
+          ls.expand_or_jump()
+        end
       end,
     },
 
     ['<C-h>'] = {
       function()
         local ls = require 'luasnip'
-        if ls and ls.jumpable(-1) then ls.jump(-1) end
+        if ls and ls.jumpable(-1) then
+          ls.jump(-1)
+        end
       end,
     },
   },
@@ -128,7 +156,8 @@ require('blink.cmp').setup {
       window = {
         border = 'rounded',
         winhighlight = 'Normal:Normal,FloatBorder:FloatBorder,CursorLine:Visual,Search:None',
-        max_width = 80, max_height = 20,
+        max_width = 80,
+        max_height = 20,
       },
     },
     ghost_text = { enabled = true },

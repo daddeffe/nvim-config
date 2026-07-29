@@ -53,7 +53,9 @@ require('snacks').setup {
           icon = ' ',
           title = 'Git Status',
           section = 'terminal',
-          enabled = function() return in_git end,
+          enabled = function()
+            return in_git
+          end,
           cmd = 'git dw',
           height = git_h,
           width = 55,
@@ -66,7 +68,9 @@ require('snacks').setup {
           icon = ' ',
           title = 'Recent Commits',
           section = 'terminal',
-          enabled = function() return in_git end,
+          enabled = function()
+            return in_git
+          end,
           cmd = 'git log --color --graph --pretty=format:"%C(auto)%h %C(auto)%d" --all -10',
           height = 15,
           width = 55,

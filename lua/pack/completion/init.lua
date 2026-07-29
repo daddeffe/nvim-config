@@ -16,7 +16,9 @@ vim.api.nvim_create_autocmd('VimEnter', {
   once = true,
   callback = function()
     local lib = vim.fn.glob(vim.fn.stdpath 'data' .. '/site/pack/*/opt/blink.cmp/lib')
-    if lib ~= '' then return end
+    if lib ~= '' then
+      return
+    end
     local ok, err = pcall(function()
       require('blink.cmp').build():pwait()
     end)

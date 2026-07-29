@@ -25,4 +25,3 @@ require('minuet').setup {
     alt = { model = 'Qwen3.6-27B-INT4' },
   },
 }
-
