@@ -11,7 +11,7 @@ vim.schedule(function()
   require('nvim-treesitter').install {
     'bash', 'c', 'cpp', 'css', 'diff', 'dockerfile',
     'git_config', 'git_rebase', 'gitattributes', 'gitcommit', 'gitignore',
-    'go', 'html', 'javascript', 'jsdoc', 'json', 'jsonc', 'lua', 'luadoc',
+    'go', 'html', 'javascript', 'jsdoc',     'json', 'lua', 'luadoc',
     'make', 'markdown', 'markdown_inline', 'php', 'phpdoc', 'python',
     'query', 'regex', 'rust', 'sql', 'toml', 'tsx', 'typescript',
     'vim', 'vimdoc', 'xml', 'yaml',
