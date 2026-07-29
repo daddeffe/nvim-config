@@ -90,6 +90,25 @@ vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter' }, {
   end,
 })
 
+local force_disable_ft = {
+  'DiffviewFiles', 'Oil', 'Telescope', 'TelescopePrompt',
+  'Trouble', 'alpha', 'checkhealth', 'dap-repl', 'dashboard',
+  'fugitive', 'git', 'help', 'lazy', 'mason', 'md', 'nofile',
+  'oil', 'promt', 'qf',
+}
+
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'BufWritePost', 'InsertLeave', 'TermEnter', 'TextChanged' }, {
+  callback = function()
+    if not vim.bo.modifiable or vim.tbl_contains(force_disable_ft, vim.bo.ft) or vim.tbl_contains(force_disable_ft, vim.bo.buftype) then
+      vim.opt.colorcolumn = '0'
+      vim.o.list = false
+    else
+      vim.opt.colorcolumn = '85'
+      vim.o.list = true
+    end
+  end,
+})
+
 -- Autocomando che intercetta apertura in modalità diff
 vim.api.nvim_create_autocmd('BufReadPost', {
   callback = function(args)

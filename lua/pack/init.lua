@@ -8,6 +8,8 @@ end
 
 require 'pack.opt'
 
+require 'pack.treesitter'
+
 require 'pack.core'
 require 'pack.ui'
 
@@ -21,8 +23,8 @@ require 'pack.navigation'
 --require 'pack.plugins_extra'
 
 require 'pack.binds'
-require 'pack.autocmd'
 
+require 'pack.autocmd'
 require 'pack.misc'
 
 vim.api.nvim_create_user_command('AlignColumns', function(opts)

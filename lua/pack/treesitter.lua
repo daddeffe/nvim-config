@@ -1,57 +1,12 @@
 vim.pack.add({
-  -- MAIN: Treesitter for syntax highlighting and more
-  'https://github.com/nvim-treesitter/nvim-treesitter',
-}, {
-  confirm = false,
-})
+  'https://github.com/neovim-treesitter/treesitter-parser-registry',
+  'https://github.com/neovim-treesitter/nvim-treesitter',
+}, { confirm = false, load = true })
 
--- Configure Treesitter
-require('nvim-treesitter.configs').setup {
-  ensure_installed = {
-    'bash',
-    'c',
-    'cpp',
-    'css',
-    'diff',
-    'dockerfile',
-    'git_config',
-    'git_rebase',
-    'gitattributes',
-    'gitcommit',
-    'gitignore',
-    'go',
-    'html',
-    'javascript',
-    'jsdoc',
-    'json',
-    'jsonc',
-    'lua',
-    'luadoc',
-    'make',
-    'markdown',
-    'markdown_inline',
-    'php',
-    'phpdoc',
-    -- 'python', -- Disabled due to query incompatibility with Neovim version
-    'query',
-    'regex',
-    'rust',
-    'sql',
-    'toml',
-    'tsx',
-    'typescript',
-    'vim',
-    'vimdoc',
-    'xml',
-    'yaml',
-  },
-  -- Autoinstall languages that are not installed
-  auto_install = true,
-  highlight = {
-    enable = true,
-    -- Disable Python due to treesitter query incompatibility with "except*" syntax
-    disable = { 'python' },
-    -- Use traditional vim regex highlighting for Python instead
-    additional_vim_regex_highlighting = { 'python' },
-  },
-}
+require('nvim-treesitter').setup {}
+
+pcall(vim.treesitter.language.add, 'lua_patterns')
+
+vim.schedule(function()
+  require('nvim-treesitter').install { 'markdown', 'markdown_inline', 'regex' }
+end)

@@ -4,7 +4,7 @@ require('conform').setup {
   formatexpr = true,
   formatters_by_ft = {
     lua = { 'stylua' },
-    python = { 'isort', 'black' },
+    python = { 'ruff_format' },
     php = { 'pint' },
     blade = { 'pint' },
     javascript = { 'prettier' },

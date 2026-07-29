@@ -3,11 +3,13 @@ local servers = {
     filetypes = { 'lua', 'python', 'javascript', 'typescript' },
   },
   bashls = {},
-  denols = {
-    root_markers = { 'deno.json', 'deno.jsonc', 'deno.lock' },
-    settings = { deno = { enable = true, lint = true, unstable = true } },
-  },
-  tsgo = {},
+  cssls = {},
+  dockerls = {},
+  gopls = {},
+  marksman = {},
+  sqls = {},
+  terraformls = {},
+  vtsls = {},
   lua_ls = {
     settings = {
       Lua = {
@@ -26,9 +28,6 @@ local servers = {
         logLevel = 'error',
       },
     },
-  },
-  intelephense = {
-    filetypes = { 'php' },
   },
   pyright = {
     settings = {
@@ -72,15 +71,27 @@ local servers = {
 }
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = vim.tbl_deep_extend('force', capabilities, require('blink.cmp').get_lsp_capabilities())
 capabilities.workspace = capabilities.workspace or {}
 capabilities.workspace.configuration = true
 capabilities.workspace.didChangeConfiguration = { dynamicRegistration = true }
 capabilities.workspace.workspaceFolders = true
 
+local css_bin = vim.fn.stdpath('data') .. '/mason/packages/css-lsp/node_modules/.bin'
+
 for server_name, server in pairs(servers) do
   server.capabilities = vim.tbl_deep_extend('force', capabilities, server.capabilities or {})
   vim.lsp.config(server_name, server)
 end
+
+vim.lsp.config('html', {
+  cmd = { css_bin .. '/vscode-html-language-server', '--stdio' },
+  filetypes = { 'html' },
+})
+vim.lsp.config('jsonls', {
+  cmd = { css_bin .. '/vscode-json-language-server', '--stdio' },
+  filetypes = { 'json', 'jsonc' },
+})
 
 require('mason-lspconfig').setup {
   ensure_installed = vim.tbl_keys(servers),
