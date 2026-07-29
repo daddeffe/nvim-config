@@ -8,5 +8,12 @@ require('nvim-treesitter').setup {}
 pcall(vim.treesitter.language.add, 'lua_patterns')
 
 vim.schedule(function()
-  require('nvim-treesitter').install { 'markdown', 'markdown_inline', 'regex' }
+  require('nvim-treesitter').install {
+    'bash', 'c', 'cpp', 'css', 'diff', 'dockerfile',
+    'git_config', 'git_rebase', 'gitattributes', 'gitcommit', 'gitignore',
+    'go', 'html', 'javascript', 'jsdoc', 'json', 'jsonc', 'lua', 'luadoc',
+    'make', 'markdown', 'markdown_inline', 'php', 'phpdoc', 'python',
+    'query', 'regex', 'rust', 'sql', 'toml', 'tsx', 'typescript',
+    'vim', 'vimdoc', 'xml', 'yaml',
+  }
 end)
