@@ -13,9 +13,9 @@ vim.g.have_nerd_font = true
 --  For more options, you can see `:help option-list`
 
 vim.o.number = true
-vim.o.wrap = false
+vim.o.wrap = true
 vim.o.linebreak = true
-vim.o.showbreak = '↪'
+vim.o.showbreak = '  ↪'
 
 vim.o.list = true
 vim.opt.listchars = {
@@ -40,7 +40,7 @@ vim.opt.shortmess:append 'sI'
 
 vim.o.clipboard = 'unnamedplus'
 
-vim.o.breakindent = false
+vim.o.breakindent = true
 vim.o.undofile = true
 
 vim.o.ignorecase = true
