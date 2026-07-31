@@ -145,8 +145,8 @@ vim.keymap.set('n', '<leader>yr', '<cmd>Telescope registers<CR>', { desc = 'Tele
 
 vim.keymap.set('n', '<leader>mm', '<cmd>Telescope marks<CR>', { desc = 'List marks' })
 
-vim.keymap.set('n', '<leader>nn', ':enew<CR>', { desc = 'New scratch buffer' })
-vim.keymap.set('n', '<leader>np', ':e ~/scratchpad.md<CR>', { desc = 'Open scratchpad' })
+vim.keymap.set('n', '<leader>Nn', ':enew<CR>', { desc = 'New scratch buffer' })
+vim.keymap.set('n', '<leader>Np', ':e ~/scratchpad.md<CR>', { desc = 'Open scratchpad' })
 
 vim.keymap.set('n', '<leader>vr', function()
   vim.wo.relativenumber = not vim.wo.relativenumber

@@ -13,18 +13,18 @@ require('fidget').setup {}
 
 local ensure_installed = vim.tbl_keys {}
 vim.list_extend(ensure_installed, {
+  'gofumpt',
+  'goimports',
+  'helm_ls',
   'lua_ls',
   'pint',
   'prettier',
-  'stylua',
-  'ruff',
   'pyright',
-  'yamlls',
-  'helm_ls',
+  'ruff',
   'shfmt',
-  'gofumpt',
-  'goimports',
+  'stylua',
   'tree-sitter-cli',
+  'yamlls',
 })
 
 require('mason-tool-installer').setup {

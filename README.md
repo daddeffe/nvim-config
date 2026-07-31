@@ -1,5 +1,4 @@
 # kickstart.nvim
-
 ## Introduction
 
 A starting point for Neovim that is:
@@ -72,15 +71,13 @@ too - it's ignored in the kickstart repo to make maintenance easier, but it's
 > If following the recommended step above (i.e., forking the repo), replace
 > `nvim-lua` with `<your_github_username>` in the commands below
 
-<details><summary> Linux and Mac </summary>
+#### Linux and Mac
 
 ```sh
 git clone https://github.com/nvim-lua/kickstart.nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"/nvim
 ```
 
-</details>
-
-<details><summary> Windows </summary>
+#### Windows
 
 If you're using `cmd.exe`:
 
@@ -93,8 +90,6 @@ If you're using `powershell.exe`
 ```
 git clone https://github.com/nvim-lua/kickstart.nvim.git "${env:LOCALAPPDATA}\nvim"
 ```
-
-</details>
 
 ### Post Installation
 
@@ -158,7 +153,8 @@ After installing all the dependencies continue with the [Install Kickstart](#Ins
 
 #### Windows Installation
 
-<details><summary>Windows with Microsoft C++ Build Tools and CMake</summary>
+##### Windows with Microsoft C++ Build Tools and CMake
+
 Installation may require installing build tools and updating the run command for `telescope-fzf-native`
 
 See `telescope-fzf-native` documentation for [more details](https://github.com/nvim-telescope/telescope-fzf-native.nvim#installation)
@@ -171,8 +167,8 @@ This requires:
 {'nvim-telescope/telescope-fzf-native.nvim', build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 ```
 
-</details>
-<details><summary>Windows with gcc/make using chocolatey</summary>
+##### Windows with gcc/make using chocolatey
+
 Alternatively, one can install gcc and make which don't require changing the config,
 the easiest way is to use choco:
 
@@ -191,8 +187,7 @@ winget install --accept-source-agreements chocolatey.chocolatey
 choco install -y neovim git ripgrep wget fd unzip gzip mingw make
 ```
 
-</details>
-<details><summary>WSL (Windows Subsystem for Linux)</summary>
+##### WSL (Windows Subsystem for Linux)
 
 ```sh
 wsl --install
@@ -202,11 +197,9 @@ sudo apt update
 sudo apt install make gcc ripgrep unzip git xclip neovim
 ```
 
-</details>
-
 #### Linux Install
 
-<details><summary>Ubuntu Install Steps</summary>
+##### Ubuntu Install Steps
 
 ```sh
 sudo add-apt-repository ppa:neovim-ppa/unstable -y
@@ -214,37 +207,34 @@ sudo apt update
 sudo apt install make gcc ripgrep unzip git xclip neovim
 ```
 
-</details>
-<details><summary>Debian Install Steps</summary>
+##### Debian Install Steps
 
-```bash
+````bash
 sudo apt update
 sudo apt install make gcc ripgrep unzip git xclip curl
+```
 
 # Now we install nvim
+
+```bash
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
 sudo rm -rf /opt/nvim-linux-x86_64
 sudo mkdir -p /opt/nvim-linux-x86_64
 sudo chmod a+rX /opt/nvim-linux-x86_64
 sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
 
-# make it available in /usr/local/bin, distro installs to /usr/bin
+#make it available in /usr/local/bin, distro installs to /usr/bin
 sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/
-```
+````
 
-</details>
-<details><summary>Fedora Install Steps</summary>
+##### Fedora Install Steps
 
 ```bash
 sudo dnf install -y gcc make git ripgrep fd-find unzip neovim
 ```
 
-</details>
-
-<details><summary>Arch Install Steps</summary>
+##### Arch Install Steps
 
 ```
 sudo pacman -S --noconfirm --needed gcc make git ripgrep fd unzip neovim
 ```
-
-</details>

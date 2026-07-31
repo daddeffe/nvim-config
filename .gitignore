@@ -9,3 +9,7 @@ nvim-pack-lock.json
 spell/
 lazy-lock.json
 lua/pack/completion/llm-local.lua
+
+# env / secrets
+.env
+.env.local

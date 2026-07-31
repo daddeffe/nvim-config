@@ -10,7 +10,7 @@
   - `autocmd.lua` — autocommands
   - `core/` — core plugins (mini, snacks, which-key, etc.)
   - `ui/` — UI/themes (catppuccin, noice, dressing)
-  - `tools/` — telescope, git, atone
+  - `tools/` — telescope, git, avante, atone
   - `editing/` — autopairs, origami, etc.
   - `lsp/` — mason, lspconfig, conform, lint
   - `navigation/` — harpoon, oil, bento
@@ -35,6 +35,7 @@ vim.pack.add({
 
 - `<leader>h` prefix = git/hunk operations (defined in `tools/git.lua` using `gitsigns.on_attach`)
 - `<leader>t` prefix = toggles (defined in `binds.lua`)
+  - `<leader>tm` = Markview toggle (defined in `misc/markview.lua`)
 - `<leader>w` prefix = window management (binds.lua)
 - `<leader>b` prefix = buffer management (binds.lua)
 - `<leader>e` prefix = explorer/oil (binds.lua)
@@ -42,7 +43,8 @@ vim.pack.add({
 - `<leader>l` prefix = LSP utilities (binds.lua)
 - `<leader>y` prefix = yank/register (binds.lua)
 - `<leader>m` prefix = marks (binds.lua)
-- `<leader>n` prefix = notes/scratch (binds.lua)
+- `<leader>n` prefix = avante AI (tools/avante.lua)
+- `<leader>N` prefix = notes/scratch (binds.lua)
 - `<leader>v` prefix = view options (binds.lua)
 
 ## Coding Style

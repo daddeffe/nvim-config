@@ -3,7 +3,6 @@ local servers = {
     filetypes = { 'lua', 'python', 'javascript', 'typescript' },
   },
   bashls = {},
-  cssls = {},
   dockerls = {},
   gopls = {},
   marksman = {},

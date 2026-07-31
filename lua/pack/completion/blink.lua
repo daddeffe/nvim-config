@@ -42,13 +42,12 @@ require('blink.cmp').setup {
 
   keymap = {
     preset = 'default',
-    ['<A-y>'] = require('minuet').make_blink_map(),
     ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
     ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
     ['<C-Space>'] = {
       function(cmp)
         return cmp.show {
-          providers = { 'lazydev', 'lsp', 'snippets', 'path', 'buffer', 'minuet' },
+          providers = { 'lazydev', 'lsp', 'snippets', 'path', 'buffer' },
         }
       end,
       'show_documentation',
@@ -164,7 +163,7 @@ require('blink.cmp').setup {
   },
 
   sources = {
-    default = { 'lsp', 'snippets', 'path', 'buffer', 'minuet' },
+    default = { 'lsp', 'snippets', 'path', 'buffer', 'avante_commands', 'avante_mentions', 'avante_files' },
     providers = {
       lazydev = {
         name = '[Lazy]',
@@ -186,12 +185,25 @@ require('blink.cmp').setup {
       },
       path = { name = '[Path]', max_items = 20 },
       buffer = { name = '[Buffer]', max_items = 10 },
-      minuet = {
-        name = '[LLM]',
-        module = 'minuet.blink',
-        async = true,
-        timeout_ms = 3000,
-        score_offset = 50,
+      avante_commands = {
+        name = 'avante_commands',
+        module = 'blink.compat.source',
+        score_offset = 90,
+      },
+      avante_files = {
+        name = 'avante_files',
+        module = 'blink.compat.source',
+        score_offset = 100,
+      },
+      avante_mentions = {
+        name = 'avante_mentions',
+        module = 'blink.compat.source',
+        score_offset = 1000,
+      },
+      avante_shortcuts = {
+        name = 'avante_shortcuts',
+        module = 'blink.compat.source',
+        score_offset = 1000,
       },
     },
   },

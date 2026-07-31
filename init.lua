@@ -20,6 +20,19 @@
 =====================================================================
 ]]
 
+-- Load .env file into vim.env
+local env_path = vim.fn.stdpath('config') .. '/.env'
+local env_f = io.open(env_path, 'r')
+if env_f then
+  for line in env_f:lines() do
+    local key, val = line:match('^([%w_]+)=(.+)$')
+    if key and val then
+      vim.env[key] = val
+    end
+  end
+  env_f:close()
+end
+
 -- Load vim.pack install and plugin list
 require 'pack'
 
