@@ -1,8 +1,12 @@
-require('obsidian').setup {
-  workspaces = { { name = 'def', path = '~/Obsidian' } },
-}
+local lazy = require 'pack.lazy'
 
-vim.keymap.set('n', '<leader>oo', '<cmd>ObsidianQuickSwitch<CR>', { desc = '[O]bsidian quick [o]pen' })
-vim.keymap.set('n', '<leader>os', '<cmd>ObsidianSearch<CR>', { desc = '[O]bsidian [s]earch' })
-vim.keymap.set('n', '<leader>ot', '<cmd>ObsidianToday<CR>', { desc = '[O]bsidian [t]oday' })
-vim.keymap.set('n', '<leader>on', '<cmd>ObsidianNew<CR>', { desc = '[O]bsidian [n]ew note' })
+local function load_obsidian()
+  require('obsidian').setup {
+    workspaces = { { name = 'def', path = '~/Obsidian' } },
+  }
+end
+
+lazy.by_key('obsidian.nvim', 'n', '<leader>oo', load_obsidian, function() vim.cmd 'ObsidianQuickSwitch' end, { desc = '[O]bsidian quick [o]pen' })
+lazy.by_key('obsidian.nvim', 'n', '<leader>os', load_obsidian, function() vim.cmd 'ObsidianSearch' end, { desc = '[O]bsidian [s]earch' })
+lazy.by_key('obsidian.nvim', 'n', '<leader>ot', load_obsidian, function() vim.cmd 'ObsidianToday' end, { desc = '[O]bsidian [t]oday' })
+lazy.by_key('obsidian.nvim', 'n', '<leader>on', load_obsidian, function() vim.cmd 'ObsidianNew' end, { desc = '[O]bsidian [n]ew note' })

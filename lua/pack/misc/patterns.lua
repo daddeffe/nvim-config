@@ -1,9 +1,13 @@
-pcall(function()
-  require('patterns.spec').setup {
-    lua_patterns = { indent_size = 2, indent_marker = '│' },
-    regex = { indent_size = 2, indent_marker = '│' },
-  }
-end)
+local lazy = require 'pack.lazy'
 
-vim.keymap.set('n', '<leader>pd', '<cmd>Patterns explain<CR>', { desc = '[P]atterns [D]escribe' })
-vim.keymap.set('n', '<leader>ph', '<cmd>Patterns hover<CR>', { desc = '[P]atterns [H]over' })
+local function load_patterns()
+  pcall(function()
+    require('patterns.spec').setup {
+      lua_patterns = { indent_size = 2, indent_marker = '│' },
+      regex = { indent_size = 2, indent_marker = '│' },
+    }
+  end)
+end
+
+lazy.by_key('patterns.nvim', 'n', '<leader>pd', load_patterns, function() vim.cmd 'Patterns explain' end, { desc = '[P]atterns [D]escribe' })
+lazy.by_key('patterns.nvim', 'n', '<leader>ph', load_patterns, function() vim.cmd 'Patterns hover' end, { desc = '[P]atterns [H]over' })

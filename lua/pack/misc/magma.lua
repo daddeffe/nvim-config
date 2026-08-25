@@ -1,7 +1,10 @@
-vim.keymap.set('n', '<leader>ji', '<cmd>MagmaInit<CR>', { desc = '[J]upyter [I]nit' })
-vim.keymap.set('n', '<leader>jd', '<cmd>MagmaDeinit<CR>', { desc = '[J]upyter [D]einit' })
-vim.keymap.set('n', '<leader>jr', '<cmd>MagmaEvaluateLine<CR>', { desc = '[J]upyter [R]un line' })
-vim.keymap.set('x', '<leader>jr', ':<C-u>MagmaEvaluateVisual<CR>', { desc = '[J]upyter [R]un selection' })
-vim.keymap.set('n', '<leader>jc', '<cmd>MagmaReevaluateCell<CR>', { desc = '[J]upyter [C]ell re-evaluate' })
-vim.keymap.set('n', '<leader>jo', '<cmd>MagmaShowOutput<CR>', { desc = '[J]upyter [O]utput' })
-vim.keymap.set('n', '<leader>jx', '<cmd>MagmaDelete<CR>', { desc = '[J]upyter delete cell' })
+local lazy = require 'pack.lazy'
+
+lazy.by_cmd('magma-nvim', 'MagmaInit', nil, 'MagmaInit')
+lazy.by_key('magma-nvim', 'n', '<leader>ji', function() end, function() vim.cmd 'MagmaInit' end, { desc = '[J]upyter [I]nit' })
+lazy.by_key('magma-nvim', 'n', '<leader>jd', function() end, function() vim.cmd 'MagmaDeinit' end, { desc = '[J]upyter [D]einit' })
+lazy.by_key('magma-nvim', 'n', '<leader>jr', function() end, function() vim.cmd 'MagmaEvaluateLine' end, { desc = '[J]upyter [R]un line' })
+lazy.by_key('magma-nvim', 'x', '<leader>jr', function() end, function() vim.cmd 'MagmaEvaluateVisual' end, { desc = '[J]upyter [R]un selection' })
+lazy.by_key('magma-nvim', 'n', '<leader>jc', function() end, function() vim.cmd 'MagmaReevaluateCell' end, { desc = '[J]upyter [C]ell re-evaluate' })
+lazy.by_key('magma-nvim', 'n', '<leader>jo', function() end, function() vim.cmd 'MagmaShowOutput' end, { desc = '[J]upyter [O]utput' })
+lazy.by_key('magma-nvim', 'n', '<leader>jx', function() end, function() vim.cmd 'MagmaDelete' end, { desc = '[J]upyter delete cell' })

@@ -4,9 +4,12 @@ vim.pack.add({
   'https://github.com/folke/todo-comments.nvim',
   'https://github.com/norcalli/nvim-colorizer.lua',
   'https://github.com/ziontee113/color-picker.nvim',
+}, { confirm = false, load = true })
+
+vim.pack.add({
   'https://github.com/hat0uma/csvview.nvim',
   'https://github.com/Kicamon/markdown-table-mode.nvim',
-}, { confirm = false, load = true })
+}, { confirm = false, load = false })
 
 require 'pack.editing.autopairs'
 require 'pack.editing.origami'

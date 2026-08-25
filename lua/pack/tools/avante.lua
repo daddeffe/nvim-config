@@ -8,7 +8,7 @@ vim.pack.add({
   -- Optional deps
   'https://github.com/MeanderingProgrammer/render-markdown.nvim',
   'https://github.com/HakonHarnes/img-clip.nvim',
-}, { confirm = false, load = true })
+}, { confirm = false, load = false })
 
 vim.api.nvim_create_autocmd('PackChanged', {
   group = vim.api.nvim_create_augroup('avante_build', { clear = true }),
@@ -23,48 +23,58 @@ vim.api.nvim_create_autocmd('PackChanged', {
   end,
 })
 
-local rm_ok, rm = pcall(require, 'render-markdown')
-if rm_ok then
-  rm.setup {
-    file_types = { 'markdown', 'Avante' },
+local lazy = require 'pack.lazy'
+
+local function load_avante()
+  local rm_ok, rm = pcall(require, 'render-markdown')
+  if rm_ok then
+    rm.setup {
+      file_types = { 'markdown', 'Avante' },
+    }
+  end
+
+  require('avante').setup {
+    provider = 'opencode',
+    providers = {
+      ['opencode-zen'] = {
+        __inherited_from = 'openai',
+        endpoint = 'https://opencode.ai/zen/v1',
+        model = 'deepseek-v4-flash',
+        api_key_name = 'OPENCODE_ZEN_API_KEY',
+      },
+    },
+    acp_providers = {
+      ['opencode'] = {
+        command = 'opencode',
+        model = 'deepseek-v4-flash',
+        args = { 'acp' },
+      },
+    },
+    behaviour = {
+      auto_suggestions = false,
+      auto_set_highlight_group = true,
+      auto_set_keymaps = false,
+      auto_apply_diff_after_generation = false,
+      support_paste_from_clipboard = false,
+      minimize_diff = true,
+      enable_token_counting = true,
+      auto_add_current_file = true,
+      auto_approve_tool_permissions = true,
+      confirmation_ui_style = 'inline_buttons',
+      acp_follow_agent_locations = true,
+    },
   }
 end
 
-require('avante').setup {
-  provider = 'opencode',
-  providers = {
-    ['opencode-zen'] = {
-      __inherited_from = 'openai',
-      endpoint = 'https://opencode.ai/zen/v1',
-      model = 'deepseek-v4-flash',
-      api_key_name = 'OPENCODE_ZEN_API_KEY',
-    },
-  },
-  acp_providers = {
-    ['opencode'] = {
-      command = 'opencode',
-      model = 'deepseek-v4-flash',
-      args = { 'acp' },
-    },
-  },
-  behaviour = {
-    auto_suggestions = false,
-    auto_set_highlight_group = true,
-    auto_set_keymaps = true,
-    auto_apply_diff_after_generation = false,
-    support_paste_from_clipboard = false,
-    minimize_diff = true,
-    enable_token_counting = true,
-    auto_add_current_file = true,
-    auto_approve_tool_permissions = true,
-    confirmation_ui_style = 'inline_buttons',
-    acp_follow_agent_locations = true,
-  },
-}
+local a_cmd = function(cmd)
+  return function()
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<cmd>' .. cmd .. '<CR>', true, false, true), 'n', false)
+  end
+end
 
-vim.keymap.set({ 'n', 'x' }, '<leader>na', '<cmd>AvanteAsk<CR>', { desc = 'Avante ask' })
-vim.keymap.set({ 'n', 'x' }, '<leader>nc', '<cmd>AvanteChat<CR>', { desc = 'Avante chat' })
-vim.keymap.set('n', '<leader>ne', '<cmd>AvanteEdit<CR>', { desc = 'Avante edit' })
-vim.keymap.set('n', '<leader>nt', '<cmd>AvanteToggle<CR>', { desc = 'Avante toggle' })
-vim.keymap.set('n', '<leader>ns', '<cmd>AvanteStop<CR>', { desc = 'Avante stop' })
-vim.keymap.set('n', '<leader>nn', '<cmd>AvanteClear<CR>', { desc = 'Avante new chat' })
+lazy.by_key('avante.nvim', { 'n', 'x' }, '<leader>na', load_avante, a_cmd 'AvanteAsk', { desc = 'Avante ask' })
+lazy.by_key('avante.nvim', { 'n', 'x' }, '<leader>nc', load_avante, a_cmd 'AvanteChat', { desc = 'Avante chat' })
+lazy.by_key('avante.nvim', 'n', '<leader>ne', load_avante, a_cmd 'AvanteEdit', { desc = 'Avante edit' })
+lazy.by_key('avante.nvim', 'n', '<leader>nt', load_avante, a_cmd 'AvanteToggle', { desc = 'Avante toggle' })
+lazy.by_key('avante.nvim', 'n', '<leader>ns', load_avante, a_cmd 'AvanteStop', { desc = 'Avante stop' })
+lazy.by_key('avante.nvim', 'n', '<leader>nn', load_avante, a_cmd 'AvanteClear', { desc = 'Avante new chat' })

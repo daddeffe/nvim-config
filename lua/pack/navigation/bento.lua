@@ -1,4 +1,7 @@
-require('bento').setup {
+local lazy = require 'pack.lazy'
+
+local function load_bento()
+  require('bento').setup {
   main_keymap = ';',
   lock_char = '🔒',
   buffer_deletion_metric = 'frecency_access',
@@ -39,4 +42,7 @@ require('bento').setup {
     separator = 'Normal',
   },
   actions = {},
-}
+  }
+end
+
+lazy.by_key('bento.nvim', 'n', ';', load_bento, nil, { desc = 'Bento buffer switcher' })

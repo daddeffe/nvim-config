@@ -42,6 +42,23 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- lazy treesitter fold: only enable foldexpr when a parser exists for the buffer
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('ts_fold', { clear = true }),
+  callback = function()
+    local ft = vim.bo.ft
+    if ft == '' then
+      return
+    end
+    vim.treesitter.language.add(ft)
+    local lang = vim.treesitter.language.get_lang(ft)
+    if vim.fn.glob(vim.fn.stdpath 'data' .. '/site/parser/' .. lang .. '.so') ~= '' then
+      vim.opt_local.foldmethod = 'expr'
+      vim.opt_local.foldexpr = 'v:lua:vim.treesitter.foldexpr()'
+    end
+  end,
+})
+
 -- syntax highlighting for dotenv files
 vim.api.nvim_create_autocmd('BufRead', {
   group = vim.api.nvim_create_augroup('dotenv_ft', { clear = true }),

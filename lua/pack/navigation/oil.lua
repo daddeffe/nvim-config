@@ -1,7 +1,7 @@
-local oil_ok, oil = pcall(require, 'oil')
-if oil_ok then
-  vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
-  oil.setup {
+local lazy = require 'pack.lazy'
+
+local function load_oil()
+  require('oil').setup {
     default_file_explorer = true,
     columns = { 'permissions', 'size', 'mtime' },
     buf_options = { buflisted = false, bufhidden = 'hide' },
@@ -85,6 +85,9 @@ if oil_ok then
       win_options = {},
     },
   }
+
+  require('oil-git-status').setup()
 end
 
-require('oil-git-status').setup()
+lazy.by_key('oil.nvim', 'n', '-', load_oil, function() vim.cmd 'Oil' end, { desc = 'Open parent directory' })
+lazy.by_cmd('oil.nvim', 'Oil', load_oil, 'Oil')
