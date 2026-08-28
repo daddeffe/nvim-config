@@ -19,7 +19,6 @@ vim.list_extend(ensure_installed, {
   'lua_ls',
   'pint',
   'prettier',
-  'pyright',
   'ruff',
   'shfmt',
   'stylua',

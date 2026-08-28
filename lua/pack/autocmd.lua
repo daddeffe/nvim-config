@@ -107,6 +107,14 @@ vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter' }, {
   end,
 })
 
+vim.api.nvim_create_autocmd({ 'FileType', 'BufEnter' }, {
+  group = vim.api.nvim_create_augroup('telescope_no_spell', { clear = true }),
+  pattern = { 'Telescope', 'TelescopePrompt' },
+  callback = function()
+    vim.opt_local.spell = false
+  end,
+})
+
 local force_disable_ft = {
   'DiffviewFiles',
   'Oil',

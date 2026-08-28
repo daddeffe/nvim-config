@@ -28,18 +28,6 @@ local servers = {
       },
     },
   },
-  pyright = {
-    settings = {
-      python = {
-        analysis = {
-          autoSearchPaths = true,
-          diagnosticMode = 'workspace',
-          useLibraryCodeForTypes = true,
-          typeCheckingMode = 'basic',
-        },
-      },
-    },
-  },
   rust_analyzer = {
     settings = {
       ['rust-analyzer'] = {
