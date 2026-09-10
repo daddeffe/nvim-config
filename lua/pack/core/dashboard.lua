@@ -1,4 +1,66 @@
-require('snacks').setup {
+local Snacks = require 'snacks'
+
+local project_priority = {
+  '^readme',
+  '^agents',
+  '^main%.',
+  '^index%.',
+  '^init%.',
+  '^app%.',
+  '^server%.',
+}
+
+local function project_rank(name)
+  name = name:lower()
+  for i, pat in ipairs(project_priority) do
+    if name:find(pat) then
+      return i
+    end
+  end
+end
+
+Snacks.dashboard.sections.project = function(opts)
+  opts = opts or {}
+  local limit = opts.limit or 6
+  return function()
+    local items = {}
+    local cwd = vim.fn.getcwd()
+    local ok, names = pcall(vim.fn.readdir, cwd)
+    if not ok then
+      return items
+    end
+    local ranked = {}
+    for _, name in ipairs(names) do
+      if not vim.startswith(name, '.') then
+        local rank = project_rank(name)
+        local full = cwd .. '/' .. name
+        if rank and vim.fn.isdirectory(full) == 0 then
+          ranked[#ranked + 1] = { name = name, full = full, rank = rank }
+        end
+      end
+    end
+    table.sort(ranked, function(a, b)
+      if a.rank ~= b.rank then
+        return a.rank < b.rank
+      end
+      return a.name < b.name
+    end)
+    for i, f in ipairs(ranked) do
+      if i > limit then
+        break
+      end
+      items[#items + 1] = {
+        file = f.name,
+        icon = 'file',
+        action = ':e ' .. vim.fn.fnameescape(f.full),
+        autokey = true,
+      }
+    end
+    return items
+  end
+end
+
+Snacks.setup {
   dashboard = {
     sections = function()
       local in_git = Snacks.git.get_root() ~= nil
@@ -9,6 +71,14 @@ require('snacks').setup {
       end
 
       return {
+        {
+          pane = 1,
+          icon = '󰈙 ',
+          title = 'Progetto',
+          section = 'project',
+          indent = 2,
+          padding = 1,
+        },
         {
           pane = 1,
           icon = ' ',
