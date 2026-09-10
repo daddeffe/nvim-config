@@ -54,7 +54,7 @@ vim.api.nvim_create_autocmd('FileType', {
     local lang = vim.treesitter.language.get_lang(ft)
     if vim.fn.glob(vim.fn.stdpath 'data' .. '/site/parser/' .. lang .. '.so') ~= '' then
       vim.opt_local.foldmethod = 'expr'
-      vim.opt_local.foldexpr = 'v:lua:vim.treesitter.foldexpr()'
+      vim.opt_local.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
     end
   end,
 })
@@ -115,6 +115,37 @@ vim.api.nvim_create_autocmd({ 'FileType', 'BufEnter' }, {
   end,
 })
 
+vim.api.nvim_create_autocmd('TextChangedI', {
+  group = vim.api.nvim_create_augroup('prompt_cursor_fix', { clear = true }),
+  pattern = '*',
+  desc = 'Fix cursor one char back in prompt buffers after cross-window redraws',
+  callback = function()
+    if vim.bo.buftype ~= 'prompt' then
+      return
+    end
+    local n1 = 1
+    local n0 = n1 - n1
+    local function fix()
+      if vim.bo.buftype ~= 'prompt' then
+        return
+      end
+      local cur = vim.api.nvim_win_get_cursor(vim.api.nvim_get_current_win())
+      local ln = vim.api.nvim_get_current_line()
+      if cur[2] == #ln - n1 then
+        vim.api.nvim_win_set_cursor(vim.api.nvim_get_current_win(), { cur[1], #ln })
+      end
+    end
+    local cursor = vim.api.nvim_win_get_cursor(vim.api.nvim_get_current_win())
+    local line = vim.api.nvim_get_current_line()
+    if cursor[2] == #line - n1 and cursor[2] > n0 then
+      vim.schedule(fix)
+      vim.defer_fn(fix, 120)
+      vim.defer_fn(fix, 350)
+      vim.defer_fn(fix, 650)
+    end
+  end,
+})
+
 local force_disable_ft = {
   'DiffviewFiles',
   'Oil',
@@ -133,7 +164,7 @@ local force_disable_ft = {
   'md',
   'nofile',
   'oil',
-  'promt',
+  'prompt',
   'qf',
 }
 
@@ -145,6 +176,56 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter', 'BufWritePost', 'Insert
     else
       vim.opt.colorcolumn = '85'
       vim.o.list = true
+    end
+  end,
+})
+
+-- Helm chart filetype detection: template files -> 'helm', values files -> 'yaml.helm-values'
+-- Serve a far partire helm_ls sui file dentro un chart Helm (go-to-definition su .Values.*)
+local function find_helm_chart_dir(dir)
+  for _ = 1, 6 do
+    if vim.fn.filereadable(dir .. '/Chart.yaml') == 1 or vim.fn.filereadable(dir .. '/Chart.yml') == 1 then
+      return true
+    end
+    local parent = vim.fn.fnamemodify(dir, ':h')
+    if parent == dir then
+      return false
+    end
+    dir = parent
+  end
+  return false
+end
+
+local function path_has_component(path, component)
+  for part in path:gmatch('[^/]+') do
+    if part == component then
+      return true
+    end
+  end
+  return false
+end
+
+vim.api.nvim_create_autocmd({ 'BufReadPost', 'BufNewFile' }, {
+  group = vim.api.nvim_create_augroup('helm_filetype', { clear = true }),
+  desc = 'helm: filetype helm/yaml.helm-values per i file di un chart Helm',
+  callback = function(args)
+    local file = vim.api.nvim_buf_get_name(args.buf)
+    if file == '' or vim.bo[args.buf].buftype ~= '' then
+      return
+    end
+    local dir = vim.fn.fnamemodify(file, ':h')
+    if not find_helm_chart_dir(dir) then
+      return
+    end
+    local base = vim.fn.fnamemodify(file, ':t')
+    local ft
+    if base == 'values.yaml' or base == 'values.yml' or base == 'values.schema.json' then
+      ft = 'yaml.helm-values'
+    elseif path_has_component(vim.fn.fnamemodify(file, ':p'), 'templates') or base:match('%.tpl$') or base == 'Chart.yaml' or base == 'Chart.yml' then
+      ft = 'helm'
+    end
+    if ft and ft ~= vim.bo[args.buf].filetype then
+      vim.bo[args.buf].filetype = ft
     end
   end,
 })

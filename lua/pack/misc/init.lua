@@ -9,3 +9,4 @@ vim.pack.add({
 require 'pack.misc.obsidian'
 require 'pack.misc.magma'
 require 'pack.misc.patterns'
+

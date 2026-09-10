@@ -4,6 +4,7 @@ vim.pack.add({
   'https://github.com/refractalize/oil-git-status.nvim',
   'https://github.com/sahilsehwag/macrobank.nvim',
   'https://github.com/serhez/bento.nvim',
+  'https://github.com/nvim-neo-tree/neo-tree.nvim',
 }, { confirm = false, load = false })
 
 require('macrobank').setup()
@@ -11,3 +12,4 @@ require('macrobank').setup()
 require 'pack.navigation.oil'
 require 'pack.navigation.harpoon'
 require 'pack.navigation.bento'
+require 'pack.navigation.neo_tree'

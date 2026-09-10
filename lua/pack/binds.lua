@@ -66,7 +66,7 @@ end, { desc = 'Open [T]erminal' })
 
 vim.keymap.set('n', '<leader>tH', function()
   Snacks.dashboard.open()
-end, { desc = 'Toggle [D]im' })
+end, { desc = 'Toggle [D]ashboard' })
 
 vim.keymap.set('n', '<leader>tD', function()
   Snacks.toggle.dim()
@@ -124,11 +124,11 @@ vim.keymap.set('n', '<leader>bd', ':bd<CR>', { desc = 'Buffer delete' })
 vim.keymap.set('n', '<leader>bD', ':bd!<CR>', { desc = 'Buffer force delete' })
 vim.keymap.set('n', '<leader>bs', ':w<CR>', { desc = 'Buffer save' })
 
-vim.keymap.set('n', '<leader>ee', '<cmd>Oil<CR>', { desc = 'Oil explorer' })
-vim.keymap.set('n', '<leader>ef', '<cmd>Oil --float<CR>', { desc = 'Oil float' })
-vim.keymap.set('n', '<leader>ed', function()
-  vim.cmd('Oil ' .. vim.fn.expand '%:p:h')
-end, { desc = 'Oil current dir' })
+-- vim.keymap.set('n', '<leader>ee', '<cmd>Oil<CR>', { desc = 'Oil explorer' })
+-- vim.keymap.set('n', '<leader>ef', '<cmd>Oil --float<CR>', { desc = 'Oil float' })
+-- vim.keymap.set('n', '<leader>ed', function()
+--   vim.cmd('Oil ' .. vim.fn.expand '%:p:h')
+-- end, { desc = 'Oil current dir' })
 
 vim.keymap.set('n', '<leader>fn', ':enew<CR>', { desc = 'New buffer' })
 vim.keymap.set('n', '<leader>fS', ':wa<CR>', { desc = 'Save all files' })
@@ -151,3 +151,8 @@ vim.keymap.set('n', '<leader>Np', ':e ~/scratchpad.md<CR>', { desc = 'Open scrat
 vim.keymap.set('n', '<leader>vr', function()
   vim.wo.relativenumber = not vim.wo.relativenumber
 end, { desc = 'Toggle relative number' })
+
+vim.keymap.set('n', '<leader>do', vim.diagnostic.open_float)
+vim.keymap.set('n', '<leader>dp', vim.diagnostic.goto_prev)
+vim.keymap.set('n', '<leader>dn', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<leader>dl', "<cmd>Telescope diagnostics<cr>")

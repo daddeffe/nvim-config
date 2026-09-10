@@ -7,6 +7,9 @@ require('nvim-treesitter').setup {}
 
 pcall(vim.treesitter.language.add, 'lua_patterns')
 
+-- filetype 'yaml.helm-values' (values.yaml nei chart Helm) evidenzia come yaml
+vim.treesitter.language.add('yaml.helm-values', 'yaml')
+
 vim.schedule(function()
   require('nvim-treesitter').install {
     'bash',
@@ -21,6 +24,8 @@ vim.schedule(function()
     'gitcommit',
     'gitignore',
     'go',
+    'gotmpl',
+    'helm',
     'html',
     'javascript',
     'jsdoc',

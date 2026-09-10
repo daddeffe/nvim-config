@@ -39,6 +39,15 @@ local servers = {
   helm_ls = {
     filetypes = { 'helm', 'yaml.helm-values' },
     root_markers = { 'Chart.yaml', 'Chart.yml' },
+    settings = {
+      helm = { fileName = 'Chart.yaml', valuesFileNames = { 'values.yaml', 'values.yml', 'values.schema.json' }, ignore = {} },
+      valuesFiles = { mainValuesFileName = 'values.yaml', additionalValuesFiles = {}, livereload = true, autoLoad = true },
+      yamlls = { enabled = false, path = '', config = nil },
+      lspServer = { fallbackErrorLanguageServer = 'yamlls', disableFallbackOnTemplates = false },
+      template = { enabled = true, debug = false, strict = true, templatedValuesFileNames = {}, multiRoot = true },
+      schema = { enabled = true },
+      completion = { context = true, usePlaceholders = true, smartFiltering = true, enablePathConversion = true },
+    },
   },
   yamlls = {
     settings = {
