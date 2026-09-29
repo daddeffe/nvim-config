@@ -1,3 +1,8 @@
+vim.keymap.set('n', '<ScrollWheelRight>', '5zl', { silent = true, desc = 'Scroll right' })
+vim.keymap.set('n', '<ScrollWheelLeft>', '5zh', { silent = true, desc = 'Scroll left' })
+vim.keymap.set('n', '<S-ScrollWheelUp>', '5zh', { silent = true, desc = 'Shift scroll left' })
+vim.keymap.set('n', '<S-ScrollWheelDown>', '5zl', { silent = true, desc = 'Shift scroll right' })
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set('n', '<Esc>', function()
   vim.cmd 'nohlsearch'
@@ -26,10 +31,10 @@ vim.keymap.set('n', 'xc', ':w<CR>', { desc = 'Write file', silent = true })
 
 -- Force cursor at center during J, nav and serach
 vim.keymap.set('n', 'J', 'mzJ`z')
-vim.keymap.set('n', '<C-d>', '<C-d>zz')
-vim.keymap.set('n', '<C-u>', '<C-u>zz')
-vim.keymap.set('n', '<PageUp>', '<C-u>zz')
-vim.keymap.set('n', '<PageDown>', '<C-d>zz')
+-- vim.keymap.set('n', '<C-d>', '<C-d>zz')
+-- vim.keymap.set('n', '<C-u>', '<C-u>zz')
+-- vim.keymap.set('n', '<PageUp>', '<C-u>zz')
+-- vim.keymap.set('n', '<PageDown>', '<C-d>zz')
 vim.keymap.set('n', 'n', 'nzz')
 vim.keymap.set('n', 'N', 'Nzz')
 
@@ -61,7 +66,7 @@ vim.keymap.set('v', '<leader>r', function()
 end, { desc = 'Execute selection in new terminal split' })
 
 vim.keymap.set('n', '<leader>T', function()
-  Snacks.terminal()
+  Snacks.terminal.open()
 end, { desc = 'Open [T]erminal' })
 
 vim.keymap.set('n', '<leader>tH', function()
@@ -96,6 +101,20 @@ end, { desc = 'Toggle S[p]ell' })
 vim.keymap.set('n', '<leader>tL', function()
   vim.wo.list = not vim.wo.list
 end, { desc = 'Toggle [L]ist chars' })
+
+local centered = false
+vim.keymap.set('n', '<leader>ta', function()
+  centered = not centered
+  vim.o.scrolloff = centered and 999 or 8
+end, { desc = 'Toggle centered navigation' })
+
+vim.keymap.set('n', '<leader>tA', function()
+  if Snacks.scroll.enabled then
+    Snacks.scroll.disable()
+  else
+    Snacks.scroll.enable()
+  end
+end, { desc = 'Toggle smooth scroll' })
 
 vim.keymap.set('n', '<leader>tc', function()
   if vim.wo.colorcolumn == '0' or vim.wo.colorcolumn == '' then

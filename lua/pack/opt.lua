@@ -13,7 +13,7 @@ vim.g.have_nerd_font = true
 --  For more options, you can see `:help option-list`
 
 vim.o.number = true
-vim.o.wrap = true
+vim.o.wrap = false
 vim.o.linebreak = true
 vim.o.showbreak = '  ↪'
 

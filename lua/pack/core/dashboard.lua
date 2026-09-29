@@ -61,6 +61,14 @@ Snacks.dashboard.sections.project = function(opts)
 end
 
 Snacks.setup {
+  terminal = {
+    win = {
+      position = "float",
+      height = 1.0,
+      width = 1.0,
+      minimal = false,
+    },
+  },
   dashboard = {
     sections = function()
       local in_git = Snacks.git.get_root() ~= nil
