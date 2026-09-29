@@ -25,14 +25,43 @@ vim.api.nvim_create_autocmd('PackChanged', {
 
 local lazy = require 'pack.lazy'
 
-local function load_avante()
-  local rm_ok, rm = pcall(require, 'render-markdown')
-  if rm_ok then
-    rm.setup {
-      file_types = { 'markdown', 'Avante' },
-    }
-  end
+local rm_ok, rm = pcall(require, 'render-markdown')
+if rm_ok then
+  rm.setup {
+    file_types = { 'markdown', 'Avante' },
+    debounce = 50,
+    heading = { border = true },
+    indent = {
+      enabled = true,
+      skip_heading = true,
+    },
+    wrap = true,
+    pipe_table = { cell = 'trimmed', preset = 'double' },
+    quote = { repeat_linebreak = true },
+    -- win_options = {
+    --   wrap = { default = true, rendered = true },
+    --   linebreak = { default = true, rendered = true },
+    --   breakindent = { default = true, rendered = true },
+    --   showbreak = { default = '  ↪', rendered = '' },
+    --   list = { default = false, rendered = false },
+    -- },
+    -- overrides = {
+    --   filetype = {
+    --     Avante = {
+    --       win_options = {
+    --         wrap = { default = true, rendered = true },
+    --         linebreak = { default = true, rendered = true },
+    --         breakindent = { default = true, rendered = true },
+    --         showbreak = { default = '  ↪', rendered = '  ↪' },
+    --         list = { default = false, rendered = false },
+    --       },
+    --     },
+    --   },
+    -- },
+  }
+end
 
+local function load_avante()
   require('avante').setup {
     provider = 'opencode',
     providers = {
