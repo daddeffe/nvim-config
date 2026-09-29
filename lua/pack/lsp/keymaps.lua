@@ -8,6 +8,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
     map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
+    map('<leader>la', function()
+      vim.lsp.buf.code_action {
+        apply = true,
+        context = {
+          only = { 'quickfix' },
+          diagnostics = vim.diagnostic.get(event.buf),
+        },
+      }
+    end, '[A]utofix diagnostics')
     map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
     map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
     map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
