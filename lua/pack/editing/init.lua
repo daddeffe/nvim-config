@@ -8,7 +8,6 @@ vim.pack.add({
 
 vim.pack.add({
   'https://github.com/hat0uma/csvview.nvim',
-  'https://github.com/Kicamon/markdown-table-mode.nvim',
 }, { confirm = false, load = false })
 
 require 'pack.editing.autopairs'
@@ -16,4 +15,3 @@ require 'pack.editing.origami'
 require 'pack.editing.todo'
 require 'pack.editing.colorizer'
 require 'pack.editing.csv'
-require 'pack.editing.markdown'
