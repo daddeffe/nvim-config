@@ -9,7 +9,6 @@ require('which-key').add({
   { '<leader>w', group = 'Windows' },
   { '<leader>b', group = 'Buffers' },
   { '<leader>o', group = 'Obsidian' },
-  { '<leader>e', group = 'Explorer' },
   { '<leader>f', group = 'Files' },
   { '<leader>N', group = 'Notes' },
   { '<leader>y', group = 'Yank' },

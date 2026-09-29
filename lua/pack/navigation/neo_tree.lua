@@ -43,5 +43,5 @@ local function load_neo_tree()
 end
 
 lazy.by_cmd('neo-tree.nvim', 'Neotree', load_neo_tree, 'Neotree')
-lazy.by_key('neo-tree.nvim', 'n', '<leader>E', load_neo_tree, function() vim.cmd 'Neotree' end, { desc = 'Neo-tree filesystem' })
+lazy.by_key('neo-tree.nvim', 'n', '<leader>e', load_neo_tree, function() vim.cmd 'Neotree' end, { desc = 'Neo-tree filesystem' })
 lazy.by_key('neo-tree.nvim', 'n', '<leader>lD', load_neo_tree, function() vim.cmd 'Neotree document_symbols' end, { desc = 'Neo-tree document symbols' })
