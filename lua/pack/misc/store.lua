@@ -1,4 +1,3 @@
-vim.cmd.packadd 'markview.nvim'
 vim.cmd.packadd 'store.nvim'
 
 local configured = false
