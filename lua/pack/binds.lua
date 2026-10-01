@@ -161,6 +161,7 @@ vim.keymap.set('n', '<leader>fS', ':wa<CR>', { desc = 'Save all files' })
 vim.keymap.set('n', '<leader>li', '<cmd>LspInfo<CR>', { desc = 'LSP info' })
 vim.keymap.set('n', '<leader>lr', '<cmd>LspRestart<CR>', { desc = 'LSP restart' })
 vim.keymap.set('n', '<leader>ll', '<cmd>LspLog<CR>', { desc = 'LSP log' })
+vim.keymap.set('n', '<leader>ld', '<cmd>Telescope diagnostics<cr>')
 
 vim.keymap.set('n', '<leader>yy', '"+yy', { desc = 'Yank line to clipboard' })
 vim.keymap.set('n', '<leader>yY', function()
@@ -176,8 +177,3 @@ vim.keymap.set('n', '<leader>Np', ':e ~/scratchpad.md<CR>', { desc = 'Open scrat
 vim.keymap.set('n', '<leader>vr', function()
   vim.wo.relativenumber = not vim.wo.relativenumber
 end, { desc = 'Toggle relative number' })
-
-vim.keymap.set('n', '<leader>do', vim.diagnostic.open_float)
-vim.keymap.set('n', '<leader>dp', vim.diagnostic.goto_prev)
-vim.keymap.set('n', '<leader>dn', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<leader>dl', "<cmd>Telescope diagnostics<cr>")

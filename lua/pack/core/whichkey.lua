@@ -8,6 +8,7 @@ require('which-key').add({
   { '<leader>n', group = 'Avante' },
   { '<leader>w', group = 'Windows' },
   { '<leader>b', group = 'Buffers' },
+  { '<leader>l', group = 'Lsp' },
   { '<leader>o', group = 'Obsidian' },
   { '<leader>f', group = 'Files' },
   { '<leader>N', group = 'Notes' },
