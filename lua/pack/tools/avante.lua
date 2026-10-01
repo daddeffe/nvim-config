@@ -31,14 +31,14 @@ local function load_avante()
       ['opencode-zen'] = {
         __inherited_from = 'openai',
         endpoint = 'https://opencode.ai/zen/v1',
-        model = 'deepseek-v4-flash',
+        model = 'deepseek-v4.1-flash',
         api_key_name = 'OPENCODE_ZEN_API_KEY',
       },
     },
     acp_providers = {
       ['opencode'] = {
         command = 'opencode',
-        model = 'deepseek-v4-flash',
+        model = 'deepseek-v4.1-flash',
         args = { 'acp' },
       },
     },
