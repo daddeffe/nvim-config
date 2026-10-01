@@ -50,8 +50,8 @@ vim.o.signcolumn = 'yes'
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 
-vim.o.spell = true
-vim.o.spelllang = 'it,en'
+-- vim.o.spell = true
+-- vim.o.spelllang = 'it,en'
 
 vim.opt.splitright = true
 vim.opt.splitbelow = false
