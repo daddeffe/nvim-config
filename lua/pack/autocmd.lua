@@ -112,37 +112,7 @@ vim.api.nvim_create_autocmd({ 'FileType', 'BufEnter' }, {
   pattern = { 'Telescope', 'TelescopePrompt' },
   callback = function()
     vim.opt_local.spell = false
-  end,
-})
-
-vim.api.nvim_create_autocmd('TextChangedI', {
-  group = vim.api.nvim_create_augroup('prompt_cursor_fix', { clear = true }),
-  pattern = '*',
-  desc = 'Fix cursor one char back in prompt buffers after cross-window redraws',
-  callback = function()
-    if vim.bo.buftype ~= 'prompt' then
-      return
-    end
-    local n1 = 1
-    local n0 = n1 - n1
-    local function fix()
-      if vim.bo.buftype ~= 'prompt' then
-        return
-      end
-      local cur = vim.api.nvim_win_get_cursor(vim.api.nvim_get_current_win())
-      local ln = vim.api.nvim_get_current_line()
-      if cur[2] == #ln - n1 then
-        vim.api.nvim_win_set_cursor(vim.api.nvim_get_current_win(), { cur[1], #ln })
-      end
-    end
-    local cursor = vim.api.nvim_win_get_cursor(vim.api.nvim_get_current_win())
-    local line = vim.api.nvim_get_current_line()
-    if cursor[2] == #line - n1 and cursor[2] > n0 then
-      vim.schedule(fix)
-      vim.defer_fn(fix, 120)
-      vim.defer_fn(fix, 350)
-      vim.defer_fn(fix, 650)
-    end
+    vim.wo.virtualedit = 'all'
   end,
 })
 

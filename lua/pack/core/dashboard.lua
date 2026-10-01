@@ -61,13 +61,15 @@ Snacks.dashboard.sections.project = function(opts)
 end
 
 Snacks.setup {
-  terminal = {
+  picker = {
     win = {
-      position = "float",
-      height = 1.0,
-      width = 1.0,
-      minimal = false,
+      input = {
+        wo = { virtualedit = 'all' },
+      },
     },
+  },
+  terminal = {
+    win = { position = 'right' },
   },
   dashboard = {
     sections = function()
