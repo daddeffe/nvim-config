@@ -92,6 +92,10 @@ vim.keymap.set('n', '<leader>tS', function()
   vim.wo.signcolumn = (vim.wo.signcolumn == 'yes') and 'no' or 'yes'
 end, { desc = 'Toggle [S]igncolumn' })
 
+vim.keymap.set('n', '<leader>tm', function()
+  vim.cmd 'Neominimap Toggle'
+end, { desc = 'Toggle [M]inimap' })
+
 vim.keymap.set('n', '<leader>td', function()
   vim.diagnostic.enable(not vim.diagnostic.is_enabled())
 end, { desc = 'Toggle [D]iagnostics' })

@@ -35,7 +35,7 @@ vim.pack.add({
 
 - `<leader>h` prefix = git/hunk operations (defined in `tools/git.lua` using `gitsigns.on_attach`)
 - `<leader>t` prefix = toggles (defined in `binds.lua`)
-  - `<leader>tm` = Markview toggle (defined in `misc/markview.lua`)
+  - `<leader>tm` = Neominimap toggle (defined in `ui/neominimap.lua`)
 - `<leader>w` prefix = window management (binds.lua)
 - `<leader>b` prefix = buffer management (binds.lua)
 - `<leader>e` prefix = explorer/oil (binds.lua)
