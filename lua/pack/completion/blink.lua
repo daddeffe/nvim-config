@@ -130,7 +130,12 @@ require('blink.cmp').setup {
     trigger = { prefetch_on_insert = false },
     list = { selection = { preselect = false, auto_insert = true } },
     menu = {
-      auto_show = true,
+      auto_show = function(ctx)
+        if vim.bo[ctx.bufnr].filetype == 'opencode' then
+          return ctx.trigger.kind == 'trigger_character'
+        end
+        return true
+      end,
       border = 'rounded',
       winhighlight = 'Normal:Normal,FloatBorder:FloatBorder,CursorLine:Visual,Search:None',
       draw = {
@@ -159,7 +164,14 @@ require('blink.cmp').setup {
         max_height = 20,
       },
     },
-    ghost_text = { enabled = true },
+    ghost_text = {
+      enabled = function()
+        if vim.bo.filetype == 'opencode' then
+          return require('blink.cmp').is_menu_visible()
+        end
+        return true
+      end,
+    },
   },
 
   sources = {
