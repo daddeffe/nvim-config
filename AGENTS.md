@@ -44,6 +44,8 @@ vim.pack.add({
 - `<leader>y` prefix = yank/register (binds.lua)
 - `<leader>m` prefix = marks (binds.lua)
 - `<leader>n` prefix = avante AI (tools/avante.lua)
+- `<leader>o` prefix = opencode AI (tools/opencode.lua)
+- `<leader>O` prefix = obsidian vault (misc/obsidian.lua)
 - `<leader>N` prefix = notes/scratch (binds.lua)
 - `<leader>v` prefix = view options (binds.lua)
 

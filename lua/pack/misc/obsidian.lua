@@ -6,7 +6,7 @@ local function load_obsidian()
   }
 end
 
-lazy.by_key('obsidian.nvim', 'n', '<leader>oo', load_obsidian, function() vim.cmd 'ObsidianQuickSwitch' end, { desc = '[O]bsidian quick [o]pen' })
-lazy.by_key('obsidian.nvim', 'n', '<leader>os', load_obsidian, function() vim.cmd 'ObsidianSearch' end, { desc = '[O]bsidian [s]earch' })
-lazy.by_key('obsidian.nvim', 'n', '<leader>ot', load_obsidian, function() vim.cmd 'ObsidianToday' end, { desc = '[O]bsidian [t]oday' })
-lazy.by_key('obsidian.nvim', 'n', '<leader>on', load_obsidian, function() vim.cmd 'ObsidianNew' end, { desc = '[O]bsidian [n]ew note' })
+lazy.by_key('obsidian.nvim', 'n', '<leader>Oo', load_obsidian, function() vim.cmd 'ObsidianQuickSwitch' end, { desc = '[O]bsidian quick [o]pen' })
+lazy.by_key('obsidian.nvim', 'n', '<leader>Os', load_obsidian, function() vim.cmd 'ObsidianSearch' end, { desc = '[O]bsidian [s]earch' })
+lazy.by_key('obsidian.nvim', 'n', '<leader>Ot', load_obsidian, function() vim.cmd 'ObsidianToday' end, { desc = '[O]bsidian [t]oday' })
+lazy.by_key('obsidian.nvim', 'n', '<leader>On', load_obsidian, function() vim.cmd 'ObsidianNew' end, { desc = '[O]bsidian [n]ew note' })
