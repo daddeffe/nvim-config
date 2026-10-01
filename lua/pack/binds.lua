@@ -1,3 +1,5 @@
+local Snacks = require 'snacks'
+
 vim.keymap.set('n', '<ScrollWheelRight>', '5zl', { silent = true, desc = 'Scroll right' })
 vim.keymap.set('n', '<ScrollWheelLeft>', '5zh', { silent = true, desc = 'Scroll left' })
 vim.keymap.set('n', '<S-ScrollWheelUp>', '5zh', { silent = true, desc = 'Shift scroll left' })
